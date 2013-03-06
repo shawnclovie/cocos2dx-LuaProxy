@@ -1,0 +1,56 @@
+#pragma once
+#ifndef __CURSORTEXTFIELD_H__
+#define __CURSORTEXTFIELD_H__
+#include "cocos2d.h"
+#include "UIEventDispatcher.h"
+USING_NS_CC;
+
+class CursorTextField : public CCTextFieldTTF, public CCTextFieldDelegate, public CCTouchDelegate, public UIEventDelegate{
+private:
+	CCPoint _touchBeginPos;
+	CCSprite *_cursor;
+	CCAction *_cursorAction;
+	CCPoint _cursorPos;
+	bool _password;
+	unsigned int _maxLength;
+	CCSize _designedSize;
+public:
+	CursorTextField();
+	~CursorTextField();
+	static CursorTextField * create(const char *fontName, float fontSize);
+	static CursorTextField * createWithPlaceHolder(const char *ph, const char *fontName, float fontSize);
+	//CCLayer
+	void onEnter();
+	void onExit();
+	void initCursorSprite(int height);
+	//CCTextFieldDelegate
+	virtual bool onTextFieldAttachWithIME(CCTextFieldTTF *s);
+	virtual bool onTextFieldDetachWithIME(CCTextFieldTTF *s);
+	virtual bool onTextFieldInsertText(CCTextFieldTTF *s, const char *t, int len);
+	virtual bool onTextFieldDeleteBackward(CCTextFieldTTF *s, const char *delText, int len);
+
+	//CCLayer
+	bool ccTouchBegan(CCTouch *t, CCEvent *e);
+	void ccTouchEnded(CCTouch *t, CCEvent *e);
+	bool isInTextField(CCTouch *t);
+	CCRect getRect();
+	void openIME();
+	void closeIME();
+	bool isPassword();
+	void setPassword(bool b);
+	unsigned int getMaxLength();
+	void setMaxLength(unsigned int n);
+
+	//overload for display "*"
+	void setString(const char *t);
+	void updateDisplay();
+	void setColor(const ccColor3B& c);
+
+	//area for touch to open IME
+	CCSize getDesignedSize();
+	void setDesignedSize(CCSize s);
+	//UIEventDelegate
+	void keyEvent(UINT m, WPARAM w, LPARAM l);
+};
+
+#endif //__CURSORTEXTFIELD_H__
