@@ -50,4 +50,4 @@ proxy:handleSelector(function(s, e)
   if s == btn then print("some thing") end  
 end)
 
-[Continue] (/shawnclovie/cocos2dx-LuaProxy/blob/master/README-02-complexFunc.md)
+[Continue Read] (README-02-complexFunc.md)
