@@ -47,11 +47,11 @@ Next we can create the table:
 
 ###Http Get/Post#
 Just add those lines in lua:
-> CCHttpRequest:open("http://google.com?q=LuaProxy", kHttpGet):sendWithHandler(function(res, hnd)
-print(res:getResponseData(), res:getResponseCode())
+> CCHttpRequest:open("https://google.com/search?q=LuaProxy&safe=strict", kHttpGet):sendWithHandler(function(res, hnd)  
+print(res:getResponseData(), res:getResponseCode())  
 end)
 
 If you want do a post http request, change arguments in open:
-> CCHttpRequest:open("http://google.com?q=LuaProxy", kHttpPost, "query=param1&other=params"):sendWithHandler(function(res, hnd) end)
+> CCHttpRequest:open("http://google.com/search?q=LuaProxy&safe=strict", kHttpPost, "query=param1&other=params"):sendWithHandler(function(res, hnd) end)
 
 Arguments to the call back function, first is CCHttpResponse, 2nd is LuaEventHandler.
