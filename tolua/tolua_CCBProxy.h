@@ -345,17 +345,18 @@ static int tolua_CCBProxy_duplicate(lua_State *l){
 }
 
 //######################################## LuaEventHandler ##########################
-//LuaEventHandler::createWithFunction
-static int tolua_LuaEventHandler_createWithFunction(lua_State *l){
+//LuaEventHandler::create
+static int tolua_LuaEventHandler_create(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertable(l, 1, "LuaEventHandler", 0, &err) || !toluafix_isfunction(l, 2, "LUA_FUNCTION", 0, &err)){
-		tolua_error(l,"#ferror in function 'LuaEventHandler.createWithFunction'.",&err);
+	if(!tolua_isusertable(l, 1, "LuaEventHandler", 0, &err)){
+		tolua_error(l,"#ferror in function 'LuaEventHandler.create'.",&err);
 		return 0;
 	}
 #endif
+	LuaEventHandler *h = LuaEventHandler::create(l);
 	int hnd = toluafix_ref_function(l, 2, 0);
-	LuaEventHandler *h = LuaEventHandler::create(l)->handle(hnd);
+	if(hnd > 0){ h->handle(hnd);}
 	tolua_pushusertype(l, h, "LuaEventHandler");
 	return 1;
 }
@@ -370,6 +371,23 @@ static int tolua_LuaEventHandler_createAppHandler(lua_State *l){
 #endif
 	int hnd = toluafix_ref_function(l, 2, 0);
 	LuaEventHandler *h = LuaEventHandler::createAppHandler(l, hnd);
+	tolua_pushusertype(l, h, "LuaEventHandler");
+	return 1;
+}
+//LuaEventHandler::handleHttpRequest
+static int tolua_LuaEventHandler_handleHttpRequest(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "LuaEventHandler", 0, &err) || !tolua_isusertype(l, 2, "CCHttpRequest", 0, &err)){
+		tolua_error(l,"#ferror in function 'LuaEventHandler.handleHttpRequest'.",&err);
+		return 0;
+	}
+#endif
+	LuaEventHandler *h = (LuaEventHandler *)tolua_tousertype(l, 1, NULL);
+	CCHttpRequest *req = (CCHttpRequest *)tolua_tousertype(l, 2, NULL);
+	if(h && req){
+		h->handle(req, toluafix_ref_function(l, 3, 0));
+	}
 	tolua_pushusertype(l, h, "LuaEventHandler");
 	return 1;
 }

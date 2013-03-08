@@ -3,9 +3,12 @@
 #include "../ui/CursorTextField.h"
 #include "tolua_CCBAnimationManager.h"
 #include "tolua_CCBProxy.h"
+#include "tolua_CCControl.h"
+#include "tolua_CCEditBox.h"
 #include "tolua_CCScrollView.h"
 #include "tolua_CCTableView.h"
 #include "tolua_CCScale9Sprite.h"
+#include "tolua_CCHttpClient.h"
 
 //copyAssetFileToData
 static int tolua_copyAssetFileToData(lua_State *l){
@@ -238,662 +241,7 @@ static int tolua_CCBSequence_setChainedSequenceId(lua_State *l){
 	tolua_pushusertype(l, o, "CCBSequence");
 	return 1;
 }
-//######################################## CCControl ##########################
-//CCControl::isEnabled
-static int tolua_CCControl_isEnabled(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControl", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'isEnabled'.",&err);
-		return 0;
-	}
-#endif
-	CCControl *o = (CCControl *)tolua_tousertype(l, 1, NULL);
-	if(o)tolua_pushboolean(l, o->isEnabled());
-	return 1;
-}
-//CCControl::isHighlighted
-static int tolua_CCControl_isHighlighted(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControl", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'isHighlighted'.",&err);
-		return 0;
-	}
-#endif
-	CCControl *o = (CCControl *)tolua_tousertype(l, 1, NULL);
-	if(o)tolua_pushboolean(l, o->isHighlighted());
-	return 1;
-}
-//CCControl::isSelected
-static int tolua_CCControl_isSelected(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControl", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'isSelected'.",&err);
-		return 0;
-	}
-#endif
-	CCControl *o = (CCControl *)tolua_tousertype(l, 1, NULL);
-	if(o)tolua_pushboolean(l, o->isSelected());
-	return 1;
-}
-//CCControl::setSelected
-static int tolua_CCControl_setSelected(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControl", 0, &err) || !tolua_isboolean(l, 2, 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'setSelected'.",&err);
-		return 0;
-	}
-#endif
-	CCControl *o = (CCControl *)tolua_tousertype(l, 1, NULL);
-	if(o){
-		o->setSelected(tolua_toboolean(l, 2, false) > 0);
-		tolua_pushusertype(l, o, "CCControl");
-	}
-	return 1;
-}
-//CCControl::getState
-static int tolua_CCControl_getState(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControl", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'getState'.",&err);
-		return 0;
-	}
-#endif
-	CCControl *o = (CCControl *)tolua_tousertype(l, 1, NULL);
-	if(o)tolua_pushnumber(l, o->getState());
-	return 1;
-}
-//CCControl::isTouchInside
-static int tolua_CCControl_isTouchInside(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControl", 0, &err) || !tolua_isusertype(l, 2, "CCTouch", 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'isTouchInside'.",&err);
-		return 0;
-	}
-#endif
-	CCControl *o = (CCControl *)tolua_tousertype(l, 1, NULL);
-	CCTouch *t = (CCTouch *)tolua_tousertype(l, 2, NULL);
-	tolua_pushboolean(l, o && t? o->isTouchInside(t) : false);
-	return 1;
-}
-//CCControl::getTouchLocation
-static int tolua_CCControl_getTouchLocation(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControl", 0, &err) || !tolua_isusertype(l, 2, "CCTouch", 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'getTouchLocation'.",&err);
-		return 0;
-	}
-#endif
-	CCControl *o = (CCControl *)tolua_tousertype(l, 1, NULL);
-	CCTouch *t = (CCTouch *)tolua_tousertype(l, 2, NULL);
-	CCPoint p = o && t? o->getTouchLocation(t) : CCPointMake(0, 0);
-	tolua_pushusertype(l, Mtolua_new((CCPoint)(p)), "CCPoint");
-	return 1;
-}
-//CCControl::hasVisibleParents
-static int tolua_CCControl_hasVisibleParents(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControl", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'hasVisibleParents'.",&err);
-		return 0;
-	}
-#endif
-	CCControl *o = (CCControl *)tolua_tousertype(l, 1, NULL);
-	tolua_pushboolean(l, o? o->hasVisibleParents() : false);
-	return 1;
-}
-//######################################## CCControlButton ##########################
-//CCControlButton::create
-static int tolua_CCControlButton_create(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertable(l, 1, "CCControlButton", 0, &err)
-		|| !(tolua_isnoobj(l, 2, &err) || tolua_isusertype(l, 2, "CCScale9Sprite", 0, &err))
-		|| !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.create'.",&err);
-		return 0;
-	}
-#endif
-	CCScale9Sprite *s = (CCScale9Sprite *)tolua_tousertype(l, 2, NULL);
-	CCControlButton *o = s? CCControlButton::create(s) : CCControlButton::create();
-	tolua_pushusertype(l, o, "CCControlButton");
-	return 1;
-}
-//CCControlButton::getBackgroundSprite
-static int tolua_CCControlButton_getBackgroundSprite(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.getBackgroundSprite'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)tolua_pushusertype(l, o->getBackgroundSprite(), "CCScale9Sprite");
-	return 1;
-}
-//CCControlButton::setBackgroundSprite
-static int tolua_CCControlButton_setBackgroundSprite(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isusertype(l, 2, "CCScale9Sprite", 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.setBackgroundSprite'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setBackgroundSprite((CCScale9Sprite *)tolua_tousertype(l, 2, NULL));
-	tolua_pushusertype(l, o, "CCControlButton");
-	return 1;
-}
-//CCControlButton::getBackgroundSpriteForState
-static int tolua_CCControlButton_getBackgroundSpriteForState(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isnumber(l, 2, CCControlStateNormal, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.getBackgroundSpriteForState'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)tolua_pushusertype(l, o->getBackgroundSpriteForState(tolua_tonumber(l, 2, CCControlStateNormal)), "CCScale9Sprite");
-	return 1;
-}
-//CCControlButton::setBackgroundSpriteForState
-static int tolua_CCControlButton_setBackgroundSpriteForState(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isusertype(l, 2, "CCScale9Sprite", 0, &err)
-		|| !tolua_isnumber(l, 3, CCControlStateNormal, &err) || !tolua_isnoobj(l, 4, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.setBackgroundSpriteForState'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setBackgroundSpriteForState((CCScale9Sprite *)tolua_tousertype(l, 2, NULL),
-		tolua_tonumber(l, 3, CCControlStateNormal));
-	tolua_pushusertype(l, o, "CCControlButton");
-	return 1;
-}
-//CCControlButton::setBackgroundSpriteFrameForState
-static int tolua_CCControlButton_setBackgroundSpriteFrameForState(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isusertype(l, 2, "CCSpriteFrame", 0, &err)
-		|| !tolua_isnumber(l, 3, CCControlStateNormal, &err) || !tolua_isnoobj(l, 4, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.setBackgroundSpriteFrameForState'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setBackgroundSpriteFrameForState((CCSpriteFrame *)tolua_tousertype(l, 2, NULL),
-		tolua_tonumber(l, 3, CCControlStateNormal));
-	tolua_pushusertype(l, o, "CCControlButton");
-	return 1;
-}
-//CCControlButton::getCurrentTitle
-static int tolua_CCControlButton_getCurrentTitle(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.getCurrentTitle'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)tolua_pushstring(l, o->getCurrentTitle()->getCString());
-	return 1;
-}
-//CCControlButton::setEnabled
-static int tolua_CCControlButton_setEnabled(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isboolean(l, 2, false, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.setEnabled'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setEnabled(tolua_toboolean(l, 2, true) > 0);
-	tolua_pushusertype(l, o, "CCControlButton");
-	return 1;
-}
-//CCControlButton::getLabelAnchorPoint
-static int tolua_CCControlButton_getLabelAnchorPoint(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.getLabelAnchorPoint'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)tolua_pushusertype(l, Mtolua_new((CCPoint)(o->getLabelAnchorPoint())), "CCPoint");
-	return 1;
-}
-//CCControlButton::setLabelAnchorPoint
-static int tolua_CCControlButton_setLabelAnchorPoint(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isnumber(l, 2, 0, &err)
-		|| !tolua_isnumber(l, 3, 0, &err) || !tolua_isnoobj(l, 4, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.setLabelAnchorPoint'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setLabelAnchorPoint(ccp(tolua_tonumber(l, 2, 0), tolua_tonumber(l, 3, 0)));
-	tolua_pushusertype(l, o, "CCControlButton");
-	return 1;
-}
-//CCControlButton::setMargins
-static int tolua_CCControlButton_setMargins(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isnumber(l, 2, 0, &err)
-		|| !tolua_isnumber(l, 3, 0, &err) || !tolua_isnoobj(l, 4, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.setMargins'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setMargins(tolua_tonumber(l, 2, 0), tolua_tonumber(l, 3, 0));
-	tolua_pushusertype(l, o, "CCControlButton");
-	return 1;
-}
-//CCControlButton::getOpacity
-static int tolua_CCControlButton_getOpacity(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.getOpacity'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)tolua_pushnumber(l, o->getOpacity());
-	return 1;
-}
-//CCControlButton::setOpacity
-static int tolua_CCControlButton_setOpacity(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isnumber(l, 2, 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.setOpacity'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setOpacity(tolua_tonumber(l, 2, 255));
-	tolua_pushusertype(l, o, "CCControlButton");
-	return 1;
-}
-//CCControlButton::getPreferredSize
-static int tolua_CCControlButton_getPreferredSize(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.getPreferredSize'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)tolua_pushusertype(l, Mtolua_new((CCSize)(o->getPreferredSize())), "CCSize");
-	return 1;
-}
-//CCControlButton::setPreferredSize
-static int tolua_CCControlButton_setPreferredSize(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isnumber(l, 2, 0, &err)
-		|| !tolua_isnumber(l, 3, 0, &err) || !tolua_isnoobj(l, 4, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.setPreferredSize'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setPreferredSize(CCSizeMake(tolua_tonumber(l, 2, 0), tolua_tonumber(l, 3, 0)));
-	tolua_pushusertype(l, o, "CCControlButton");
-	return 1;
-}
-//CCControlButton::isPushed
-static int tolua_CCControlButton_isPushed(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.isPushed'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)tolua_pushboolean(l, o->isPushed());
-	return 1;
-}
-//CCControlButton::getTitleLabel
-static int tolua_CCControlButton_getTitleLabel(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.getTitleLabel'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o){
-		CCNode *n = o->getTitleLabel();
-		CCLabelTTF *ttf = dynamic_cast<CCLabelTTF *>(n);
-		if(ttf)tolua_pushusertype(l, ttf, "CCLabelTTF");
-		else{
-			CCLabelBMFont *bm = dynamic_cast<CCLabelBMFont *>(n);
-			if(bm)tolua_pushusertype(l, bm, "CCLabelBMFont");
-			else{
-				CCLabelAtlas *at = dynamic_cast<CCLabelAtlas *>(n);
-				tolua_pushusertype(l, at? at : n, at? "CCLabelAtlas" : "CCNode");
-			}
-		}
-	}
-	return 1;
-}
-//CCControlButton::setTitleLabel
-static int tolua_CCControlButton_setTitleLabel(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isusertype(l, 2, "CCNode", 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.setTitleLabel'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setTitleLabel((CCNode *)tolua_tousertype(l, 2, NULL));
-	tolua_pushusertype(l, o, "CCControlButton");
-	return 1;
-}
-//CCControlButton::getTitleBMFontForState
-static int tolua_CCControlButton_getTitleBMFontForState(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isnumber(l, 2, CCControlStateNormal, &err)
-		|| !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.getTitleBMFontForState'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)tolua_pushstring(l, o->getTitleBMFontForState(tolua_tonumber(l, 2, CCControlStateNormal)));
-	return 1;
-}
-//CCControlButton::setTitleBMFontForState
-static int tolua_CCControlButton_setTitleBMFontForState(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isstring(l, 2, 0, &err)
-		|| !tolua_isnumber(l, 3, CCControlStateNormal, &err) || !tolua_isnoobj(l, 4, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.setTitleBMFontForState'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setTitleBMFontForState(tolua_tostring(l, 2, NULL), tolua_tonumber(l, 3, CCControlStateNormal));
-	tolua_pushusertype(l, o, "CCControlButton");
-	return 1;
-}
-//CCControlButton::getTitleColorForState
-static int tolua_CCControlButton_getTitleColorForState(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isnumber(l, 2, CCControlStateNormal, &err)
-		|| !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.getTitleColorForState'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)tolua_pushusertype(l, Mtolua_new((ccColor3B)(o->getTitleColorForState(tolua_tonumber(l, 2, CCControlStateNormal)))), "ccColor3B");
-	return 1;
-}
-//CCControlButton::setTitleColorForState
-static int tolua_CCControlButton_setTitleColorForState(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isusertype(l, 2, "ccColor3B", 0, &err)
-		|| !tolua_isnumber(l, 3, CCControlStateNormal, &err) || !tolua_isnoobj(l, 4, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.setTitleColorForState'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setTitleColorForState(*(ccColor3B *)(l, 2, NULL), tolua_tonumber(l, 3, CCControlStateNormal));
-	tolua_pushusertype(l, o, "CCControlButton");
-	return 1;
-}
-//CCControlButton::getTitleTTFForState
-static int tolua_CCControlButton_getTitleTTFForState(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isnumber(l, 2, CCControlStateNormal, &err)
-		|| !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.getTitleTTFForState'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)tolua_pushstring(l, o->getTitleTTFForState(tolua_tonumber(l, 2, CCControlStateNormal)));
-	return 1;
-}
-//CCControlButton::setTitleTTFForState
-static int tolua_CCControlButton_setTitleTTFForState(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isstring(l, 2, 0, &err)
-		|| !tolua_isnumber(l, 3, CCControlStateNormal, &err) || !tolua_isnoobj(l, 4, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.setTitleTTFForState'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setTitleTTFForState(tolua_tostring(l, 2, NULL), tolua_tonumber(l, 3, CCControlStateNormal));
-	tolua_pushusertype(l, o, "CCControlButton");
-	return 1;
-}
-//CCControlButton::getTitleForState
-static int tolua_CCControlButton_getTitleForState(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isnumber(l, 2, CCControlStateNormal, &err)
-		|| !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.getTitleForState'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)tolua_pushstring(l, o->getTitleForState(tolua_tonumber(l, 2, CCControlStateNormal))->getCString());
-	return 1;
-}
-//CCControlButton::setTitleForState
-static int tolua_CCControlButton_setTitleForState(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCControlButton", 0, &err) || !tolua_isstring(l, 2, 0, &err)
-		|| !tolua_isnumber(l, 3, CCControlStateNormal, &err) || !tolua_isnoobj(l, 4, &err)){
-		tolua_error(l,"#ferror in function 'CCControlButton.setTitleForState'.",&err);
-		return 0;
-	}
-#endif
-	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setTitleForState(CCString::create(tolua_tostring(l, 2, NULL)), tolua_tonumber(l, 3, CCControlStateNormal));
-	tolua_pushusertype(l, o, "CCControlButton");
-	return 1;
-}
 
-//* 2.0.4 no subclass of CCEditBoxImpl, __createSystemEditBox error LNK2019
-//######################################## CCEditBox ##########################
-//CCEditBox::create
-static int tolua_CCEditBox_create(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertable(l, 1, "CCEditBox", 0, &err) ||
-		!tolua_isnumber(l, 2, 0, &err) || !tolua_isnumber(l, 3, 0, &err) ||
-		!tolua_isusertype(l, 4, "CCScale9Sprite", 0, &err) || !tolua_isnoobj(l, 5, &err)){
-		tolua_error(l,"#ferror in function 'create'.",&err);
-		return 0;
-	}
-#endif
-	int w = tolua_tonumber(l, 2, 0), h = tolua_tonumber(l, 3, 0);
-	CCScale9Sprite *sp = (CCScale9Sprite *)tolua_tousertype(l, 4, NULL);
-	tolua_pushusertype(l, CCEditBox::create(CCSizeMake(w, h), sp), "CCEditBox");
-	return 1;
-}
-//CCEditBox::setContentSize
-static int tolua_CCEditBox_setContentSize(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCEditBox", 0, &err) || !tolua_isnumber(l, 2, 0, &err) ||
-		!tolua_isnumber(l, 3, 0, &err) || !tolua_isnoobj(l, 4, &err)){
-		tolua_error(l,"#ferror in function 'setContentSize'.",&err);
-		return 0;
-	}
-#endif
-	CCEditBox *o = (CCEditBox *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setContentSize(CCSizeMake(tolua_tonumber(l, 2, 0), tolua_tonumber(l, 3, 0)));
-	tolua_pushusertype(l, o, "CCEditBox");
-	return 1;
-}
-//CCEditBox::setFontColor
-static int tolua_CCEditBox_setFontColor(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCEditBox", 0, &err) || !tolua_isusertype(l, 2, "ccColor3B", 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'setFontColor'.",&err);
-		return 0;
-	}
-#endif
-	CCEditBox *o = (CCEditBox *)tolua_tousertype(l, 1, NULL);
-	ccColor3B c = *((ccColor3B*)tolua_tousertype(l, 2, NULL));
-	if(o)o->setFontColor(c);
-	tolua_pushusertype(l, o, "CCEditBox");
-	return 1;
-}
-//CCEditBox::setInputFlag
-static int tolua_CCEditBox_setInputFlag(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCEditBox", 0, &err) || !tolua_isnumber(l, 2, 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'setInputFlag'.",&err);
-		return 0;
-	}
-#endif
-	CCEditBox *o = (CCEditBox *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setInputFlag((EditBoxInputFlag)(int)tolua_tonumber(l, 2, 0));
-	tolua_pushusertype(l, o, "CCEditBox");
-	return 1;
-}
-//CCEditBox::setInputMode
-static int tolua_CCEditBox_setInputMode(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCEditBox", 0, &err) || !tolua_isnumber(l, 2, 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'setInputMode'.",&err);
-		return 0;
-	}
-#endif
-	CCEditBox *o = (CCEditBox *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setInputMode((EditBoxInputMode)(int)tolua_tonumber(l, 2, 0));
-	tolua_pushusertype(l, o, "CCEditBox");
-	return 1;
-}
-//CCEditBox::setMaxLength
-static int tolua_CCEditBox_setMaxLength(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCEditBox", 0, &err) || !tolua_isnumber(l, 2, 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'setMaxLength'.",&err);
-		return 0;
-	}
-#endif
-	CCEditBox *o = (CCEditBox *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setMaxLength(tolua_tonumber(l, 2, 0));
-	tolua_pushusertype(l, o, "CCEditBox");
-	return 1;
-}
-//CCEditBox::setPlaceHolder
-static int tolua_CCEditBox_setPlaceHolder(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCEditBox", 0, &err) || !tolua_isstring(l, 2, 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'setPlaceHolder'.",&err);
-		return 0;
-	}
-#endif
-	CCEditBox *o = (CCEditBox *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setPlaceHolder(tolua_tostring(l, 2, ""));
-	tolua_pushusertype(l, o, "CCEditBox");
-	return 1;
-}
-//CCEditBox::setPlaceHolderFontColor
-static int tolua_CCEditBox_setPlaceHolderFontColor(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCEditBox", 0, &err) || !tolua_isusertype(l, 2, "ccColor3B", 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'setPlaceHolderFontColor'.",&err);
-		return 0;
-	}
-#endif
-	CCEditBox *o = (CCEditBox *)tolua_tousertype(l, 1, NULL);
-	ccColor3B c = *((ccColor3B*)tolua_tousertype(l, 2, NULL));
-	if(o)o->setPlaceholderFontColor(c);
-	tolua_pushusertype(l, o, "CCEditBox");
-	return 1;
-}
-//CCEditBox::setReturnType
-static int tolua_CCEditBox_setReturnType(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCEditBox", 0, &err) || !tolua_isnumber(l, 2, 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'setReturnType'.",&err);
-		return 0;
-	}
-#endif
-	CCEditBox *o = (CCEditBox *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setReturnType((KeyboardReturnType)(int)tolua_tonumber(l, 2, 0));
-	tolua_pushusertype(l, o, "CCEditBox");
-	return 1;
-}
-//CCEditBox::getText
-static int tolua_CCEditBox_getText(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCEditBox", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'getText'.",&err);
-		return 0;
-	}
-#endif
-	CCEditBox *o = (CCEditBox *)tolua_tousertype(l, 1, NULL);
-	tolua_pushstring(l, o? o->getText() : "");
-	return 1;
-}
-//CCEditBox::setText
-static int tolua_CCEditBox_setText(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCEditBox", 0, &err) ||
-		!tolua_isstring(l, 2, 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'setText'.",&err);
-		return 0;
-	}
-#endif
-	CCEditBox *o = (CCEditBox *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setText(tolua_tostring(l, 2, ""));
-	tolua_pushusertype(l, o, "CCEditBox");
-	return 1;
-}
-//*/
 //######################################## CursorTextField ##########################
 //CursorTextField::create
 static int tolua_CursorTextField_create(lua_State *l){
@@ -1058,6 +406,9 @@ TOLUA_API int tolua_CC_Extension_open(lua_State* l){
 	tolua_usertype(l, "CCBSequence");
 	tolua_usertype(l, "CCControl");
 	tolua_usertype(l, "CCControlButton");
+	tolua_usertype(l, "CCHttpClient");
+	tolua_usertype(l, "CCHttpRequest");
+	tolua_usertype(l, "CCHttpResponse");
 	tolua_usertype(l, "CCScale9Sprite");
 	tolua_usertype(l, "CCScrollView");
 	tolua_usertype(l, "CCTableView");
@@ -1187,9 +538,7 @@ TOLUA_API int tolua_CC_Extension_open(lua_State* l){
 		tolua_constant(l, "CCControlStateHighlighted", CCControlStateHighlighted);
 		tolua_constant(l, "CCControlStateDisabled", CCControlStateDisabled);
 		tolua_constant(l, "CCControlStateSelected", CCControlStateSelected);
-/*
-// comment those line, android version would not crash on startup.
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32)
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32 && CC_TARGET_PLATFORM != CC_PLATFORM_ANDROID)
 		tolua_cclass(l, "CCEditBox", "CCEditBox", "CCControlButton", NULL);
 		tolua_beginmodule(l, "CCEditBox");
 			tolua_function(l, "create", tolua_CCEditBox_create);
@@ -1222,7 +571,50 @@ TOLUA_API int tolua_CC_Extension_open(lua_State* l){
 		tolua_constant(l, "kKeyboardReturnTypeSearch", kKeyboardReturnTypeSearch);
 		tolua_constant(l, "kKeyboardReturnTypeGo", kKeyboardReturnTypeGo);
 #endif
-//*/
+		tolua_cclass(l, "CCHttpClient", "CCHttpClient", "CCObject", NULL);
+		tolua_beginmodule(l, "CCHttpClient");
+			tolua_function(l, "getInstance", tolua_CCHttpClient_getInstance);
+			tolua_function(l, "getTimeoutForConnect", tolua_CCHttpClient_getTimeoutForConnect);
+			tolua_function(l, "setTimeoutForConnect", tolua_CCHttpClient_setTimeoutForConnect);
+			tolua_function(l, "getTimeoutForRead", tolua_CCHttpClient_getTimeoutForRead);
+			tolua_function(l, "setTimeoutForRead", tolua_CCHttpClient_setTimeoutForRead);
+			tolua_function(l, "send", tolua_CCHttpClient_send);
+		tolua_endmodule(l);
+		tolua_constant(l, "kHttpGet", CCHttpRequest::kHttpGet);
+		tolua_constant(l, "kHttpPost", CCHttpRequest::kHttpPost);
+		tolua_constant(l, "kHttpUnknow", CCHttpRequest::kHttpUnkown);
+		tolua_cclass(l, "CCHttpRequest", "CCHttpRequest", "CCObject", NULL);
+		tolua_beginmodule(l, "CCHttpRequest");
+			tolua_function(l, "open", tolua_CCHttpRequest_open);
+			tolua_function(l, "sendWithHandler", tolua_CCHttpRequest_sendWithHandler);
+			tolua_function(l, "getRequestType", tolua_CCHttpRequest_getRequestType);
+			tolua_function(l, "setRequestType", tolua_CCHttpRequest_setRequestType);
+			tolua_function(l, "getUrl", tolua_CCHttpRequest_getUrl);
+			tolua_function(l, "setUrl", tolua_CCHttpRequest_setUrl);
+			tolua_function(l, "getRequestData", tolua_CCHttpRequest_getRequestData);
+			tolua_function(l, "setRequestData", tolua_CCHttpRequest_setRequestData);
+			tolua_function(l, "getRequestDataSize", tolua_CCHttpRequest_getRequestDataSize);
+			tolua_function(l, "getTag", tolua_CCHttpRequest_getTag);
+			tolua_function(l, "setTag", tolua_CCHttpRequest_setTag);
+			tolua_function(l, "getUserData", tolua_CCHttpRequest_getUserData);
+			tolua_function(l, "setUserData", tolua_CCHttpRequest_setUserData);
+			tolua_function(l, "getTarget", tolua_CCHttpRequest_getTarget);
+			tolua_function(l, "getHeaders", tolua_CCHttpRequest_getHeaders);
+			tolua_function(l, "setHeaders", tolua_CCHttpRequest_setHeaders);
+		tolua_endmodule(l);
+		tolua_cclass(l, "CCHttpResponse", "CCHttpResponse", "CCObject", NULL);
+		tolua_beginmodule(l, "CCHttpResponse");
+			tolua_function(l, "getHttpRequest", tolua_CCHttpResponse_getHttpRequest);
+			tolua_function(l, "isSucceed", tolua_CCHttpResponse_isSucceed);
+			tolua_function(l, "setSucceed", tolua_CCHttpResponse_setSucceed);
+			tolua_function(l, "getResponseData", tolua_CCHttpResponse_getResponseData);
+			tolua_function(l, "setResponseData", tolua_CCHttpResponse_setResponseData);
+			tolua_function(l, "getResponseCode", tolua_CCHttpResponse_getResponseCode);
+			tolua_function(l, "setResponseCode", tolua_CCHttpResponse_setResponseCode);
+			tolua_function(l, "getErrorBuffer", tolua_CCHttpResponse_getErrorBuffer);
+			tolua_function(l, "setErrorBuffer", tolua_CCHttpResponse_setErrorBuffer);
+		tolua_endmodule(l);
+		
 		tolua_cclass(l, "CCScale9Sprite", "CCScale9Sprite", "CCNode", NULL);
 		tolua_beginmodule(l, "CCScale9Sprite");
 			tolua_function(l, "create", tolua_CCScale9Sprite_create);
@@ -1322,8 +714,9 @@ TOLUA_API int tolua_CC_Extension_open(lua_State* l){
 		tolua_constant(l, "kLuaEventAppEnterForeground", kLuaEventAppEnterForeground);
 		tolua_cclass(l, "LuaEventHandler", "LuaEventHandler", "CCLayer", NULL);
 		tolua_beginmodule(l, "LuaEventHandler");
-			tolua_function(l, "createWithFunction", tolua_LuaEventHandler_createWithFunction);
+			tolua_function(l, "create", tolua_LuaEventHandler_create);
 			tolua_function(l, "createAppHandler", tolua_LuaEventHandler_createAppHandler);
+			tolua_function(l, "handleHttpRequest", tolua_LuaEventHandler_handleHttpRequest);
 		tolua_endmodule(l);
 		tolua_cclass(l, "LuaTableView", "LuaTableView", "CCTableView", NULL);
 		tolua_beginmodule(l, "LuaTableView");

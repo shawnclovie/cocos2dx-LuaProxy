@@ -56,15 +56,24 @@ public:
 	~LuaEventHandler(){}
 	static LuaEventHandler * createAppHandler(lua_State *l, int handler);
 	static LuaEventHandler * create(lua_State *l);
+	// Handle with function, for layer event, allow other three options
 	LuaEventHandler * handle(int handler, bool multiTouches = false, int priority = 0, bool swallows = false);
+	// Handle for CCBAnimationManager with optional function
 	LuaEventHandler * handle(CCBAnimationManager *m, int handler = 0);
+	// Handle for CCHttpRequest with optional function
+	LuaEventHandler * handle(CCHttpRequest *req, int handler = 0);
 	inline void unhandle();
 	int getHandler();
 	LuaEventHandler * setTypename(const char *n);
 	void executeHandler(unsigned int argNum = 0);
+
+	// Application enter background or foreground
 	void applicationStateChange(LuaEvents e);
+	// CCControl event
 	void controlAction(CCObject *sender, CCControlEvent e);
+	// Default event recever
 	void action(CCObject *sender);
+	// An animation of ccb complated
 	void completedAnimationSequenceNamed(const char *n);
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32)
 	virtual void editBoxEditingDidBegin(CCEditBox *eb);
@@ -73,6 +82,7 @@ public:
 	virtual void editBoxReturn(CCEditBox *eb);
 	void editBoxEvent(const char *e, CCEditBox *eb);
 #endif
+	// CCTableView events
 	virtual CCSize cellSizeForTable(CCTableView *t);
 	virtual CCTableViewCell * tableCellAtIndex(CCTableView *t, unsigned int i);
 	virtual unsigned int numberOfCellsInTableView(CCTableView *t);
@@ -81,6 +91,10 @@ public:
 	virtual void scrollViewDidZoom(CCScrollView *s);
 	virtual void keyBackClicked();
 	virtual void keyMenuClicked();
+
+	// Http Event
+	void onHttpResponse(CCNode *sender, void *data);
+	
 	void onIAPProductList(CCDictionary *prods);
 	void onIAPBuy(bool success, const char *key, const char *errMsg = NULL, int errCode = 0);
 	void onIAPRestore(CCArray *prodIds);
