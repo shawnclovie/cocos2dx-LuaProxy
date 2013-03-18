@@ -3,7 +3,7 @@
 static int _calcCharCount(const char *t){
 	int n = 0;
 	char ch = 0;
-	while(ch = *t){
+	while(ch == *t){
 		CC_BREAK_IF(!ch);
 		if(0x80 != (0xC0 & ch))
 			++ n;
@@ -102,6 +102,10 @@ bool CursorTextField::onTextFieldAttachWithIME(CCTextFieldTTF *s){
 	return false;
 }
 bool CursorTextField::onTextFieldInsertText(CCTextFieldTTF *s, const char *t, int len){
+	if(strcmp(t, "\n") == 0){
+		this->closeIME();
+		return false;
+	}
 	if(m_pInputText->length() + len > _maxLength)
 		return true;
 //std::cout<<"CTF.onInsTxt()"<<t<<"\n";
@@ -114,7 +118,9 @@ bool CursorTextField::onTextFieldInsertText(CCTextFieldTTF *s, const char *t, in
 bool CursorTextField::onTextFieldDeleteBackward(CCTextFieldTTF *s, const char *delText, int len){
 	if((int)m_pInputText->length() < len)
 		return false;
-	for(int i = 0; i < len; i ++)m_pInputText->pop_back();
+	std::string::iterator it = m_pInputText->end();
+	for(int i = 0; i < len; i ++)it --;
+	m_pInputText->erase(it, m_pInputText->end());
 	this->updateDisplay();
 	this->_cursor->setPositionX(m_pInputText->empty()? 0 : getContentSize().width);
 	return true;
@@ -159,6 +165,7 @@ void CursorTextField::setColor(const ccColor3B& c){
 	updateColor();
 	_cursor->setColor(c);
 }
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 void CursorTextField::keyEvent(UINT m, WPARAM w, LPARAM l){
 	if(!_cursor->isVisible())
 		return;
@@ -176,3 +183,4 @@ void CursorTextField::keyEvent(UINT m, WPARAM w, LPARAM l){
 	}
 	
 }
+#endif
