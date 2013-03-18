@@ -44,3 +44,14 @@ end
 Next we can create the table:
 > local table = LuaTableView:createWithHandler(h, CCSizeMake(320,480))  
 -- Set table properties, referrence CCTableView API, and add into layer.
+
+###Http Get/Post#
+Just add those lines in lua:
+> CCHttpRequest:open("https://google.com/search?q=LuaProxy&safe=strict", kHttpGet):sendWithHandler(function(res, hnd)  
+print(res:getResponseData(), res:getResponseCode())  
+end)
+
+If you want do a post http request, change arguments in open:
+> CCHttpRequest:open("http://google.com/search?q=LuaProxy&safe=strict", kHttpPost, "query=param1&other=params"):sendWithHandler(function(res, hnd) end)
+
+Arguments to the call back function, first is CCHttpResponse, 2nd is LuaEventHandler.
