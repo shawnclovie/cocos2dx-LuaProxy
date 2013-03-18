@@ -6,7 +6,8 @@ LuaProxy for cocos2d-x, include CocosBuilder support for lua, and other cocos2d-
 ##Step 1 Add LuaProxy files to your project#
 Create a Lua based cocos2d-x project, or open your project that added Lua support.  
 In Visual Studio, open Project Property, in C/C++ - Additional Include Directories, add LuaProxy source code directory, and add all source files.  
-In Xcode, add all source files but UI/UIEventDispatcher.cpp(and .h), it's design for win32.
+In Xcode, add all source files.
+You may safety remove ui/UIEventDispatcher.cpp(and .h), it's just design for win32.
 
 ##Step 2 Add C++ Code#
 Open CCAppDelegate.cpp, add include like this:  
