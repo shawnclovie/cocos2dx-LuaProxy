@@ -65,13 +65,15 @@ SEL_CCControlHandler CCBProxy::onResolveCCBCCControlSelector(CCObject * pTarget,
 }
 
 bool CCBProxy::onAssignCCBMemberVariable(CCObject * t, const char * v, CCNode * n){
-	_memVars->setObject(n, v);
+	if(n){
+		_memVars->setObject(n, v);
+	}
+	return true;
 }
 
 // assign member variable to temp dictionary
 bool CCBProxy::onAssignCCBMemberVariable(CCObject * t, CCString * v, CCNode * n) {
-	onAssignCCBMemberVariable(t, v->getCString(), n);
-	return true;
+	return onAssignCCBMemberVariable(t, v->getCString(), n);
 }
 
 void CCBProxy::onNodeLoaded(CCNode * pNode, CCNodeLoader * pNodeLoader){

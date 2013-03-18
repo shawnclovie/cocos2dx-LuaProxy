@@ -2,10 +2,16 @@
 #ifndef __CURSORTEXTFIELD_H__
 #define __CURSORTEXTFIELD_H__
 #include "cocos2d.h"
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #include "UIEventDispatcher.h"
+#endif
 USING_NS_CC;
 
-class CursorTextField : public CCTextFieldTTF, public CCTextFieldDelegate, public CCTouchDelegate, public UIEventDelegate{
+class CursorTextField : public CCTextFieldTTF, public CCTextFieldDelegate, public CCTouchDelegate
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+	, public UIEventDelegate
+#endif
+{
 private:
 	CCPoint _touchBeginPos;
 	CCSprite *_cursor;
@@ -50,7 +56,9 @@ public:
 	CCSize getDesignedSize();
 	void setDesignedSize(CCSize s);
 	//UIEventDelegate
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 	void keyEvent(UINT m, WPARAM w, LPARAM l);
+#endif
 };
 
 #endif //__CURSORTEXTFIELD_H__
