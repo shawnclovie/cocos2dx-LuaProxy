@@ -81,14 +81,16 @@ public:
 	
 	CCDictionary *getMemberVariables();
 	const char * getMemberName(CCObject *n);
-	//get member variable in node for key
+	// Get member variable in node for key
 	CCNode * getNode(const char *n);
+	// Dynamic cast (o) to type (t), and push it by usertype into lua state.
 	static void nodeToTypeForLua(lua_State *l, CCObject *o, const char *t);
-	//read ccbi
-	CCNode * readCCBFromFile(const char *, float resolutionScale = 1);
+	// Read ccbi file (f). 2nd argument not use yet.
+	CCNode * readCCBFromFile(const char *f, float resolutionScale = 1);
 //	void changeResolutionScale(CCNode *n, CCBAnimationManager *m, float resolutionScale);
 
-	//fix label text blur when scaled
+	// Fix label text blur when scaled
+	// Change (o) and the children's scale and font size (scale/=rate and fontSize*=rate), and set font name if assigned (font)
 	void fixLabel(CCNode *o, const float rate, bool withChild, const char *font = NULL);
 	void duplicate(CCScale9Sprite *n, CCScale9Sprite *o);
 	void duplicate(CCSprite *n, CCSprite *o);
