@@ -1,10 +1,9 @@
 #cocos2dx-LuaProxy#
 =================
+LuaProxy for cocos2d-x, include CocosBuilder support for lua, and other cocos2d-extension support for lua, and easy to use function.
 
 ##Change Log#
 2013-3-19 Change main include file name to luaopen_LuaProxy.h - All function useful for lua will be add, not only CC_Extension.
-
-LuaProxy for cocos2d-x, include CocosBuilder support for lua, and other cocos2d-extension support for lua, and easy to use function.
 
 ##Step 1 Add LuaProxy files to your project#
 Create a Lua based cocos2d-x project, or open your project that added Lua support.  
