@@ -333,6 +333,21 @@ static int tolua_CCBProxy_duplicate(lua_State *l){
 	return 1;
 }
 
+//######################################## LuaCallFuncInterval ##########################
+//LuaCallFuncInterval::create(LUA_FUNCTION hnd = 0)
+static int tolua_LuaCallFuncInterval_create(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertable(l, 1, "LuaCallFuncInterval", 0, &err) || !tolua_isnumber(l, 2, 0, &err) ||
+		!toluafix_isfunction(l, 3, "LUA_FUNCTION", 0, &err)){
+		tolua_error(l,"#ferror in function 'LuaCallFuncInterval.create'.",&err);
+		return 0;
+	}
+#endif
+	LuaCallFuncInterval *h = LuaCallFuncInterval::create(tolua_tonumber(l, 2, 0), toluafix_ref_function(l, 3, 0));
+	tolua_pushusertype(l, h, "LuaCallFuncInterval");
+	return 1;
+}
 //######################################## LuaEventHandler ##########################
 //LuaEventHandler::create(LUA_FUNCTION hnd = 0)
 static int tolua_LuaEventHandler_create(lua_State *l){

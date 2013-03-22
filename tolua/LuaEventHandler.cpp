@@ -332,3 +332,30 @@ void LuaEventHandler::onIAPRestore(CCArray *pids){
 		le->executeFunctionByHandler(_handler, 1);
 	}
 }
+
+LuaCallFuncInterval * LuaCallFuncInterval::create(float dur, int handler){
+	LuaCallFuncInterval *o = new LuaCallFuncInterval();
+	o->initWithDuration(dur);
+	o->_handler = handler;
+	o->autorelease();
+	return o;
+}
+
+void LuaCallFuncInterval::startWithTarget(CCNode *tar){
+	CCActionInterval::startWithTarget(tar);
+	if(_handler){
+		CCLuaEngine *le = sharedEngine();
+		le->pushString("start");
+		le->pushCCObject(m_pTarget, "CCNode");
+		le->executeFunctionByHandler(_handler, 2);
+	}
+}
+
+void LuaCallFuncInterval::update(float time){
+	if(_handler){
+		CCLuaEngine *le = sharedEngine();
+		le->pushFloat(time);
+		le->pushCCObject(m_pTarget, "CCNode");
+		le->executeFunctionByHandler(_handler, 2);
+	}
+}

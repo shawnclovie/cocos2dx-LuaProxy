@@ -100,4 +100,13 @@ public:
 	void onIAPRestore(CCArray *prodIds);
 };
 
+class LuaCallFuncInterval : public CCActionInterval{
+public:
+	int _handler;
+	LuaCallFuncInterval() : _handler(0){}
+	~LuaCallFuncInterval(){}
+	static LuaCallFuncInterval * create(float dur, int handler);
+	virtual void startWithTarget(CCNode *tar);
+	virtual void update(float time);
+};
 #endif
