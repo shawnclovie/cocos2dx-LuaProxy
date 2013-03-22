@@ -55,3 +55,11 @@ If you want do a post http request, change arguments in open:
 > CCHttpRequest:open("http://google.com/search?q=LuaProxy&safe=strict", kHttpPost, "query=param1&other=params"):sendWithHandler(function(res, hnd) end)
 
 Arguments to the call back function, first is CCHttpResponse, 2nd is LuaEventHandler.
+
+### LuaCallFuncInterval ###
+Call function multi times in duration seconds, useful just like animation change contentSize or preferredSize or other.
+> local s = layer:getContentSize()
+> layer:runAction(LuaCallFunction:create(1, function(t, n)  
+> s.width = s.width + 1  
+> n:setContentSize(s)  
+> end))
