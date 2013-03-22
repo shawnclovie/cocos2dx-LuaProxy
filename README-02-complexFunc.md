@@ -60,6 +60,6 @@ Arguments to the call back function, first is CCHttpResponse, 2nd is LuaEventHan
 Call function multi times in duration seconds, useful just like animation change contentSize or preferredSize or other.
 > local s = layer:getContentSize()
 > layer:runAction(LuaCallFunction:create(1, function(t, n)  
-> s.width = s.width + 1  
-> n:setContentSize(s)  
+> -- Change layer width larger 100 pixel  
+> n:setContentSize(CCSizeMake(s.width + 100 * t, s.height))  
 > end))
