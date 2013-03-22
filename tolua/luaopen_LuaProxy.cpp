@@ -97,9 +97,11 @@ static int tolua_touchedNodesChild(lua_State *l){
 }
 
 TOLUA_API int luaopen_LuaProxy(lua_State* l){
+	tolua_CC_Extension_open(l);
 	tolua_open(l);
 	tolua_usertype(l, "CCBProxy");
 	tolua_usertype(l, "CursorTextField");
+	tolua_usertype(l, "LuaCallFuncInterval");
 	tolua_usertype(l, "LuaEventHandler");
 	tolua_usertype(l, "LuaTableView");
 	tolua_module(l, NULL, 0);
@@ -158,6 +160,10 @@ TOLUA_API int luaopen_LuaProxy(lua_State* l){
 		tolua_constant(l, "kLuaEventKeyMenu", kLuaEventKeyMenu);
 		tolua_constant(l, "kLuaEventAppEnterBackground", kLuaEventAppEnterBackground);
 		tolua_constant(l, "kLuaEventAppEnterForeground", kLuaEventAppEnterForeground);
+		tolua_cclass(l, "LuaCallFuncInterval", "LuaCallFuncInterval", "CCActionInterval", NULL);
+		tolua_beginmodule(l, "LuaCallFuncInterval");
+			tolua_function(l, "create", tolua_LuaCallFuncInterval_create);
+		tolua_endmodule(l);
 		tolua_cclass(l, "LuaEventHandler", "LuaEventHandler", "CCLayer", NULL);
 		tolua_beginmodule(l, "LuaEventHandler");
 			tolua_function(l, "create", tolua_LuaEventHandler_create);
@@ -169,6 +175,5 @@ TOLUA_API int luaopen_LuaProxy(lua_State* l){
 			tolua_function(l, "createWithHandler", tolua_LuaTableView_createWithHandler);
 		tolua_endmodule(l);
 	tolua_endmodule(l);
-	tolua_CC_Extension_open(l);
 	return 1;
 }
