@@ -27,13 +27,23 @@ THE SOFTWARE.
 #include "tolua++.h"
 #include "tolua_fix.h"
 
+#if COCOS2D_VERSION < 0x00020100
+#define LuaStack sharedEngine()
+#else
+#define LuaStack sharedEngine()->getLuaStack()
+#endif
+
 CCLuaEngine * sharedEngine(){
 	return (CCLuaEngine *)CCScriptEngineManager::sharedManager()->getScriptEngine();
 }
 
+lua_State * luaStateForEngine(CCLuaEngine *le = NULL){
+	if(!le){ le = sharedEngine();}
+	return LuaStack->getLuaState();
+}
+
 bool pushLuaFunction(int nHandler){
-	CCLuaEngine *le = sharedEngine();
-	lua_State *l = le->getLuaState();
+	lua_State *l = luaStateForEngine();
     toluafix_get_function_by_refid(l, nHandler);          /* stack: ... func */
     if(!lua_isfunction(l, -1)){
         CCLOG("[LUA ERROR] function refid '%d' does not reference a Lua function", nHandler);
@@ -47,8 +57,7 @@ bool pushLuaFunction(int nHandler){
 // If (retInt) is true, try to return int and bool value, and auto finish function call.
 // Else, should manual call finishRunLuaFunction()
 int runLuaFunction(int h, int numArgs, bool retInt = false){
-	CCLuaEngine *le = sharedEngine();
-	lua_State *l = le->getLuaState();
+	lua_State *l = luaStateForEngine();
 	if(pushLuaFunction(h)){                                         /* stack: ... arg1 arg2 ... func */
 		if(numArgs > 0){
 			lua_insert(l, -(numArgs + 1));                        /* stack: ... func arg1 arg2 ... */
@@ -153,39 +162,36 @@ LuaEventHandler * LuaEventHandler::setTypename(const char *n){
 	return this;
 }
 void LuaEventHandler::executeHandler(unsigned int argNum){
-	sharedEngine()->executeFunctionByHandler(this->_handler, argNum);
+	LuaStack->executeFunctionByHandler(_handler, argNum);
 }
 
 void LuaEventHandler::applicationStateChange(LuaEvents e){
 	if(_handler){
-		CCLuaEngine *le = sharedEngine();
-		le->pushInt(e);
-		le->executeFunctionByHandler(_handler, 1);
+		LuaStack->pushInt(e);
+		LuaStack->executeFunctionByHandler(_handler, 1);
 	}
 }
 
 void LuaEventHandler::controlAction(CCObject *sender, CCControlEvent e){
 	if(this->_handler){
-		CCLuaEngine *le = sharedEngine();
-		le->pushCCObject(sender, _typename.empty()? "CCControl" : _typename.c_str());
-		le->pushInt(e);
-		le->executeFunctionByHandler(_handler, 2);
+		LuaStack->pushCCObject(sender, _typename.empty()? "CCControl" : _typename.c_str());
+		LuaStack->pushInt(e);
+		LuaStack->executeFunctionByHandler(_handler, 2);
 	}
 }
 void LuaEventHandler::action(CCObject *sender){
 	if(this->_handler){
 		CCLuaEngine *le = sharedEngine();
-		le->pushCCObject(sender, _typename.empty()? "CCObject" : _typename.c_str());
-		le->executeFunctionByHandler(_handler, 1);
+		LuaStack->pushCCObject(sender, _typename.empty()? "CCObject" : _typename.c_str());
+		LuaStack->executeFunctionByHandler(_handler, 1);
 	}
 }
 void LuaEventHandler::completedAnimationSequenceNamed(const char *n){
 	if(_handler){
-		CCLuaEngine *le = sharedEngine();
-		le->pushCCObject(_aniMGR, "CCBAnimationManager");
-		le->pushString(n);
-		le->pushCCObject(this, "LuaEventHandler");
-		le->executeFunctionByHandler(_handler, 3);
+		LuaStack->pushCCObject(_aniMGR, "CCBAnimationManager");
+		LuaStack->pushString(n);
+		LuaStack->pushCCObject(this, "LuaEventHandler");
+		LuaStack->executeFunctionByHandler(_handler, 3);
 	}
 }
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32)
@@ -212,11 +218,10 @@ void LuaEventHandler::editBoxEvent(const char *e, CCEditBox *eb){
 CCSize LuaEventHandler::cellSizeForTable(CCTableView *t){
 	CCSize r = CCSizeZero;
 	if(_handler){
-		CCLuaEngine *le = sharedEngine();
-		le->pushString("cellSize");
-		le->pushCCObject(t, "CCTableView");
+		LuaStack->pushString("cellSize");
+		LuaStack->pushCCObject(t, "CCTableView");
 		runLuaFunction(_handler, 2);
-		lua_State *l = le->getLuaState();
+		lua_State *l = luaStateForEngine();
 		tolua_Error err;
 		if(tolua_isusertype(l, -1, "CCSize", 0, &err)){
 			CCSize *v = (CCSize *)tolua_tousertype(l, -1, NULL);
@@ -230,16 +235,15 @@ CCTableViewCell * LuaEventHandler::tableCellAtIndex(CCTableView *t, unsigned int
 	CCTableViewCell *cell = t->dequeueCell();
 	if(_handler){
 		int argNum = 3;
-		CCLuaEngine *le = sharedEngine();
-		le->pushString("cellAtIndex");
-		le->pushCCObject(t, "CCTableView");
-		le->pushInt(i);
+		LuaStack->pushString("cellAtIndex");
+		LuaStack->pushCCObject(t, "CCTableView");
+		LuaStack->pushInt(i);
 		if(cell){
-			le->pushCCObject(cell, "CCTableViewCell");
+			LuaStack->pushCCObject(cell, "CCTableViewCell");
 			argNum ++;
 		}
 		runLuaFunction(_handler, argNum);
-		lua_State *l = le->getLuaState();
+		lua_State *l = luaStateForEngine();
 		tolua_Error err;
 		if(tolua_isusertype(l, -1, "CCTableViewCell", 0, &err)){
 			cell = (CCTableViewCell *)tolua_tousertype(l, -1, NULL);
@@ -251,85 +255,75 @@ CCTableViewCell * LuaEventHandler::tableCellAtIndex(CCTableView *t, unsigned int
 unsigned int LuaEventHandler::numberOfCellsInTableView(CCTableView *t){
 	int r = 0;
 	if(_handler){
-		CCLuaEngine *le = sharedEngine();
-		le->pushString("numberOfCells");
-		le->pushCCObject(t, "CCTableView");
+		LuaStack->pushString("numberOfCells");
+		LuaStack->pushCCObject(t, "CCTableView");
 		r = runLuaFunction(_handler, 2, true);
 	}
 	return r;
 }
 void LuaEventHandler::tableCellTouched(CCTableView *t, CCTableViewCell *c){
 	if(_handler){
-		CCLuaEngine *le = sharedEngine();
-		le->pushString("cellTouched");
-		le->pushCCObject(t, "CCTableView");
-		le->pushCCObject(t, "CCTableViewCell");
+		LuaStack->pushString("cellTouched");
+		LuaStack->pushCCObject(t, "CCTableView");
+		LuaStack->pushCCObject(c, "CCTableViewCell");
 		runLuaFunction(_handler, 3, true);
 	}
 }
 void LuaEventHandler::scrollViewDidScroll(CCScrollView *s){
 	if(_handler){
-		CCLuaEngine *le = sharedEngine();
-		le->pushString("scrollViewDidScroll");
+		LuaStack->pushString("scrollViewDidScroll");
 		runLuaFunction(_handler, 1, true);
 	}
 }
 void LuaEventHandler::scrollViewDidZoom(CCScrollView *s){
 	if(_handler){
-		CCLuaEngine *le = sharedEngine();
-		le->pushString("scrollViewDidZoom");
+		LuaStack->pushString("scrollViewDidZoom");
 		runLuaFunction(_handler, 1, true);
 	}
 }
 void LuaEventHandler::keyBackClicked(){
 	if(_handler){
-		CCLuaEngine *le = sharedEngine();
-		le->pushInt(kLuaEventKeyBack);
-		le->executeFunctionByHandler(_handler, 1);
+		LuaStack->pushInt(kLuaEventKeyBack);
+		LuaStack->executeFunctionByHandler(_handler, 1);
 	}
 }
 void LuaEventHandler::keyMenuClicked(){
 	if(_handler){
-		CCLuaEngine *le = sharedEngine();
-		le->pushInt(kLuaEventKeyMenu);
-		le->executeFunctionByHandler(_handler, 1);
+		LuaStack->pushInt(kLuaEventKeyMenu);
+		LuaStack->executeFunctionByHandler(_handler, 1);
 	}
 }
 
 void LuaEventHandler::onHttpResponse(CCNode *sender, void *data){
 	if(_handler){
 		CCHttpResponse *res = (CCHttpResponse*)data;
-		CCLuaEngine *le = sharedEngine();
-		le->pushCCObject(res, "CCHttpResponse");
-		le->pushCCObject(this, "LuaEventHandler");
-		le->executeFunctionByHandler(_handler, 2);
+		LuaStack->pushCCObject(res, "CCHttpResponse");
+		LuaStack->pushCCObject(this, "LuaEventHandler");
+		LuaStack->executeFunctionByHandler(_handler, 2);
 	}
 }
 
 void LuaEventHandler::onIAPProductList(CCDictionary *prods){
 	if(_handler){
-		CCLuaEngine *le = sharedEngine();
-		if(prods){	le->pushCCObject(prods, "CCDictionary");}
-		else{		le->pushNil();}
-		le->executeFunctionByHandler(_handler, 1);
+		if(prods){	LuaStack->pushCCObject(prods, "CCDictionary");}
+		else{		LuaStack->pushNil();}
+		LuaStack->executeFunctionByHandler(_handler, 1);
 	}
 }
 void LuaEventHandler::onIAPBuy(bool success, const char *key, const char *errMsg, int errCode){
 	if(_handler){
-		CCLuaEngine *le = sharedEngine();
-		le->pushBoolean(success);
-		le->pushString(key);
-		le->pushString(errMsg? errMsg : "");
-		le->pushInt(errCode);
-		le->executeFunctionByHandler(_handler, 4);
+		LuaStack->pushBoolean(success);
+		LuaStack->pushString(key);
+		LuaStack->pushString(errMsg? errMsg : "");
+		LuaStack->pushInt(errCode);
+		LuaStack->executeFunctionByHandler(_handler, 4);
 	}
 }
 void LuaEventHandler::onIAPRestore(CCArray *pids){
 	if(_handler){
-		CCLuaEngine *le = sharedEngine();
-		if(pids){	le->pushCCObject(pids, "CCArray");}
-		else{		le->pushNil();}
-		le->executeFunctionByHandler(_handler, 1);
+		if(pids){	LuaStack->pushCCObject(pids, "CCArray");}
+		else{		LuaStack->pushNil();}
+		LuaStack->executeFunctionByHandler(_handler, 1);
 	}
 }
 
@@ -344,18 +338,16 @@ LuaCallFuncInterval * LuaCallFuncInterval::create(float dur, int handler){
 void LuaCallFuncInterval::startWithTarget(CCNode *tar){
 	CCActionInterval::startWithTarget(tar);
 	if(_handler){
-		CCLuaEngine *le = sharedEngine();
-		le->pushString("start");
-		le->pushCCObject(m_pTarget, "CCNode");
-		le->executeFunctionByHandler(_handler, 2);
+		LuaStack->pushString("start");
+		LuaStack->pushCCObject(m_pTarget, "CCNode");
+		LuaStack->executeFunctionByHandler(_handler, 2);
 	}
 }
 
 void LuaCallFuncInterval::update(float time){
 	if(_handler){
-		CCLuaEngine *le = sharedEngine();
-		le->pushFloat(time);
-		le->pushCCObject(m_pTarget, "CCNode");
-		le->executeFunctionByHandler(_handler, 2);
+		LuaStack->pushFloat(time);
+		LuaStack->pushCCObject(m_pTarget, "CCNode");
+		LuaStack->executeFunctionByHandler(_handler, 2);
 	}
 }

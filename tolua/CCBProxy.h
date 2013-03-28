@@ -48,12 +48,12 @@ public:
 	CCBProxy * initProxy(lua_State *l);
 
 	//interface methods
+	virtual SEL_MenuHandler onResolveCCBCCMenuItemSelector(CCObject * pTarget, const char * pSelectorName);
 	virtual SEL_MenuHandler onResolveCCBCCMenuItemSelector(CCObject * pTarget, CCString * pSelectorName);
+	virtual SEL_CCControlHandler onResolveCCBCCControlSelector(CCObject * pTarget, const char * pSelectorName);
 	virtual SEL_CCControlHandler onResolveCCBCCControlSelector(CCObject * pTarget, CCString * pSelectorName);
 	virtual bool onAssignCCBMemberVariable(CCObject * pTarget, const char * pMemberVariableName, CCNode * pNode);
-#if (COCOS2D_VERSION < 0x00020100)
 	virtual bool onAssignCCBMemberVariable(CCObject * pTarget, CCString * pMemberVariableName, CCNode * pNode);
-#endif
 	virtual void onNodeLoaded(CCNode * pNode, CCNodeLoader * pNodeLoader);
 
 	//create LuaEventHandler contains a lua function(handler), for handler control's event

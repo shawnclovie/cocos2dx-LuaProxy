@@ -56,12 +56,20 @@ CCBProxy * CCBProxy::initProxy(lua_State *l){
 	return this;
 }
 
-SEL_MenuHandler CCBProxy::onResolveCCBCCMenuItemSelector(CCObject * pTarget, CCString * pSelectorName){
+SEL_MenuHandler CCBProxy::onResolveCCBCCMenuItemSelector(CCObject * pTarget, const char * pSelectorName){
 	return menu_selector(CCBProxy::menuItemCallback);
 }
 
-SEL_CCControlHandler CCBProxy::onResolveCCBCCControlSelector(CCObject * pTarget, CCString * pSelectorName){
+SEL_MenuHandler CCBProxy::onResolveCCBCCMenuItemSelector(CCObject * pTarget, CCString * pSelectorName){
+	return onResolveCCBCCMenuItemSelector(pTarget, pSelectorName->getCString());
+}
+
+SEL_CCControlHandler CCBProxy::onResolveCCBCCControlSelector(CCObject * pTarget, const char * pSelectorName){
 	return cccontrol_selector(CCBProxy::controlCallback);
+}
+
+SEL_CCControlHandler CCBProxy::onResolveCCBCCControlSelector(CCObject * pTarget, CCString * pSelectorName){
+	return onResolveCCBCCControlSelector(pTarget, pSelectorName->getCString());
 }
 
 bool CCBProxy::onAssignCCBMemberVariable(CCObject * t, const char * v, CCNode * n){
@@ -208,7 +216,9 @@ CCNode * CCBProxy::readCCBFromFile(const char *f, float resolutionScale){
 	lib->registerCCNodeLoader("", ProxyLayerLoader::loader());
 	CCBReader * reader = new CCBReader(lib);
 	reader->autorelease();
+#if COCOS2D_VERSION < 0x00020100
 	reader->hasScriptingOwner = true;
+#endif
 	CCNode *node = reader->readNodeGraphFromFile(f, this);
 	CCBAnimationManager *m = reader->getAnimationManager();
 	node->setUserObject(m);

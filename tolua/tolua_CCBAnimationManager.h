@@ -221,8 +221,11 @@ static int tolua_CCBAnimationManager_runAnimations(lua_State *l){
 		}
 		if(seqId >= 0){
 			float dur = tolua_tonumber(l, 3, 0);
+#if COCOS2D_VERSION < 0x00020100
 			m->runAnimations(seqId, dur);
-			//m->runAnimationsForSequenceIdTweenDuration(seqId, dur);
+#else
+			m->runAnimationsForSequenceIdTweenDuration(seqId, dur);
+#endif
 		}
 	}
 	tolua_pushusertype(l, m, "CCBAnimationManager");
@@ -244,8 +247,13 @@ static int tolua_CCBAnimationManager_runAnimationsForSequenceIdTweenDuration(lua
 	if(m){
 		float dur = tolua_tonumber(l, 3, 0);
 		int seqId = tolua_tonumber(l, 2, -1);
-		if(seqId >= 0)m->runAnimations(seqId, dur);
-			//m->runAnimationsForSequenceIdTweenDuration(seqId, dur);
+		if(seqId >= 0){
+#if COCOS2D_VERSION < 0x00020100
+			m->runAnimations(seqId, dur);
+#else
+			m->runAnimationsForSequenceIdTweenDuration(seqId, dur);
+#endif
+		}
 	}
 	tolua_pushusertype(l, m, "CCBAnimationManager");
 	return 1;

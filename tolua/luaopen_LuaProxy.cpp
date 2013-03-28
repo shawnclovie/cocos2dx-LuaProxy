@@ -18,8 +18,14 @@ static int tolua_copyAssetFileToData(lua_State *l){
 	std::string src = tolua_tostring(l, 1, NULL),
 		tar = tolua_tostring(l, 2, NULL);
 	if(tar.length() == 0){tar = src;}
-	tar.insert(0, fu->getWriteablePath());
+#if COCOS2D_VERSION < 0x00020100
 	src = fu->fullPathFromRelativePath(src.c_str());
+	std::string p = fu->getWriteablePath();
+#else
+	src = fu->fullPathForFilename(src.c_str());
+	std::string p = fu->getWritablePath();
+#endif
+	tar.insert(0, p);
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32)
 	unsigned char *c = fu->getFileData(src.c_str(), "r", &len);
 	if(len > 0){

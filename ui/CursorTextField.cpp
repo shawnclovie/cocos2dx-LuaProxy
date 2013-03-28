@@ -156,12 +156,14 @@ void CursorTextField::updateDisplay(){
 	CCLabelTTF::setString(s);
 }
 void CursorTextField::setColor(const ccColor3B& c){
+#if COCOS2D_VERSION < 0x00020100
 	m_sColor = m_sColorUnmodified = c;
 	if(m_bOpacityModifyRGB){
 		m_sColor.r = c.r * m_nOpacity/255.0f;
 		m_sColor.g = c.g * m_nOpacity/255.0f;
 		m_sColor.b = c.b * m_nOpacity/255.0f;
 	}
+#endif
 	updateColor();
 	_cursor->setColor(c);
 }
