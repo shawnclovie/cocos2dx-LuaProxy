@@ -23,22 +23,31 @@ sv:isBounceable(false)
 
 ###CCTableView#
 You may not control CCTableView in Lua, so I created a sub class LuaTableView, it can add a LuaEventHandler with delegate and data source.
-Firstly, create a handler:
-> local h = LuaEventHandler:createWithFunction(function(fn, table, a1, a2)  
-local r  
-if fn == "cellSize" then  
--- Return cell size  
-r = CCSizeMake(320,100)  
-elseif fn == "cellAtIndex" then  
--- Return CCTableViewCell, a1 is cell index, a2 is dequeued cell (maybe nil)  
--- Do something to create cell and change the content  
-elseif fn == "numberOfCells"  
--- Return number of cells  
-r = 100  
-elseif fn == "cellTouched" then  
--- A cell was touched, a1 is cell that be touched. This is not necessary.  
-end  
-return r  
+Firstly, create a handler:  
+
+> -- @param fn string Callback type  
+-- @param table LuaTableView  
+-- @param a1 & a2 mixed Difference means for every "fn"  
+local h = LuaEventHandler:createWithFunction(function(fn, table, a1, a2)  
+	local r  
+	if fn == "cellSize" then  
+		-- Return cell size  
+		r = CCSizeMake(320,100)  
+	elseif fn == "cellAtIndex" then  
+		-- Return CCTableViewCell, a1 is cell index, a2 is dequeued cell (maybe nil)  
+		-- Do something to create cell and change the content  
+		if not a2 then  
+			a2 = CCTableViewCell:create()  
+			-- Build cell struct, just like load ccbi or add sprite  
+		end  
+		-- Change content
+	elseif fn == "numberOfCells"  
+		-- Return number of cells  
+		r = 100  
+	elseif fn == "cellTouched" then  
+		-- A cell was touched, a1 is cell that be touched. This is not necessary.  
+	end  
+	return r  
 end
 
 Next we can create the table:
