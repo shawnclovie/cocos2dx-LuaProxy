@@ -38,7 +38,12 @@ typedef enum {
 	kLuaEventAppEnterForeground
 } LuaEvents;
 
-class LuaEventHandler : public CCLayer, public CCBAnimationManagerDelegate, public CCTableViewDelegate, public CCTableViewDataSource{
+class LuaEventHandler : public CCLayer, public CCBAnimationManagerDelegate,
+public CCTableViewDelegate, public CCTableViewDataSource
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32)
+,public CCEditBoxDelegate
+#endif
+{
 protected:
 	lua_State *_lua;
 	std::string _typename;
