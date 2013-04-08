@@ -31,23 +31,20 @@ class LuaTableView : public CCTableView{
 protected:
 	LuaEventHandler *_handler;
 	LuaTableView();
-	CCScale9Sprite *_hScroller;
-	CCScale9Sprite *_vScroller;
+	CCScale9Sprite *_scrollBar;
+	CCScale9Sprite *_scrollTrack;
+	float _scrollOffset;
+	float _scrollTrackDelta;
 public:
 	~LuaTableView();
 	static LuaTableView * createWithHandler(LuaEventHandler *h, CCSize s, CCNode *c);
-/*	virtual CCSize cellSizeForTable(CCTableView *t);
-	virtual CCTableViewCell * tableCellAtIndex(CCTableView *t, unsigned int i);
-	virtual unsigned int numberOfCellsInTableView(CCTableView *t);
-	virtual void tableCellTouched(CCTableView *t, CCTableViewCell *c);
-*/
-	virtual void scrollViewDidScroll(CCScrollView *s){
-		CCTableView::scrollViewDidScroll(s);
-	}
-	virtual void scrollViewDidZoom(CCScrollView *s){
-		CCTableView::scrollViewDidZoom(s);
-	}
-	void setScroller(CCScale9Sprite *h, CCScale9Sprite *v);
+	virtual void scrollViewDidScroll(CCScrollView *s);
+	virtual void scrollViewDidZoom(CCScrollView *s);
+	virtual void reloadData();
+	void setScrollBar(CCScale9Sprite *s, CCScale9Sprite *t);
+	void setScrollOffset(float o);
+	void resetScroll();
+	void updateScroll();
 };
 
 #endif //__LUATABLEVIEW__

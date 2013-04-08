@@ -179,6 +179,9 @@ TOLUA_API int luaopen_LuaProxy(lua_State* l){
 		tolua_cclass(l, "LuaTableView", "LuaTableView", "CCTableView", NULL);
 		tolua_beginmodule(l, "LuaTableView");
 			tolua_function(l, "createWithHandler", tolua_LuaTableView_createWithHandler);
+			tolua_function(l, "reloadData", tolua_LuaTableView_reloadData);
+			tolua_function(l, "setScrollBar", tolua_LuaTableView_setScrollBar);
+			tolua_function(l, "setScrollOffset", tolua_LuaTableView_setScrollOffset);
 		tolua_endmodule(l);
 	tolua_endmodule(l);
 	return 1;

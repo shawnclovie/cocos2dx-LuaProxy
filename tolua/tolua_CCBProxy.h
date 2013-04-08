@@ -408,5 +408,55 @@ static int tolua_LuaTableView_createWithHandler(lua_State *l){
 	tolua_pushusertype(l, t, "LuaTableView");
 	return 1;
 }
+//LuaTableView::reloadData()
+static int tolua_LuaTableView_reloadData(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "LuaTableView", 0, &err)){
+		tolua_error(l,"#ferror in function 'LuaTableView.reloadData'.",&err);
+		return 0;
+	}
+#endif
+	LuaTableView *o = (LuaTableView *)tolua_tousertype(l, 1, NULL);
+	if(o){
+		o->reloadData();
+		tolua_pushusertype(l, o, "LuaTableView");
+	}
+	return 1;
+}
+//LuaTableView::setScrollBar(CCScale9Sprite *h, CCScale9Sprite *v)
+static int tolua_LuaTableView_setScrollBar(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "LuaTableView", 0, &err) ||
+		!(tolua_isusertype(l, 2, "CCScale9Sprite", 0, &err) || tolua_isnoobj(l, 2, &err)) ||
+		!(tolua_isusertype(l, 3, "CCScale9Sprite", 0, &err) || tolua_isnoobj(l, 3, &err))){
+		tolua_error(l,"#ferror in function 'LuaTableView.setScrollBar'.",&err);
+		return 0;
+	}
+#endif
+	LuaTableView *o = (LuaTableView *)tolua_tousertype(l, 1, NULL);
+	if(o){
+		o->setScrollBar((CCScale9Sprite *)tolua_tousertype(l, 2, NULL), (CCScale9Sprite *)tolua_tousertype(l, 3, NULL));
+		tolua_pushusertype(l, o, "LuaTableView");
+	}
+	return 1;
+}
+//LuaTableView::setScrollOffset(CCScale9Sprite *h, CCScale9Sprite *v)
+static int tolua_LuaTableView_setScrollOffset(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "LuaTableView", 0, &err) || !tolua_isnumber(l, 2, 0, &err)){
+		tolua_error(l,"#ferror in function 'LuaTableView.setScrollOffset'.",&err);
+		return 0;
+	}
+#endif
+	LuaTableView *o = (LuaTableView *)tolua_tousertype(l, 1, NULL);
+	if(o){
+		o->setScrollOffset(tolua_tonumber(l, 2, 0));
+		tolua_pushusertype(l, o, "LuaTableView");
+	}
+	return 1;
+}
 
 #endif //__TOLUA_CCBPROXY__

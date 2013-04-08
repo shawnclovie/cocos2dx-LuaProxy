@@ -35,35 +35,102 @@ LuaTableView * LuaTableView::createWithHandler(LuaEventHandler *h, CCSize s, CCN
 	r->_updateContentSize();
 	return r;
 }
-LuaTableView::LuaTableView(){
-	_handler = NULL;
-	_hScroller = NULL;
-	_vScroller = NULL;
-}
+LuaTableView::LuaTableView():_scrollOffset(0), _handler(0), _scrollBar(0), _scrollTrack(0), _scrollTrackDelta(0){}
 LuaTableView::~LuaTableView(){
 	CC_SAFE_RELEASE(_handler);
-	CC_SAFE_RELEASE(_hScroller);
-	CC_SAFE_RELEASE(_vScroller);
+	setScrollBar(0, 0);
 }
-/*
-CCSize LuaTableView::cellSizeForTable(CCTableView *t){
-	return _handler->cellSizeForTable(t);
+void LuaTableView::setScrollBar(CCScale9Sprite *s, CCScale9Sprite *st){
+	if(_scrollBar){		_scrollBar->removeAllChildrenWithCleanup(true);}
+	if(_scrollTrack){	_scrollTrack->removeAllChildrenWithCleanup(true);}
+	_scrollBar = s;
+	_scrollTrack = st;
+	if(s){
+		if(st){
+			addChild(st, 255);
+		}
+		addChild(s, 255);
+		resetScroll();
+	}
 }
-CCTableViewCell * LuaTableView::tableCellAtIndex(CCTableView *t, unsigned int i){
-	return _handler->tableCellAtIndex(t, i);
+void LuaTableView::setScrollOffset(float o){
+	_scrollOffset = o;
 }
-unsigned int LuaTableView::numberOfCellsInTableView(CCTableView *t){
-	return _handler->numberOfCellsInTableView(t);
+void LuaTableView::updateScroll(){
+	if(!_scrollBar || !_scrollBar->isVisible()){
+		return;
+	}
+	bool vert = getDirection() == kCCScrollViewDirectionVertical;
+	CCSize vs = getViewSize(),
+		cs = getContentSize(),
+		ss = _scrollBar->getPreferredSize();
+	CCPoint cp = getContentOffset(),
+		p = _scrollBar->getPosition();
+	float rate = 1 - (vert? abs(cp.y) / (cs.height - vs.height) : abs(cp.x) / (cs.width - vs.width));
+	if(vert){	p.y = cs.height - (cs.height - ss.height) * rate - ss.height - _scrollTrackDelta;
+	}else{		p.x = cs.width - (cs.width - ss.width) * rate - ss.width - _scrollTrackDelta;
+	}
+	_scrollBar->setPosition(p);
+	if(_scrollTrack){
+		p = _scrollTrack->getPosition();
+		if(vert){	p.y = abs(cp.y);
+		}else{		p.x = abs(cp.x);
+		}
+		_scrollTrack->setPosition(p);
+	}
+//CCLog("LTV.up ss=%d,%d vh=%d cy=%d ch=%d y=%d", (int)ss.width, (int)ss.height, (int)vs.height, (int)p.y, (int)cs.height, (int)_scrollBar->getPositionY());
 }
-void LuaTableView::tableCellTouched(CCTableView *t, CCTableViewCell *c){
-	_handler->tableCellTouched(t, c);
+void LuaTableView::scrollViewDidScroll(CCScrollView *s){
+	CCTableView::scrollViewDidScroll(s);
+	updateScroll();
 }
-*/
-void LuaTableView::setScroller(CCScale9Sprite *h, CCScale9Sprite *v){
-	CC_SAFE_RELEASE(_hScroller);
-	CC_SAFE_RELEASE(_vScroller);
-	_hScroller = h;
-	_vScroller = v;
-	CC_SAFE_RETAIN(h);
-	CC_SAFE_RETAIN(v);
+void LuaTableView::scrollViewDidZoom(CCScrollView *s){
+	CCTableView::scrollViewDidZoom(s);
+}
+void LuaTableView::reloadData(){
+	CCTableView::reloadData();
+	resetScroll();
+}
+void LuaTableView::resetScroll(){
+	if(!_scrollBar){ return;}
+	CCSize vs = getViewSize(), cs = getContentSize();
+	bool vert = getDirection() == kCCScrollViewDirectionVertical;
+	bool v = vert? vs.height < cs.height : vs.width < cs.height;
+	_scrollBar->setVisible(v);
+	CCPoint p = ccp(0, 0), ap = vert? ccp(1,0) : CCPointZero;
+	if(v){
+		CCSize s = _scrollBar->getPreferredSize(),
+			st = _scrollTrack? _scrollTrack->getPreferredSize() : CCSizeZero;
+		if(vert){
+			p.x = vs.width + _scrollOffset - (st.width > 0? (st.width - s.width) / 2 : 0);
+			_scrollTrackDelta = st.height > 0? (st.height - s.height) / 2 : 0;
+			s.height = vs.height / cs.height * vs.height - _scrollTrackDelta * 2;
+		}else{
+			p.y = vs.height + _scrollOffset - (st.height > 0? (st.height - s.height) / 2 : 0);
+			_scrollTrackDelta = st.width > 0? (st.width - s.width) / 2 : 0;
+			s.width = vs.width / cs.width * vs.width - _scrollTrackDelta * 2;
+		}
+		_scrollBar->setAnchorPoint(ap);
+		_scrollBar->setPreferredSize(s);
+		_scrollBar->setPosition(p);
+//CCLog("LTV vScroll.size=%d,%d vh=%d ch=%d", (int)s.width, (int)s.height, (int)vs.height, (int)cs.height);
+	}
+	if(_scrollTrack){
+		_scrollTrack->setVisible(v);
+		if(v){
+			CCSize s = _scrollTrack->getPreferredSize();
+			if(vert){
+				p.x = vs.width + _scrollOffset;
+				s.height = vs.height;
+			}else{
+				p.y = vs.height + _scrollOffset;
+				s.width = vs.width;
+			}
+			_scrollTrack->setAnchorPoint(ap);
+			_scrollTrack->setPreferredSize(s);
+			_scrollTrack->setPosition(p);
+		}
+	}
+//CCLog("LTV reload vscr=%x visible=%d", _scroller, _scrollBar->isVisible());
+	updateScroll();
 }
