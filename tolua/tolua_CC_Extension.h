@@ -253,7 +253,7 @@ TOLUA_API int tolua_CC_Extension_open(lua_State* l){
 		tolua_constant(l, "CCControlStateHighlighted", CCControlStateHighlighted);
 		tolua_constant(l, "CCControlStateDisabled", CCControlStateDisabled);
 		tolua_constant(l, "CCControlStateSelected", CCControlStateSelected);
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32 && CC_TARGET_PLATFORM != CC_PLATFORM_ANDROID)
+#ifdef LUAPROXY_CCEDITBOX_ENABLED
 		tolua_cclass(l, "CCEditBox", "CCEditBox", "CCControlButton", NULL);
 		tolua_beginmodule(l, "CCEditBox");
 			tolua_function(l, "create", tolua_CCEditBox_create);

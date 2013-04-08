@@ -8,14 +8,13 @@ extern "C" {
 #include "CCBProxy.h"
 
 //######################################## CCScale9Sprite ##########################
-//CCScale9Sprite::create(const char *file, CCRect rect = CCRectZero, CCRect capInsets = CCRectZero)
+//CCScale9Sprite::create(const char *file, CCRect *rect = CCRectZero, CCRect capInsets = CCRectZero)
 static int tolua_CCScale9Sprite_create(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
 	if(!tolua_isusertable(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isstring(l, 2, 0, &err) ||
 		!(tolua_isnoobj(l, 3, &err) || tolua_isusertype(l, 3, "CCRect", 0, &err)) ||
-		!(tolua_isnoobj(l, 4, &err) || tolua_isusertype(l, 4, "CCRect", 0, &err)) ||
-		!tolua_isnoobj(l, 5, &err)){
+		!(tolua_isnoobj(l, 4, &err) || tolua_isusertype(l, 4, "CCRect", 0, &err))){
 		tolua_error(l,"#ferror in function 'CCScale9Sprite.create'.",&err);
 		return 0;
 	}
@@ -29,14 +28,13 @@ static int tolua_CCScale9Sprite_create(lua_State *l){
 	tolua_pushusertype(l, o, "CCScale9Sprite");
 	return 1;
 }
-//CCScale9Sprite::createWithSpriteFrame
+//CCScale9Sprite::createWithSpriteFrame(CCSpriteFrame *f, CCRect capInsets = CCRectZero)
 static int tolua_CCScale9Sprite_createWithSpriteFrame(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
 	if(!tolua_isusertable(l, 1, "CCScale9Sprite", 0, &err) ||
 		!tolua_isusertype(l, 2, "CCSpriteFrame", 0, &err) ||
-		!(tolua_isnoobj(l, 3, &err) || tolua_isusertype(l, 3, "CCRect", 0, &err)) ||
-		!tolua_isnoobj(l, 4, &err)){
+		!(tolua_isnoobj(l, 3, &err) || tolua_isusertype(l, 3, "CCRect", 0, &err))){
 		tolua_error(l,"#ferror in function 'createWithSpriteFrame'.",&err);
 		return 0;
 	}
@@ -49,12 +47,12 @@ static int tolua_CCScale9Sprite_createWithSpriteFrame(lua_State *l){
 	tolua_pushusertype(l, o, "CCScale9Sprite");
 	return 1;
 }
-//CCScale9Sprite::setContentSize
+//CCScale9Sprite::setContentSize(number, number)
 static int tolua_CCScale9Sprite_setContentSize(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
 	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isnumber(l, 2, 0, &err) ||
-		!tolua_isnumber(l, 3, 0, &err) || !tolua_isnoobj(l, 4, &err)){
+		!tolua_isnumber(l, 3, 0, &err)){
 		tolua_error(l,"#ferror in function 'setContentSize'.",&err);
 		return 0;
 	}

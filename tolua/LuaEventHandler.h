@@ -80,7 +80,7 @@ public:
 	void action(CCObject *sender);
 	// An animation of ccb complated
 	void completedAnimationSequenceNamed(const char *n);
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32)
+#ifdef LUAPROXY_CCEDITBOX_ENABLED
 	virtual void editBoxEditingDidBegin(CCEditBox *eb);
 	virtual void editBoxEditingDidEnd(CCEditBox *eb);
 	virtual void editBoxTextChanged(CCEditBox *eb);

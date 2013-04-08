@@ -194,7 +194,7 @@ void LuaEventHandler::completedAnimationSequenceNamed(const char *n){
 		LuaStack->executeFunctionByHandler(_handler, 3);
 	}
 }
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32)
+#ifdef LUAPROXY_CCEDITBOX_ENABLED
 void LuaEventHandler::editBoxEditingDidBegin(CCEditBox *eb){
 	this->editBoxEvent("begin", eb);
 }
