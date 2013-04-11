@@ -181,7 +181,6 @@ void LuaEventHandler::controlAction(CCObject *sender, CCControlEvent e){
 }
 void LuaEventHandler::action(CCObject *sender){
 	if(this->_handler){
-		CCLuaEngine *le = sharedEngine();
 		LuaStack->pushCCObject(sender, _typename.empty()? "CCObject" : _typename.c_str());
 		LuaStack->executeFunctionByHandler(_handler, 1);
 	}

@@ -442,7 +442,9 @@ static int tolua_CCControlButton_setTitleColorForState(lua_State *l){
 	}
 #endif
 	CCControlButton *o = (CCControlButton *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setTitleColorForState(*(ccColor3B *)(l, 2, NULL), tolua_tonumber(l, 3, CCControlStateNormal));
+	if(o){
+		o->setTitleColorForState(*(ccColor3B *)tolua_tousertype(l, 2, NULL), tolua_tonumber(l, 3, CCControlStateNormal));
+	}
 	tolua_pushusertype(l, o, "CCControlButton");
 	return 1;
 }

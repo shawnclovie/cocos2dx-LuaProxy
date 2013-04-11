@@ -58,7 +58,7 @@ public:
 
 	//create LuaEventHandler contains a lua function(handler), for handler control's event
 	void handleEvent(CCControlButton *n, const int handler, bool multiTouches = false, CCControlEvent e = CCControlEventTouchUpInside);
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32)
+#ifdef LUAPROXY_CCEDITBOX_ENABLED
 	void handleEvent(CCEditBox *n, const int handler);
 #endif
 	void handleEvent(CCBAnimationManager *m, const int handler);

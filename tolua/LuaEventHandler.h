@@ -40,7 +40,7 @@ typedef enum {
 
 class LuaEventHandler : public CCLayer, public CCBAnimationManagerDelegate,
 public CCTableViewDelegate, public CCTableViewDataSource
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32)
+#ifdef LUAPROXY_CCEDITBOX_ENABLED
 ,public CCEditBoxDelegate
 #endif
 {

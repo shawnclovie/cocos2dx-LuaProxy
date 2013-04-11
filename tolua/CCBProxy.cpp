@@ -101,7 +101,7 @@ void CCBProxy::handleEvent(CCControlButton *n, const int handler, bool multiTouc
 	n->addTargetWithActionForControlEvents(h, cccontrol_selector(LuaEventHandler::controlAction), e);
 }
 
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32)
+#ifdef LUAPROXY_CCEDITBOX_ENABLED
 void CCBProxy::handleEvent(CCEditBox *n, const int handler){
 	LuaEventHandler *h = this->addHandler(handler, false)
 		->setTypename("CCEditBox");
