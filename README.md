@@ -37,7 +37,7 @@ Now you can add the "l" into any scene.
 ###Referrence any node in ccbi#
 We'd loaded a ccbi as layer, but you want access a CCLabelTTF, marked "owner" and named "label" in CocosBuilder, and a CCControlButton named "button". Just do this:
 
-> local lbl = proxy:getNodeWithType("label", "CCLabelTTF")  
+> local lbl = tolua.cast(proxy:getNode"label", "CCLabelTTF")  
 lbl:setString("some string")  
 local btn = proxy:getNodeWithType("button", "CCControlButton")
 
