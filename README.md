@@ -22,7 +22,13 @@ Move to the line that got CCLuaEngine, add this:
 > luaopen_LuaProxy(pEngine->getLuaState());  
 
 Now you can do those things in lua, but we must create a CCBProxy at first, I wrote this in lua:  
-local proxy = CCBProxy:create()
+
+> local proxy = CCBProxy:create()  
+-- !!  
+-- If you want to handle CCControlButton, you must add this line.  
+-- And kept variable "proxy" to global.  
+-- While the button won't be use, just like scene poped, you'd batter release the proxy.
+-- proxy:retain()
 
 ##About CCBI#
 
