@@ -27,7 +27,7 @@ Now you can do those things in lua, but we must create a CCBProxy at first, I wr
 -- !!  
 -- If you want to handle CCControlButton, you must add this line.  
 -- And kept variable "proxy" to global.  
--- While the button won't be use, just like scene poped, you'd batter release the proxy.
+-- While the button won't be use, just like scene poped, you'd batter release the proxy.  
 -- proxy:retain()
 
 ##About CCBI#
@@ -52,7 +52,7 @@ So if you'd loaded other ccbi and any variable defined same name, the old one wi
 
 ###Proxy CCControlButton event with any function#
 There are two way to do the thing.  
->  -- Handle single button event  
+>  -- Handle single button event, you must kept the proxy (retain it, release after the button never use.)  
 proxy:handleButtonEvent(btn, function(s, e) print(s, e) end, 0) -- 0 means UpInside
 
 or
