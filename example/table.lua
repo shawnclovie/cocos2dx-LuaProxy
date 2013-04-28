@@ -5,7 +5,7 @@ for i = 1, 40 do
 -- @param fn string Callback type
 -- @param table LuaTableView
 -- @param a1 & a2 mixed Difference means for every "fn"
-local h = LuaEventHandler:createWithFunction(function(fn, table, a1, a2)
+local h = LuaEventHandler:create(function(fn, table, a1, a2)
 	local r
 	if fn == "cellSize" then
 		-- Return cell size
@@ -20,14 +20,14 @@ local h = LuaEventHandler:createWithFunction(function(fn, table, a1, a2)
 		end
 		-- Change content
 		tolua.cast(a2:getChildByTag(1), "CCLabelTTF"):setString(data[a1 + 1])
-	elseif fn == "numberOfCells"
+	elseif fn == "numberOfCells" then
 		-- Return number of cells
 		r = #data
 	elseif fn == "cellTouched" then
 		-- A cell was touched, a1 is cell that be touched. This is not necessary.
 	end
 	return r
-end
+end)
 
 local t = LuaTableView:createWithHandler(h, CCSizeMake(320,480))
 t:setBounceable(false)

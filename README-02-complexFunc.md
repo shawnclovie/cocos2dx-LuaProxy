@@ -28,7 +28,7 @@ Firstly, create a handler:
 > -- @param fn string Callback type  
 -- @param table LuaTableView  
 -- @param a1 & a2 mixed Difference means for every "fn"  
-local h = LuaEventHandler:createWithFunction(function(fn, table, a1, a2)  
+local h = LuaEventHandler:create(function(fn, table, a1, a2)  
 	local r  
 	if fn == "cellSize" then  
 		-- Return cell size  
@@ -41,14 +41,14 @@ local h = LuaEventHandler:createWithFunction(function(fn, table, a1, a2)
 			-- Build cell struct, just like load ccbi or add sprite  
 		end  
 		-- Change content
-	elseif fn == "numberOfCells"  
+	elseif fn == "numberOfCells" then  
 		-- Return number of cells  
 		r = 100  
 	elseif fn == "cellTouched" then  
 		-- A cell was touched, a1 is cell that be touched. This is not necessary.  
 	end  
 	return r  
-end
+end)
 
 Next we can create the table:
 > local table = LuaTableView:createWithHandler(h, CCSizeMake(320,480))  
