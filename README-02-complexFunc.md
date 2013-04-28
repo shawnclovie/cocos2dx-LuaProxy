@@ -41,6 +41,8 @@ local h = LuaEventHandler:create(function(fn, table, a1, a2)
 			-- Build cell struct, just like load ccbi or add sprite  
 		end  
 		-- Change content
+		
+		r = a2
 	elseif fn == "numberOfCells" then  
 		-- Return number of cells  
 		r = 100  

@@ -20,6 +20,7 @@ local h = LuaEventHandler:create(function(fn, table, a1, a2)
 		end
 		-- Change content
 		tolua.cast(a2:getChildByTag(1), "CCLabelTTF"):setString(data[a1 + 1])
+		r = a2
 	elseif fn == "numberOfCells" then
 		-- Return number of cells
 		r = #data
