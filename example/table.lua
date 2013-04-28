@@ -32,6 +32,8 @@ end)
 
 local t = LuaTableView:createWithHandler(h, CCSizeMake(320,480))
 t:setBounceable(false)
+--[[
+-- Temporary unusable, please skip these lines to the comment section's end.
 -- Add scroll bar and scroll track (track is optional), they'll be placed right or bottom in table.
 -- The function LuaTableView:setScrollOffset(float) can be used for adjust scroll bar's position (bigger to right or bottom)
 -- Assume those two sprite frames were loaded.
@@ -43,6 +45,7 @@ local trk = CCScale9Sprite:createWithSpriteFrame(sfc:spriteFrameByName("scrollTr
 trk:setOpacity(128)
 trk:setPreferredSize(CCSizeMake(15, 15))
 t:setScrollBar(bar, trk)
+]]
 
 -- Create a scene and run
 local l = CCLayer:create()
