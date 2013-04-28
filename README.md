@@ -55,11 +55,4 @@ There are two way to do the thing.
 >  -- Handle single button event, you must kept the proxy (retain it, release after the button never use.)  
 proxy:handleButtonEvent(btn, function(s, e) print(s, e) end, 0) -- 0 means UpInside
 
-or
-
->  -- Handle all CCControlButton and CCMenuItem event  
-proxy:handleSelector(function(s, e)  
-  if s == btn then print("some thing") end  
-end)
-
 [Continue Read] (README-02-complexFunc.md)
