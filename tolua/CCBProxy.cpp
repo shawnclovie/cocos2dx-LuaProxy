@@ -27,14 +27,14 @@ THE SOFTWARE.
 
 CCBProxy::CCBProxy(){
 	_selectorHandler = NULL;
-	this->_memVars = CCDictionary::create();
-	this->_memVars->retain();
-	this->_handlers = CCArray::create();
-	this->_handlers->retain();
+	_memVars = CCDictionary::create();
+	_memVars->retain();
+	_handlers = CCArray::create();
+	_handlers->retain();
 }
 CCBProxy::~CCBProxy(){
-	CC_SAFE_RELEASE(this->_memVars);
-	CC_SAFE_RELEASE(this->_handlers);
+	CC_SAFE_RELEASE(_memVars);
+	CC_SAFE_RELEASE(_handlers);
 	CC_SAFE_RELEASE(_selectorHandler);
 }
 void CCBProxy::releaseMembers(){
@@ -73,7 +73,7 @@ SEL_CCControlHandler CCBProxy::onResolveCCBCCControlSelector(CCObject * pTarget,
 }
 
 bool CCBProxy::onAssignCCBMemberVariable(CCObject * t, const char * v, CCNode * n){
-	if(n){
+	if(n && v && strlen(v) > 0){
 		_memVars->setObject(n, v);
 	}
 	return true;
@@ -95,7 +95,7 @@ CCBSelectorResolver * CCBProxy::createNew(){
 void CCBProxy::handleEvent(CCControlButton *n, const int handler, bool multiTouches, CCControlEvent e){
 	LuaEventHandler *h = getHandler(handler);
 	if(!h){
-		h = this->addHandler(handler, multiTouches)
+		h = addHandler(handler, multiTouches)
 			->setTypename("CCControlButton");
 	}
 	n->addTargetWithActionForControlEvents(h, cccontrol_selector(LuaEventHandler::controlAction), e);
@@ -103,14 +103,14 @@ void CCBProxy::handleEvent(CCControlButton *n, const int handler, bool multiTouc
 
 #ifdef LUAPROXY_CCEDITBOX_ENABLED
 void CCBProxy::handleEvent(CCEditBox *n, const int handler){
-	LuaEventHandler *h = this->addHandler(handler, false)
+	LuaEventHandler *h = addHandler(handler, false)
 		->setTypename("CCEditBox");
 	n->setDelegate(h);
 }
 #endif
 
 void CCBProxy::handleEvent(CCBAnimationManager *m, const int handler){
-	this->addHandler(handler)->handle(m);
+	addHandler(handler)->handle(m);
 }
 
 void CCBProxy::handleKeypad(const int handler){
@@ -118,9 +118,9 @@ void CCBProxy::handleKeypad(const int handler){
 }
 
 LuaEventHandler * CCBProxy::addHandler(const int handler, bool multiTouches){
-	LuaEventHandler *h = LuaEventHandler::create(this->_lua)
+	LuaEventHandler *h = LuaEventHandler::create(_lua)
 		->handle(handler, multiTouches, 0, false);
-	this->_handlers->addObject(h);
+	_handlers->addObject(h);
 	return h;
 }
 
@@ -178,7 +178,7 @@ void CCBProxy::controlCallback(CCObject *pSender, CCControlEvent event) {
 	}
 }
 
-CCDictionary * CCBProxy::getMemberVariables(){return this->_memVars;}
+CCDictionary * CCBProxy::getMemberVariables(){return _memVars;}
 
 const char * CCBProxy::getMemberName(CCObject *n){
 	CCDictElement *e;
@@ -212,8 +212,9 @@ void CCBProxy::nodeToTypeForLua(lua_State *l, CCObject *o, const char *t){
 }
 
 CCNode * CCBProxy::readCCBFromFile(const char *f, float resolutionScale){
+	//assert(f && strlen(f) > 0, "File name must not be null or empty string.");
 	CCNodeLoaderLibrary * lib = CCNodeLoaderLibrary::sharedCCNodeLoaderLibrary();
-	lib->registerCCNodeLoader("", ProxyLayerLoader::loader());
+	//lib->registerCCNodeLoader("CCParticleSystemQuad", ProxyPSQLoader::loader());
 	CCBReader * reader = new CCBReader(lib);
 	reader->autorelease();
 #if COCOS2D_VERSION < 0x00020100
@@ -241,9 +242,56 @@ void CCBProxy::fixLabel(CCNode *o, const float rate, bool withChild, const char 
 	if(withChild){
 		CCObject *s;
 		CCARRAY_FOREACH(o->getChildren(), s){
-			this->fixLabel((CCNode *)s, rate, true, font);
+			fixLabel((CCNode *)s, rate, true, font);
 		}
 	}
+}
+void CCBProxy::fixParticle(CCNode *o, const float dur, const float life, bool withChild){
+	CCParticleSystemQuad *e = dynamic_cast<CCParticleSystemQuad *>(o);
+	if(e){
+		printf("ccbproxy fixPar %x %x\n", e, e->getTexture());
+		e->setDuration(dur);
+		e->setLife(life);
+		e->setAutoRemoveOnFinish(true);
+	}
+	if(withChild){
+		CCObject *s;
+		CCARRAY_FOREACH(o->getChildren(), s){
+			fixParticle((CCNode *)s, dur, life, true);
+		}
+	}
+}
+void CCBProxy::fixParticleWithHandler(CCNode *o, LuaEventHandler *h, bool withChild){
+	CCParticleSystemQuad *e = dynamic_cast<CCParticleSystemQuad *>(o);
+	if(e){
+		h->action(e);
+	}
+	if(withChild){
+		CCObject *s;
+		CCARRAY_FOREACH(o->getChildren(), s){
+			fixParticleWithHandler((CCNode *)s, h, true);
+		}
+	}
+}
+#define CREATE_AND_DUPLICATE(r,T,n) if(dynamic_cast<T *>(n)){T *e = T::create();duplicate(e, (T *)n);r = e;}
+CCNode * CCBProxy::copyNode(CCNode *n){
+	CCNode *r = NULL;
+	if(n){
+		if(!r){	CREATE_AND_DUPLICATE(r, CCLabelTTF, n);}
+		if(!r){	CREATE_AND_DUPLICATE(r, CCLabelBMFont, n);}
+		if(!r){	CREATE_AND_DUPLICATE(r, CCParticleSystemQuad, n);}
+		if(!r){	CREATE_AND_DUPLICATE(r, CCSprite, n);}
+		if(!r){	CREATE_AND_DUPLICATE(r, CCScale9Sprite, n);}
+		if(!r){
+			r = CCNode::create();
+			duplicate(r, n);
+		}
+		CCObject *o = NULL;
+		CCARRAY_FOREACH(n->getChildren(), o){
+			r->addChild(copyNode((CCNode *)o));
+		}
+	}
+	return r;
 }
 void CCBProxy::duplicate(CCScale9Sprite *n, CCScale9Sprite *o){
 	if(!n || !o)return;
@@ -251,7 +299,7 @@ void CCBProxy::duplicate(CCScale9Sprite *n, CCScale9Sprite *o){
 	n->setCapInsets(o->getCapInsets());
 	n->setOpacity(o->getOpacity());
 	n->setColor(o->getColor());
-	this->duplicate((CCNode *)n, (CCNode *)o);
+	duplicate((CCNode *)n, (CCNode *)o);
 }
 void CCBProxy::duplicate(CCSprite *n, CCSprite *o){
 	if(!n || !o)return;
@@ -261,7 +309,7 @@ void CCBProxy::duplicate(CCSprite *n, CCSprite *o){
 	n->setFlipX(o->isFlipX());
 	n->setFlipY(o->isFlipY());
 	n->setBlendFunc(o->getBlendFunc());
-	this->duplicate((CCNode *)n, (CCNode *)o);
+	duplicate((CCNode *)n, (CCNode *)o);
 }
 void CCBProxy::duplicate(CCLabelBMFont *n, CCLabelBMFont *o){
 	if(!n || !o)return;
@@ -269,7 +317,7 @@ void CCBProxy::duplicate(CCLabelBMFont *n, CCLabelBMFont *o){
 	n->setOpacity(o->getOpacity());
 	n->setColor(o->getColor());
 	n->setBlendFunc(o->getBlendFunc());
-	this->duplicate((CCNode *)n, (CCNode *)o);
+	duplicate((CCNode *)n, (CCNode *)o);
 }
 void CCBProxy::duplicate(CCLabelTTF *n, CCLabelTTF *o){
 	if(!n || !o)return;
@@ -279,7 +327,7 @@ void CCBProxy::duplicate(CCLabelTTF *n, CCLabelTTF *o){
 	n->setDimensions(o->getDimensions());
 	n->setHorizontalAlignment(o->getHorizontalAlignment());
 	n->setVerticalAlignment(o->getVerticalAlignment());
-	this->duplicate((CCNode *)n, (CCNode *)o);
+	duplicate((CCNode *)n, (CCNode *)o);
 }
 void CCBProxy::duplicate(CCNode *n, CCNode *o){
 	if(!n || !o)return;
