@@ -31,6 +31,7 @@ class LuaTableView : public CCTableView{
 protected:
 	LuaEventHandler *_handler;
 	LuaTableView();
+	CCNode *_scrollNode;
 	CCScale9Sprite *_scrollBar;
 	CCScale9Sprite *_scrollTrack;
 	float _scrollOffset;
@@ -38,10 +39,13 @@ protected:
 public:
 	~LuaTableView();
 	static LuaTableView * createWithHandler(LuaEventHandler *h, CCSize s, CCNode *c);
+	virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent);
 	virtual void scrollViewDidScroll(CCScrollView *s);
 	virtual void scrollViewDidZoom(CCScrollView *s);
 	virtual void reloadData();
-	void setScrollBar(CCScale9Sprite *s, CCScale9Sprite *t);
+	void setScrollNode(CCNode *n);
+	void setScrollBar(CCScale9Sprite *s);
+	void setScrollTrack(CCScale9Sprite *t);
 	void setScrollOffset(float o);
 	void resetScroll();
 	void updateScroll();

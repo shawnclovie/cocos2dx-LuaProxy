@@ -122,6 +122,22 @@ static int tolua_CCControl_hasVisibleParents(lua_State *l){
 	tolua_pushboolean(l, o? o->hasVisibleParents() : false);
 	return 1;
 }
+//CCControl::sendActionsForControlEvents(CCControlEvent)
+static int tolua_CCControl_sendActionsForControlEvents(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "CCControl", 0, &err) || !tolua_isnumber(l, 2, 0, &err)){
+		tolua_error(l,"#ferror in function 'sendActionsForControlEvents'.",&err);
+		return 0;
+	}
+#endif
+	CCControl *o = (CCControl *)tolua_tousertype(l, 1, NULL);
+	if(o){
+		o->sendActionsForControlEvents((CCControlEvent)(int)tolua_tonumber(l, 2, CCControlEventTouchUpInside));
+	}
+	tolua_pushusertype(l, o, "CCControl");
+	return 1;
+}
 //######################################## CCControlButton ##########################
 //CCControlButton::create
 static int tolua_CCControlButton_create(lua_State *l){

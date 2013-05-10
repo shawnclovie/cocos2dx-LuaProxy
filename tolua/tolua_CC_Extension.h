@@ -219,7 +219,17 @@ TOLUA_API int tolua_CC_Extension_open(lua_State* l){
 			tolua_function(l, "isTouchInside", tolua_CCControl_isTouchInside);
 			tolua_function(l, "getTouchLocation", tolua_CCControl_getTouchLocation);
 			tolua_function(l, "hasVisibleParents", tolua_CCControl_hasVisibleParents);
+			tolua_function(l, "sendActionsForControlEvents", tolua_CCControl_sendActionsForControlEvents);
 		tolua_endmodule(l);
+		tolua_constant(l, "CCControlEventTouchDown", CCControlEventTouchDown);
+		tolua_constant(l, "CCControlEventTouchDragInside", CCControlEventTouchDragInside);
+		tolua_constant(l, "CCControlEventTouchDragOutside", CCControlEventTouchDragOutside);
+		tolua_constant(l, "CCControlEventTouchDragEnter", CCControlEventTouchDragEnter);
+		tolua_constant(l, "CCControlEventTouchDragExit", CCControlEventTouchDragExit);
+		tolua_constant(l, "CCControlEventTouchUpInside", CCControlEventTouchUpInside);
+		tolua_constant(l, "CCControlEventTouchUpOutside", CCControlEventTouchUpOutside);
+		tolua_constant(l, "CCControlEventTouchCancel", CCControlEventTouchCancel);
+		tolua_constant(l, "CCControlEventValueChanged", CCControlEventValueChanged);
 		tolua_cclass(l, "CCControlButton", "CCControlButton", "CCControl", NULL);
 		tolua_beginmodule(l, "CCControlButton");
 			tolua_function(l, "create", tolua_CCControlButton_create);

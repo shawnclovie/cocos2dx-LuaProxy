@@ -48,17 +48,15 @@ protected:
 	lua_State *_lua;
 	std::string _typename;
 	int _handler;
+	int _handlerRef;
 	bool _multiTouches;
 	int _priority;
 	bool _swallows;
 	CCBAnimationManager *_aniMGR;
-	LuaEventHandler(){
-		_aniMGR = NULL;
-		_lua = NULL;
-	}
+	LuaEventHandler() : _aniMGR(NULL), _lua(NULL), _handler(0), _handlerRef(0){}
 public:
 	static LuaEventHandler * app;
-	~LuaEventHandler(){}
+	~LuaEventHandler();
 	static LuaEventHandler * createAppHandler(lua_State *l, int handler);
 	static LuaEventHandler * create(lua_State *l);
 	// Handle with function, for layer event, allow other three options
@@ -92,6 +90,8 @@ public:
 	virtual CCTableViewCell * tableCellAtIndex(CCTableView *t, unsigned int i);
 	virtual unsigned int numberOfCellsInTableView(CCTableView *t);
 	virtual void tableCellTouched(CCTableView *t, CCTableViewCell *c);
+	// Touched event, pass the point that touch in table
+	virtual void tableCellTouched(CCTableView *t, CCTableViewCell *c, CCTouch *touch);
 	virtual void scrollViewDidScroll(CCScrollView *s);
 	virtual void scrollViewDidZoom(CCScrollView *s);
 	virtual void keyBackClicked();
@@ -108,8 +108,9 @@ public:
 class LuaCallFuncInterval : public CCActionInterval{
 public:
 	int _handler;
-	LuaCallFuncInterval() : _handler(0){}
-	~LuaCallFuncInterval(){}
+	int _handlerRef;
+	LuaCallFuncInterval() : _handler(0), _handlerRef(0){}
+	~LuaCallFuncInterval();
 	static LuaCallFuncInterval * create(float dur, int handler);
 	virtual void startWithTarget(CCNode *tar);
 	virtual void update(float time);

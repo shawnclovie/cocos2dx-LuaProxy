@@ -4,8 +4,15 @@
 #include "tolua_CCBProxy.h"
 #include "tolua_CursorTextField.h"
 
+// Require encoded lua file
+// require(path)
+static int tolua_LuaProxy_require(lua_State *l){
+	
+	return 1;
+}
+
 //copyAssetFileToData(const char *src, const char *tar)
-static int tolua_copyAssetFileToData(lua_State *l){
+static int tolua_LuaProxy_copyAssetFileToData(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
 	if(!tolua_isstring(l, 1, 0, &err) || !tolua_isstring(l, 2, 0, &err)){
@@ -72,7 +79,7 @@ CCLog("iconv converted, %s", outbuf);
 	return 1;
 }*/
 // touchedNodesChild(CCNode *node, int x, int y, const char *toTypeName)
-static int tolua_touchedNodesChild(lua_State *l){
+static int tolua_LuaProxy_touchedNodesChild(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
 	if(!tolua_isusertype(l, 1, "CCNode", 0, &err) || !tolua_isnumber(l, 2, 0, &err) || !tolua_isnumber(l, 3, 0, &err)
@@ -101,7 +108,17 @@ static int tolua_touchedNodesChild(lua_State *l){
 	else{	tolua_pushusertype(l, NULL, t);}
 	return 1;
 }
-
+/*
+static int tolua_LuaProxy_repeatTexParams(lua_State *l){
+	ccTexParams *p = Mtolua_new((ccTexParams)());
+	p->minFilter = GL_LINEAR;
+	p->magFilter = GL_LINEAR;
+	p->wrapS = GL_REPEAT;
+	p->wrapT = GL_REPEAT;
+	tolua_pushusertype(l, p, "ccTexParams");
+	return 1;
+}
+*/
 TOLUA_API int luaopen_LuaProxy(lua_State* l){
 	tolua_CC_Extension_open(l);
 	tolua_open(l);
@@ -112,9 +129,18 @@ TOLUA_API int luaopen_LuaProxy(lua_State* l){
 	tolua_usertype(l, "LuaTableView");
 	tolua_module(l, NULL, 0);
 	tolua_beginmodule(l, NULL);
-		tolua_function(l, "copyAssetFileToData", tolua_copyAssetFileToData);
-		tolua_function(l, "touchedNodesChild", tolua_touchedNodesChild);
+		tolua_function(l, "copyAssetFileToData", tolua_LuaProxy_copyAssetFileToData);
+		tolua_function(l, "touchedNodesChild", tolua_LuaProxy_touchedNodesChild);
+//		tolua_function(l, "repeatTexParams", tolua_LuaProxy_repeatTexParams);
+		tolua_constant(l, "GL_LINEAR", GL_LINEAR);
+		tolua_constant(l, "GL_REPEAT", GL_REPEAT);
+		tolua_constant(l, "GL_NEAREST", GL_NEAREST);
+		tolua_constant(l, "GL_CLAMP_TO_EDGE", GL_CLAMP_TO_EDGE);
+		tolua_constant(l, "GL_TEXTURE", GL_TEXTURE);
 		tolua_constant(l, "CC_TARGET_PLATFORM", CC_TARGET_PLATFORM);
+// Not availiable for android
+//		tolua_constant(l, "GL_CLAMP", GL_CLAMP);
+//		tolua_constant(l, "GL_TEXTURE_WIDTH", GL_TEXTURE_WIDTH);
 		tolua_constant(l, "CC_PLATFORM_IOS", CC_PLATFORM_IOS);
 		tolua_constant(l, "CC_PLATFORM_ANDROID", CC_PLATFORM_ANDROID);
 		tolua_constant(l, "CC_PLATFORM_WIN32", CC_PLATFORM_WIN32);
@@ -146,6 +172,9 @@ TOLUA_API int luaopen_LuaProxy(lua_State* l){
 			tolua_function(l, "deliverChildren", tolua_CCBProxy_deliverChildren);
 			tolua_function(l, "readCCBFromFile", tolua_CCBProxy_readCCBFromFile);
 			tolua_function(l, "fixLabel", tolua_CCBProxy_fixLabel);
+			tolua_function(l, "fixParticle", tolua_CCBProxy_fixParticle);
+			tolua_function(l, "fixParticleWithHandler", tolua_CCBProxy_fixParticleWithHandler);
+			tolua_function(l, "copyNode", tolua_CCBProxy_copyNode);
 			tolua_function(l, "duplicate", tolua_CCBProxy_duplicate);
 		tolua_endmodule(l);
 		tolua_cclass(l, "CursorTextField", "CursorTextField", "CCTextFieldTTF", NULL);
@@ -180,7 +209,9 @@ TOLUA_API int luaopen_LuaProxy(lua_State* l){
 		tolua_beginmodule(l, "LuaTableView");
 			tolua_function(l, "createWithHandler", tolua_LuaTableView_createWithHandler);
 			tolua_function(l, "reloadData", tolua_LuaTableView_reloadData);
+			tolua_function(l, "setScrollNode", tolua_LuaTableView_setScrollNode);
 			tolua_function(l, "setScrollBar", tolua_LuaTableView_setScrollBar);
+			tolua_function(l, "setScrollTrack", tolua_LuaTableView_setScrollTrack);
 			tolua_function(l, "setScrollOffset", tolua_LuaTableView_setScrollOffset);
 		tolua_endmodule(l);
 	tolua_endmodule(l);

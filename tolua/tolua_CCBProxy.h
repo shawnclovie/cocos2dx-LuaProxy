@@ -308,6 +308,58 @@ static int tolua_CCBProxy_fixLabel(lua_State *l){
 	tolua_pushusertype(l, p, "CCBProxy");
 	return 1;
 }
+//CCBProxy::fixParticle(CCNode *n, float dur, float life, bool withChild)
+static int tolua_CCBProxy_fixParticle(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "CCBProxy", 0, &err) || !tolua_isusertype(l, 2, "CCNode", 0, &err) ||
+		!tolua_isnumber(l, 3, 0, &err) || !tolua_isnumber(l, 4, 0, &err)){
+		tolua_error(l,"#ferror in function 'CCBProxy.fixParticle'.",&err);
+		return 0;
+	}
+#endif
+	CCBProxy *p = (CCBProxy *)tolua_tousertype(l, 1, 0);
+	CCNode *n = (CCNode *)tolua_tousertype(l, 2, 0);
+	if(p && n){
+		p->fixParticle(n, tolua_tonumber(l, 3, 1), tolua_tonumber(l, 4, 0), tolua_toboolean(l, 5, false) > 0);
+	}
+	tolua_pushusertype(l, p, "CCBProxy");
+	return 1;
+}
+//CCBProxy::fixParticleWithHandler(CCNode *n, LuaEventHandler, bool withChild)
+static int tolua_CCBProxy_fixParticleWithHandler(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "CCBProxy", 0, &err) || !tolua_isusertype(l, 2, "CCNode", 0, &err) ||
+		!tolua_isusertype(l, 3, "LuaEventHandler", 0, &err)){
+		tolua_error(l,"#ferror in function 'CCBProxy.fixParticle'.",&err);
+		return 0;
+	}
+#endif
+	CCBProxy *p = (CCBProxy *)tolua_tousertype(l, 1, 0);
+	CCNode *n = (CCNode *)tolua_tousertype(l, 2, 0);
+	LuaEventHandler *h = (LuaEventHandler *)tolua_tousertype(l, 3, 0);
+	if(p && n){
+		p->fixParticleWithHandler(n, h, tolua_toboolean(l, 4, false) > 0);
+	}
+	tolua_pushusertype(l, p, "CCBProxy");
+	return 1;
+}
+//CCBProxy::copyNode(CCNode *n)
+static int tolua_CCBProxy_copyNode(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "CCBProxy", 0, &err) || !tolua_isusertype(l, 2, "CCNode", 0, &err)){
+		tolua_error(l,"#ferror in function 'CCBProxy.copyNode'.",&err);
+		return 0;
+	}
+#endif
+	CCBProxy *p = (CCBProxy *)tolua_tousertype(l, 1, 0);
+	CCNode *n = (CCNode *)tolua_tousertype(l, 2, 0);
+	CCNode *r = p && n? p->copyNode(n) : NULL;
+	tolua_pushusertype(l, r, "CCNode");
+	return 1;
+}
 //CCBProxy::duplicate(CCNode *node, CCNode *nodeFrom, const char *type)
 static int tolua_CCBProxy_duplicate(lua_State *l){
 #ifndef TOLUA_RELEASE
@@ -424,20 +476,53 @@ static int tolua_LuaTableView_reloadData(lua_State *l){
 	}
 	return 1;
 }
-//LuaTableView::setScrollBar(CCScale9Sprite *h, CCScale9Sprite *v)
+//LuaTableView::setScrollNode(CCNode *n)
+static int tolua_LuaTableView_setScrollNode(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "LuaTableView", 0, &err) ||
+		!(tolua_isusertype(l, 2, "CCNode", 0, &err) || tolua_isnoobj(l, 2, &err))){
+		tolua_error(l,"#ferror in function 'LuaTableView.setScrollNode'.",&err);
+		return 0;
+	}
+#endif
+	LuaTableView *o = (LuaTableView *)tolua_tousertype(l, 1, NULL);
+	if(o){
+		o->setScrollNode((CCNode *)tolua_tousertype(l, 2, NULL));
+		tolua_pushusertype(l, o, "LuaTableView");
+	}
+	return 1;
+}
+//LuaTableView::setScrollBar(CCScale9Sprite *s)
 static int tolua_LuaTableView_setScrollBar(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
 	if(!tolua_isusertype(l, 1, "LuaTableView", 0, &err) ||
-		!(tolua_isusertype(l, 2, "CCScale9Sprite", 0, &err) || tolua_isnoobj(l, 2, &err)) ||
-		!(tolua_isusertype(l, 3, "CCScale9Sprite", 0, &err) || tolua_isnoobj(l, 3, &err))){
+		!(tolua_isusertype(l, 2, "CCScale9Sprite", 0, &err) || tolua_isnoobj(l, 2, &err))){
 		tolua_error(l,"#ferror in function 'LuaTableView.setScrollBar'.",&err);
 		return 0;
 	}
 #endif
 	LuaTableView *o = (LuaTableView *)tolua_tousertype(l, 1, NULL);
 	if(o){
-		o->setScrollBar((CCScale9Sprite *)tolua_tousertype(l, 2, NULL), (CCScale9Sprite *)tolua_tousertype(l, 3, NULL));
+		o->setScrollBar((CCScale9Sprite *)tolua_tousertype(l, 2, NULL));
+		tolua_pushusertype(l, o, "LuaTableView");
+	}
+	return 1;
+}
+//LuaTableView::setScrollTrack(CCScale9Sprite *s)
+static int tolua_LuaTableView_setScrollTrack(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "LuaTableView", 0, &err) ||
+		!(tolua_isusertype(l, 2, "CCScale9Sprite", 0, &err) || tolua_isnoobj(l, 2, &err))){
+		tolua_error(l,"#ferror in function 'LuaTableView.setScrollTrack'.",&err);
+		return 0;
+	}
+#endif
+	LuaTableView *o = (LuaTableView *)tolua_tousertype(l, 1, NULL);
+	if(o){
+		o->setScrollTrack((CCScale9Sprite *)tolua_tousertype(l, 2, NULL));
 		tolua_pushusertype(l, o, "LuaTableView");
 	}
 	return 1;

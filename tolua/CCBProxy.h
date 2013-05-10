@@ -92,19 +92,39 @@ public:
 	// Fix label text blur when scaled
 	// Change (o) and the children's scale and font size (scale/=rate and fontSize*=rate), and set font name if assigned (font)
 	void fixLabel(CCNode *o, const float rate, bool withChild, const char *font = NULL);
+	void fixParticle(CCNode *o, const float dur, const float life, bool withChild);
+	void fixParticleWithHandler(CCNode *o, LuaEventHandler *h, bool withChild);
+	CCNode * copyNode(CCNode *n);
+	// Duplicate (o)'s properties to (n)
+	void duplicate(CCNode *n, CCNode *o);
 	void duplicate(CCScale9Sprite *n, CCScale9Sprite *o);
 	void duplicate(CCSprite *n, CCSprite *o);
 	void duplicate(CCLabelBMFont *n, CCLabelBMFont *o);
 	void duplicate(CCLabelTTF *n, CCLabelTTF *o);
-	void duplicate(CCNode *n, CCNode *o);
 	void duplicate(CCParticleSystemQuad *n, CCParticleSystemQuad *o);
 	void duplicate(CCParticleSystem *n, CCParticleSystem *o);
 };
-
-class ProxyLayerLoader : public CCLayerLoader {
+/*
+class ProxyPSQLoader : public CCParticleSystemQuadLoader{
 public:
-	CCB_STATIC_NEW_AUTORELEASE_OBJECT_METHOD(ProxyLayerLoader, loader);
+	CCB_STATIC_NEW_AUTORELEASE_OBJECT_METHOD(ProxyPSQLoader, loader);
+	virtual CCTexture2D * parsePropTypeTexture(CCNode * pNode, CCNode * pParent, CCBReader * pCCBReader) {
+		CCString * spriteFile = pCCBReader->readCachedString();
+		if(spriteFile->compare("") != 0){
+			const char *s = spriteFile->getCString();
+			CCTextureCache *c = CCTextureCache::sharedTextureCache();
+			CCTexture2D *t = c->textureForKey(s);
+			if(!t){
+				t = c->addImage(s);
+			}
+			return t;
+		}else{
+			return NULL;
+		}
+	}
+
 protected:
-	CCB_VIRTUAL_NEW_AUTORELEASE_CREATECCNODE_METHOD(CCBProxy);
+	CCB_VIRTUAL_NEW_AUTORELEASE_CREATECCNODE_METHOD(CCParticleSystemQuad);
 };
+*/
 #endif // __CCBPROXY_H_

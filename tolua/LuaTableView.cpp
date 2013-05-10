@@ -35,42 +35,86 @@ LuaTableView * LuaTableView::createWithHandler(LuaEventHandler *h, CCSize s, CCN
 	r->_updateContentSize();
 	return r;
 }
-LuaTableView::LuaTableView():_scrollOffset(0), _handler(0), _scrollBar(0), _scrollTrack(0), _scrollTrackDelta(0){}
+LuaTableView::LuaTableView():_scrollOffset(0), _handler(0), _scrollNode(0), _scrollBar(0), _scrollTrack(0), _scrollTrackDelta(0){}
 LuaTableView::~LuaTableView(){
 	CC_SAFE_RELEASE(_handler);
-	setScrollBar(0, 0);
+	setScrollNode(NULL);
+	setScrollBar(NULL);
+	setScrollTrack(NULL);
 }
-void LuaTableView::setScrollBar(CCScale9Sprite *s, CCScale9Sprite *st){
-	if(_scrollBar){		_scrollBar->removeAllChildrenWithCleanup(true);}
-	if(_scrollTrack){	_scrollTrack->removeAllChildrenWithCleanup(true);}
-	_scrollBar = s;
-	_scrollTrack = st;
-	if(s){
-		if(st){
-			addChild(st, 255);
+void LuaTableView::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent){
+	if (!this->isVisible()) {
+		return;
+	}
+	if (m_pTouches->count() == 1 && !this->isTouchMoved()) {
+		unsigned int index;
+		CCTableViewCell *cell;
+		CCPoint point = this->getContainer()->convertTouchToNodeSpace(pTouch);
+		if (m_eVordering == kCCTableViewFillTopDown) {
+			CCSize cellSize = m_pDataSource->cellSizeForTable(this);
+			point.y -= cellSize.height;
 		}
+		index = this->_indexFromOffset(point);
+		cell  = this->_cellWithIndex(index);
+		if (cell) {
+			LuaEventHandler *h = dynamic_cast<LuaEventHandler *>(m_pTableViewDelegate);
+			if(h){ h->tableCellTouched(this, cell, pTouch);
+			}else{ m_pTableViewDelegate->tableCellTouched(this, cell);
+			}
+		}
+	}
+	CCScrollView::ccTouchEnded(pTouch, pEvent);
+}
+void LuaTableView::setScrollNode(CCNode *n){
+	if(_scrollNode){ _scrollNode->removeAllChildrenWithCleanup(true);}
+	_scrollNode = n;
+	if(n){
+		addChild(n, 255);
+	}
+}
+void LuaTableView::setScrollBar(CCScale9Sprite *s){
+	if(_scrollBar){ _scrollBar->removeAllChildrenWithCleanup(true);}
+	_scrollBar = s;
+	if(s){
 		addChild(s, 255);
-		resetScroll();
+	}
+}
+void LuaTableView::setScrollTrack(CCScale9Sprite *st){
+	if(_scrollTrack){ _scrollTrack->removeAllChildrenWithCleanup(true);}
+	_scrollTrack = st;
+	if(st){
+		addChild(st, 254);
 	}
 }
 void LuaTableView::setScrollOffset(float o){
 	_scrollOffset = o;
 }
 void LuaTableView::updateScroll(){
-	if(!_scrollBar || !_scrollBar->isVisible()){
+	bool vBar = _scrollBar && _scrollBar->isVisible(),
+		vNode = _scrollNode && _scrollNode->isVisible();
+	if(!vBar || !vNode){
 		return;
 	}
 	bool vert = getDirection() == kCCScrollViewDirectionVertical;
+	CCPoint p, cp = getContentOffset();
 	CCSize vs = getViewSize(),
-		cs = getContentSize(),
-		ss = _scrollBar->getPreferredSize();
-	CCPoint cp = getContentOffset(),
-		p = _scrollBar->getPosition();
+		cs = getContentSize();
 	float rate = 1 - (vert? abs(cp.y) / (cs.height - vs.height) : abs(cp.x) / (cs.width - vs.width));
-	if(vert){	p.y = cs.height - (cs.height - ss.height) * rate - ss.height - _scrollTrackDelta;
-	}else{		p.x = cs.width - (cs.width - ss.width) * rate - ss.width - _scrollTrackDelta;
+	if(vBar){
+		CCSize ss = _scrollBar->getPreferredSize();
+		p = _scrollBar->getPosition();
+		if(vert){	p.y = cs.height - (cs.height - ss.height) * rate - ss.height - _scrollTrackDelta;
+		}else{		p.x = cs.width - (cs.width - ss.width) * rate - ss.width - _scrollTrackDelta;
+		}
+		_scrollBar->setPosition(p);
 	}
-	_scrollBar->setPosition(p);
+	if(vNode){
+		p = _scrollNode->getPosition();
+		if(vert){	p.y = cp.y + vs.height * rate;
+		}else{		p.x = cp.x + vs.width * rate;
+		}
+		_scrollNode->setPosition(p);
+	}
 	if(_scrollTrack){
 		p = _scrollTrack->getPosition();
 		if(vert){	p.y = abs(cp.y);
@@ -82,10 +126,12 @@ void LuaTableView::updateScroll(){
 }
 void LuaTableView::scrollViewDidScroll(CCScrollView *s){
 	CCTableView::scrollViewDidScroll(s);
+	_handler->scrollViewDidScroll(this);
 	updateScroll();
 }
 void LuaTableView::scrollViewDidZoom(CCScrollView *s){
 	CCTableView::scrollViewDidZoom(s);
+	_handler->scrollViewDidZoom(this);
 }
 void LuaTableView::reloadData(){
 	CCTableView::reloadData();

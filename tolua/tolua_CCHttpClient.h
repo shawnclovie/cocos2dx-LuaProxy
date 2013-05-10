@@ -316,13 +316,16 @@ static int tolua_CCHttpRequest_setHeaders(lua_State *l){
 		CCString *s;
 		CCARRAY_FOREACH(ds, _o){
 			s = dynamic_cast<CCString *>(_o);
-			if(s){ hs.push_back(s->getCString());}
+			if(s){
+				hs.push_back(s->getCString());
+			}
 		}
 		o->setHeaders(hs);
 	}
 	tolua_pushusertype(l, o, "CCHttpRequest");
 	return 1;
 }
+
 //######################################## CCHttpResponse ##########################
 //CCHttpResponse::getHttpRequest
 static int tolua_CCHttpResponse_getHttpRequest(lua_State *l){

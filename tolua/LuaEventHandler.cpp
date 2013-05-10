@@ -106,6 +106,10 @@ void finishRunLuaFunction(lua_State *l){
 
 LuaEventHandler * LuaEventHandler::app = NULL;
 
+LuaEventHandler::~LuaEventHandler(){
+	unhandle();
+}
+
 LuaEventHandler * LuaEventHandler::createAppHandler(lua_State *l, int handler){
 	if(!app){
 		app = new LuaEventHandler();
@@ -123,18 +127,18 @@ LuaEventHandler * LuaEventHandler::create(lua_State *l){
 }
 
 LuaEventHandler * LuaEventHandler::handle(int handler, bool multiTouches, int priority, bool swallows){
-	this->unhandle();
-	this->_handler = handler;
-	this->_multiTouches = multiTouches;
-	this->_priority = priority;
-	this->_swallows = swallows;
+	unhandle();
+	_handler = handler;
+	_multiTouches = multiTouches;
+	_priority = priority;
+	_swallows = swallows;
+	_handlerRef = lua_ref(_lua, _handler);
 	return this;
 }
 
 LuaEventHandler * LuaEventHandler::handle(CCBAnimationManager *m, int handler){
 	if(handler > 0){
-		this->unhandle();
-		_handler = handler;
+		handle(handler);
 	}
 	_aniMGR = m;
 	m->setDelegate(this);
@@ -152,7 +156,11 @@ LuaEventHandler * LuaEventHandler::handle(CCHttpRequest *req, int handler){
 }
 
 void LuaEventHandler::unhandle(){
-	this->_handler = 0;
+	if(_handler > 0){
+		lua_unref(_lua, _handlerRef);
+		_handlerRef = 0;
+		_handler = 0;
+	}
 }
 int LuaEventHandler::getHandler(){
 	return _handler;
@@ -261,23 +269,29 @@ unsigned int LuaEventHandler::numberOfCellsInTableView(CCTableView *t){
 	return r;
 }
 void LuaEventHandler::tableCellTouched(CCTableView *t, CCTableViewCell *c){
+	tableCellTouched(t, c, NULL);
+}
+void LuaEventHandler::tableCellTouched(CCTableView *t, CCTableViewCell *c, CCTouch *touch){
 	if(_handler){
 		LuaStack->pushString("cellTouched");
 		LuaStack->pushCCObject(t, "CCTableView");
 		LuaStack->pushCCObject(c, "CCTableViewCell");
-		runLuaFunction(_handler, 3, true);
+		LuaStack->pushCCObject(touch, "CCTouch");
+		runLuaFunction(_handler, 4, true);
 	}
 }
 void LuaEventHandler::scrollViewDidScroll(CCScrollView *s){
 	if(_handler){
-		LuaStack->pushString("scrollViewDidScroll");
-		runLuaFunction(_handler, 1, true);
+		LuaStack->pushString("scroll");
+		LuaStack->pushCCObject(s, "CCScrollView");
+		runLuaFunction(_handler, 2, true);
 	}
 }
 void LuaEventHandler::scrollViewDidZoom(CCScrollView *s){
 	if(_handler){
-		LuaStack->pushString("scrollViewDidZoom");
-		runLuaFunction(_handler, 1, true);
+		LuaStack->pushString("zoom");
+		LuaStack->pushCCObject(s, "CCScrollView");
+		runLuaFunction(_handler, 2, true);
 	}
 }
 void LuaEventHandler::keyBackClicked(){
@@ -350,3 +364,5 @@ void LuaCallFuncInterval::update(float time){
 		LuaStack->executeFunctionByHandler(_handler, 2);
 	}
 }
+
+LuaCallFuncInterval::~LuaCallFuncInterval(){}
