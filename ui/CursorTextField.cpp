@@ -21,8 +21,7 @@ CursorTextField::CursorTextField()
 	CCTextFieldTTF();
 }
 CursorTextField::~CursorTextField(){
-	CC_SAFE_RELEASE(this->_cursor);
-	CC_SAFE_RELEASE(this->_cursorAction);
+	CC_SAFE_RELEASE(_cursorAction);
 }
 CursorTextField * CursorTextField::create(const char *fontName, float fontSize){
 	return createWithPlaceHolder("", fontName, fontSize);
@@ -63,7 +62,7 @@ void CursorTextField::onEnter(){
 #endif
 	CCTextFieldTTF::onEnter();
 	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, -128, false);
-	this->setDelegate(this);
+	setDelegate(this);
 	_cursor->runAction(_cursorAction);
 }
 void CursorTextField::onExit(){
@@ -71,48 +70,48 @@ void CursorTextField::onExit(){
 //	UIEventDispatcher::sharedDispatcher()->removeListener(this);
 #endif
 	_cursor->stopAction(_cursorAction);
-	this->detachWithIME();
+	detachWithIME();
 	CCTextFieldTTF::onExit();
 	CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this);
 }
 bool CursorTextField::ccTouchBegan(CCTouch *t, CCEvent *e){
-	this->_touchBeginPos = CCDirector::sharedDirector()->convertToGL(t->getLocationInView());
+	_touchBeginPos = CCDirector::sharedDirector()->convertToGL(t->getLocationInView());
 	return true;
 }
 void CursorTextField::ccTouchEnded(CCTouch *t, CCEvent *e){
 	CCPoint ep = CCDirector::sharedDirector()->convertToGL(t->getLocationInView());
-	if(abs(ep.x - this->_touchBeginPos.x) > DELTA || abs(ep.y - this->_touchBeginPos.y) > DELTA){
-		this->_touchBeginPos.x = this->_touchBeginPos.y = -1;
+	if(abs(ep.x - _touchBeginPos.x) > DELTA || abs(ep.y - _touchBeginPos.y) > DELTA){
+		_touchBeginPos.x = _touchBeginPos.y = -1;
 	}else
 		isInTextField(t)? openIME() : closeIME();
 }
 CCRect CursorTextField::getRect(){
-	CCSize s = &this->_designedSize != NULL? this->_designedSize : getContentSize();
+	CCSize s = &_designedSize != NULL? _designedSize : getContentSize();
 	return CCRectMake(0 - s.width * getAnchorPoint().x, 0 - s.height * getAnchorPoint().y, s.width, s.height);
 }
-CCSize CursorTextField::getDesignedSize(){return this->_designedSize;}
-void CursorTextField::setDesignedSize(CCSize s){this->_designedSize = s;}
+CCSize CursorTextField::getDesignedSize(){return _designedSize;}
+void CursorTextField::setDesignedSize(CCSize s){_designedSize = s;}
 bool CursorTextField::isInTextField(CCTouch *t){
 	return getRect().containsPoint(convertTouchToNodeSpaceAR(t));
 }
 // ############################# Delegate functions ###############################
 bool CursorTextField::onTextFieldAttachWithIME(CCTextFieldTTF *s){
-	if(!this->m_pInputText->empty())
-		this->_cursor->setPositionX(getContentSize().width);
+	if(!m_pInputText->empty())
+		_cursor->setPositionX(getContentSize().width);
 	return false;
 }
 bool CursorTextField::onTextFieldInsertText(CCTextFieldTTF *s, const char *t, int len){
 	if(strcmp(t, "\n") == 0){
-		this->closeIME();
+		closeIME();
 		return false;
 	}
 	if(m_pInputText->length() + len > _maxLength)
 		return true;
 //std::cout<<"CTF.onInsTxt()"<<t<<"\n";
 	m_pInputText->append(t);
-	this->updateDisplay();
+	updateDisplay();
 	_cursor->setPositionX(getTextureRect().size.width);
-//	this->_cursor->setPositionX(getContentSize().width);
+//	_cursor->setPositionX(getContentSize().width);
 	return true;
 }
 bool CursorTextField::onTextFieldDeleteBackward(CCTextFieldTTF *s, const char *delText, int len){
@@ -121,19 +120,19 @@ bool CursorTextField::onTextFieldDeleteBackward(CCTextFieldTTF *s, const char *d
 	std::string::iterator it = m_pInputText->end();
 	for(int i = 0; i < len; i ++)it --;
 	m_pInputText->erase(it, m_pInputText->end());
-	this->updateDisplay();
-	this->_cursor->setPositionX(m_pInputText->empty()? 0 : getContentSize().width);
+	updateDisplay();
+	_cursor->setPositionX(m_pInputText->empty()? 0 : getContentSize().width);
 	return true;
 }
 bool CursorTextField::onTextFieldDetachWithIME(CCTextFieldTTF *s){return false;}
 
 void CursorTextField::openIME(){
 	_cursor->setVisible(true);
-	this->attachWithIME();
+	attachWithIME();
 }
 void CursorTextField::closeIME(){
 	_cursor->setVisible(false);
-	this->detachWithIME();
+	detachWithIME();
 }
 bool CursorTextField::isPassword(){return _password;}
 void CursorTextField::setPassword(bool b){_password = b;}
@@ -141,7 +140,7 @@ unsigned int CursorTextField::getMaxLength(){return _maxLength;}
 void CursorTextField::setMaxLength(unsigned int n){_maxLength = n;}
 void CursorTextField::setString(const char *t){
 	m_pInputText->replace(0, m_pInputText->length(), t? t : "");
-	this->updateDisplay();
+	updateDisplay();
 }
 void CursorTextField::updateDisplay(){
 	const char *s = m_pInputText->length() == 0? m_pPlaceHolder->c_str() :
@@ -174,13 +173,13 @@ void CursorTextField::keyEvent(UINT m, WPARAM w, LPARAM l){
 	if(m == WM_CHAR){
 //CCLOG("CursorTextField.keyEvent %d %d %c", m, w, w);
 		if(VK_BACK == w){
-			this->onTextFieldDeleteBackward(this, NULL, 1);
+			onTextFieldDeleteBackward(this, NULL, 1);
 		}else if(VK_RETURN == w){
 			
 		}else{
 			char s[2];
 			sprintf(s, "%c", w);
-			this->onTextFieldInsertText(this, s, 1);
+			onTextFieldInsertText(this, s, 1);
 		}
 	}
 	

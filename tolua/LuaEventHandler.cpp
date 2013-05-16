@@ -121,10 +121,25 @@ LuaEventHandler * LuaEventHandler::createAppHandler(lua_State *l, int handler){
 
 LuaEventHandler * LuaEventHandler::create(lua_State *l){
 	LuaEventHandler *h = new LuaEventHandler();
-	h->_lua = l;
+	h->_lua = l == NULL? luaStateForEngine() : l;
 	h->autorelease();
 	return h;
 }
+
+void LuaEventHandler::pushInt(int v){		LuaStack->pushInt(v);}
+void LuaEventHandler::pushFloat(float v){	LuaStack->pushFloat(v);}
+void LuaEventHandler::pushBoolean(bool v){	LuaStack->pushBoolean(v);}
+void LuaEventHandler::pushString(const char *v){LuaStack->pushString(v);}
+void LuaEventHandler::pushCCObject(CCObject *v, const char *t){
+	LuaStack->pushCCObject(v, t);}
+void LuaEventHandler::pushNil(){			LuaStack->pushNil();}
+int LuaEventHandler::runFunctionHandler(int hnd, int argNum, bool retInt){
+	int r = 0;
+	if(retInt){	r = runLuaFunction(hnd, argNum, true);}
+	else{		LuaStack->executeFunctionByHandler(hnd, argNum);}
+	return r;
+}
+
 
 LuaEventHandler * LuaEventHandler::handle(int handler, bool multiTouches, int priority, bool swallows){
 	unhandle();
@@ -201,24 +216,30 @@ void LuaEventHandler::completedAnimationSequenceNamed(const char *n){
 		LuaStack->executeFunctionByHandler(_handler, 3);
 	}
 }
+void LuaEventHandler::call(const char *s){
+	if(_handler){
+		LuaStack->pushString(s);
+		LuaStack->executeFunctionByHandler(_handler, 1);
+	}
+}
 #ifdef LUAPROXY_CCEDITBOX_ENABLED
 void LuaEventHandler::editBoxEditingDidBegin(CCEditBox *eb){
-	this->editBoxEvent("begin", eb);
+	editBoxEvent("begin", eb);
 }
 void LuaEventHandler::editBoxEditingDidEnd(CCEditBox *eb){
-	this->editBoxEvent("end", eb);
+	editBoxEvent("end", eb);
 }
 void LuaEventHandler::editBoxTextChanged(CCEditBox *eb){
-	this->editBoxEvent("change", eb);
+	editBoxEvent("change", eb);
 }
 void LuaEventHandler::editBoxReturn(CCEditBox *eb){
-	this->editBoxEvent("return", eb);
+	editBoxEvent("return", eb);
 }
 void LuaEventHandler::editBoxEvent(const char *e, CCEditBox *eb){
-	if(this->_handler && e){
-		lua_pushstring(this->_lua, e);
-		lua_pushlightuserdata(this->_lua, eb);
-		this->executeHandler(2);
+	if(_handler && e){
+		lua_pushstring(_lua, e);
+		lua_pushlightuserdata(_lua, eb);
+		executeHandler(2);
 	}
 }
 #endif

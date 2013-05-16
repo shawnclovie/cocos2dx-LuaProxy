@@ -58,7 +58,14 @@ public:
 	static LuaEventHandler * app;
 	~LuaEventHandler();
 	static LuaEventHandler * createAppHandler(lua_State *l, int handler);
-	static LuaEventHandler * create(lua_State *l);
+	static LuaEventHandler * create(lua_State *l = NULL);
+	static void pushInt(int v);
+	static void pushFloat(float v);
+	static void pushBoolean(bool v);
+	static void pushString(const char *v);
+	static void pushCCObject(CCObject *v, const char *t);
+	static void pushNil();
+	static int runFunctionHandler(int hnd, int argNum, bool retInt);
 	// Handle with function, for layer event, allow other three options
 	LuaEventHandler * handle(int handler, bool multiTouches = false, int priority = 0, bool swallows = false);
 	// Handle for CCBAnimationManager with optional function
@@ -78,6 +85,8 @@ public:
 	void action(CCObject *sender);
 	// An animation of ccb complated
 	void completedAnimationSequenceNamed(const char *n);
+	// Call lua func with a string
+	void call(const char *s);
 #ifdef LUAPROXY_CCEDITBOX_ENABLED
 	virtual void editBoxEditingDidBegin(CCEditBox *eb);
 	virtual void editBoxEditingDidEnd(CCEditBox *eb);
