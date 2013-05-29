@@ -139,7 +139,12 @@ int LuaEventHandler::runFunctionHandler(int hnd, int argNum, bool retInt){
 	else{		LuaStack->executeFunctionByHandler(hnd, argNum);}
 	return r;
 }
-
+void LuaEventHandler::runString(const char *s){
+	luaL_dostring(LuaStack->getLuaState(), s);
+}
+lua_State * LuaEventHandler::defaultState(){
+	return LuaStack->getLuaState();
+}
 
 LuaEventHandler * LuaEventHandler::handle(int handler, bool multiTouches, int priority, bool swallows){
 	unhandle();
@@ -297,6 +302,25 @@ void LuaEventHandler::tableCellTouched(CCTableView *t, CCTableViewCell *c, CCTou
 		LuaStack->pushString("cellTouched");
 		LuaStack->pushCCObject(t, "CCTableView");
 		LuaStack->pushCCObject(c, "CCTableViewCell");
+		LuaStack->pushCCObject(touch, "CCTouch");
+		runLuaFunction(_handler, 4, true);
+	}
+}
+void LuaEventHandler::tableCellTouchBegan(CCTableView *t, CCTableViewCell *c, CCTouch *touch){
+	if(_handler){
+		LuaStack->pushString("cellTouchBegan");
+		LuaStack->pushCCObject(t, "CCTableView");
+		LuaStack->pushCCObject(c, "CCTableViewCell");
+		LuaStack->pushCCObject(touch, "CCTouch");
+		runLuaFunction(_handler, 4, true);
+	}
+}
+void LuaEventHandler::tableCellTouchEnded(CCTableView *t, CCTableViewCell *c, CCTouch *touch){
+	if(_handler){
+		LuaStack->pushString("cellTouchEnded");
+		LuaStack->pushCCObject(t, "CCTableView");
+		if(c){LuaStack->pushCCObject(c, "CCTableViewCell");}
+		else{LuaStack->pushNil();}
 		LuaStack->pushCCObject(touch, "CCTouch");
 		runLuaFunction(_handler, 4, true);
 	}

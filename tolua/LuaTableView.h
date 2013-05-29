@@ -39,6 +39,8 @@ protected:
 public:
 	~LuaTableView();
 	static LuaTableView * createWithHandler(LuaEventHandler *h, CCSize s, CCNode *c);
+	CCTableViewCell * cellForTouch(CCTouch *t);
+	virtual bool ccTouchBegan(CCTouch *t, CCEvent *e);
 	virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent);
 	virtual void scrollViewDidScroll(CCScrollView *s);
 	virtual void scrollViewDidZoom(CCScrollView *s);

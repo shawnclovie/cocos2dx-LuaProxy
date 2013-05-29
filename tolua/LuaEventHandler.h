@@ -65,7 +65,9 @@ public:
 	static void pushString(const char *v);
 	static void pushCCObject(CCObject *v, const char *t);
 	static void pushNil();
-	static int runFunctionHandler(int hnd, int argNum, bool retInt);
+	static int runFunctionHandler(int hnd, int argNum, bool retInt = false);
+	static void runString(const char *s);
+	static lua_State * defaultState();
 	// Handle with function, for layer event, allow other three options
 	LuaEventHandler * handle(int handler, bool multiTouches = false, int priority = 0, bool swallows = false);
 	// Handle for CCBAnimationManager with optional function
@@ -101,6 +103,8 @@ public:
 	virtual void tableCellTouched(CCTableView *t, CCTableViewCell *c);
 	// Touched event, pass the point that touch in table
 	virtual void tableCellTouched(CCTableView *t, CCTableViewCell *c, CCTouch *touch);
+	virtual void tableCellTouchBegan(CCTableView *t, CCTableViewCell *c, CCTouch *touch);
+	virtual void tableCellTouchEnded(CCTableView *t, CCTableViewCell *c, CCTouch *touch);
 	virtual void scrollViewDidScroll(CCScrollView *s);
 	virtual void scrollViewDidZoom(CCScrollView *s);
 	virtual void keyBackClicked();

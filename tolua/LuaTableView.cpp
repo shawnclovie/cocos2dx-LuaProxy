@@ -42,26 +42,42 @@ LuaTableView::~LuaTableView(){
 	setScrollBar(NULL);
 	setScrollTrack(NULL);
 }
+CCTableViewCell * LuaTableView::cellForTouch(CCTouch *t){
+	unsigned int index;
+	CCPoint point = this->getContainer()->convertTouchToNodeSpace(t);
+	if (m_eVordering == kCCTableViewFillTopDown) {
+		CCSize cellSize = m_pDataSource->cellSizeForTable(this);
+		point.y -= cellSize.height;
+	}
+	index = this->_indexFromOffset(point);
+#if COCOS2D_VERSION >= 0x0020100
+	return this->cellAtIndex(index);
+#else
+	return this->_cellWithIndex(index);
+#endif
+}
+bool LuaTableView::ccTouchBegan(CCTouch *t, CCEvent *e){
+	bool r = CCScrollView::ccTouchBegan(t, e);
+	if(r){
+		LuaEventHandler *h = dynamic_cast<LuaEventHandler *>(m_pTableViewDelegate);
+		if(h){ h->tableCellTouchBegan(this, cellForTouch(t), t);}
+	}
+	return r;
+}
 void LuaTableView::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent){
 	if (!this->isVisible()) {
 		return;
 	}
+	CCTableViewCell *cell = cellForTouch(pTouch);
 	if (m_pTouches->count() == 1 && !this->isTouchMoved()) {
-		unsigned int index;
-		CCTableViewCell *cell;
-		CCPoint point = this->getContainer()->convertTouchToNodeSpace(pTouch);
-		if (m_eVordering == kCCTableViewFillTopDown) {
-			CCSize cellSize = m_pDataSource->cellSizeForTable(this);
-			point.y -= cellSize.height;
-		}
-		index = this->_indexFromOffset(point);
-		cell  = this->_cellWithIndex(index);
 		if (cell) {
 			LuaEventHandler *h = dynamic_cast<LuaEventHandler *>(m_pTableViewDelegate);
-			if(h){ h->tableCellTouched(this, cell, pTouch);
-			}else{ m_pTableViewDelegate->tableCellTouched(this, cell);
-			}
+			if(h){ h->tableCellTouched(this, cell, pTouch);}
+			else{ m_pTableViewDelegate->tableCellTouched(this, cell);}
 		}
+	}else{
+		LuaEventHandler *h = dynamic_cast<LuaEventHandler *>(m_pTableViewDelegate);
+		if(h){ h->tableCellTouchEnded(this, cell, pTouch);}
 	}
 	CCScrollView::ccTouchEnded(pTouch, pEvent);
 }
