@@ -46,6 +46,12 @@ static int tolua_CCBProxy_getMemberName(lua_State *l){
 	tolua_pushstring(l, p && n? p->getMemberName(n) : "");
 	return 1;
 }
+//CCBProxy::getMemberVariables
+static int tolua_CCBProxy_getMemberVariables(lua_State *l){
+	CCBProxy *p = (CCBProxy *)tolua_tousertype(l, 1, NULL);
+	tolua_pushusertype(l, p->getMemberVariables(), "CCDictionary");
+	return 1;
+}
 //CCBProxy::getNode
 static int tolua_CCBProxy_getNode(lua_State *l){
 #ifndef TOLUA_RELEASE
@@ -286,7 +292,7 @@ static int tolua_CCBProxy_readCCBFromFile(lua_State *l){
 	CCBProxy *p = (CCBProxy *)tolua_tousertype(l, 1, NULL);
 	const char *f = tolua_tostring(l, 2, 0);
 	if(p){
-		tolua_pushusertype(l, p->readCCBFromFile(f, tolua_tonumber(l, 3, 1)), "CCNode");
+		tolua_pushusertype(l, p->readCCBFromFile(f), "CCNode");
 	}
 	return 1;
 }

@@ -3,6 +3,7 @@
 #include "tolua_CC_Extension.h"
 #include "tolua_CCBProxy.h"
 #include "tolua_CursorTextField.h"
+#include "../ui/UIUtil.h"
 
 // Require encoded lua file
 // require(path)
@@ -119,6 +120,74 @@ static int tolua_LuaProxy_repeatTexParams(lua_State *l){
 	return 1;
 }
 */
+
+static int tolua_LuaProxy_fileContentsForPath(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isstring(l, 1, 0, &err)){
+		tolua_error(l, "#ferror in function 'fileContentsForPath'.", &err);
+		return 0;
+	}
+#endif
+	const char *p = tolua_tostring(l, 1, NULL);
+	if(p && strlen(p) > 0){
+		unsigned long size = 0;
+		unsigned char *d = CCFileUtils::sharedFileUtils()->getFileData(p, "rb", &size);
+		tolua_pushstring(l, CCString::createWithData(d, size)->getCString());
+	}
+	return 1;
+}
+
+// Util::createStroke(CCLabelTTF *l, float s, ccColor3B c)
+static int tolua_UIUtil_createStroke(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertable(l, 1, "UIUtil", 0, &err) || !tolua_isusertype(l, 2, "CCLabelTTF", 0, &err) || !tolua_isnumber(l, 3, 0, &err)
+		|| !tolua_isusertype(l, 4, "ccColor3B", 0, &err)){
+			tolua_error(l, "#ferror in function 'UIUtil.createStroke'.", &err);
+			return 0;
+	}
+#endif
+	CCLabelTTF *o = (CCLabelTTF *)tolua_tousertype(l, 2, NULL);
+	ccColor3B *c = (ccColor3B *)tolua_tousertype(l, 4, NULL);
+	CCRenderTexture *r = UIUtil::createStroke(o, tolua_tonumber(l, 3, 1), c? *c : ccc3(0,0,0));
+	tolua_pushusertype(l, r, "CCRenderTexture");
+	return 1;
+}
+
+static int tolua_UIUtil_shaderForKey(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertable(l, 1, "UIUtil", 0, &err) || !tolua_isstring(l, 2, 0, &err)
+		|| !(tolua_isstring(l, 3, 0, &err) || tolua_isnoobj(l, 3, &err))
+		|| !(tolua_isstring(l, 4, 0, &err) || tolua_isnoobj(l, 4, &err))){
+			tolua_error(l, "#ferror in function 'UIUtil.shaderForKey'.", &err);
+			return 0;
+	}
+#endif
+	const char *k = tolua_tostring(l, 2, NULL);
+	if(k && strlen(k) > 0){
+		tolua_pushusertype(l, UIUtil::shaderForKey(k, tolua_tostring(l, 3, NULL), tolua_tostring(l, 4, NULL)), "CCGLProgram");
+	}
+	return 1;
+}
+
+static int tolua_UIUtil_setShaderWithChildren(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertable(l, 1, "UIUtil", 0, &err) || !tolua_isusertype(l, 2, "CCNode", 0, &err)
+		|| !(tolua_isusertype(l, 3, "CCGLProgram", 0, &err) || tolua_isnoobj(l, 3, &err))){
+			tolua_error(l, "#ferror in function 'UIUtil.setShaderWithChildren'.", &err);
+			return 0;
+	}
+#endif
+	CCNode *n = (CCNode *)tolua_tousertype(l, 2, NULL);
+	if(n){
+		UIUtil::setShaderWithChildren(n, (CCGLProgram *)tolua_tousertype(l, 3, NULL));
+	}
+	return 1;
+}
+
 TOLUA_API int luaopen_LuaProxy(lua_State* l){
 	tolua_CC_Extension_open(l);
 	tolua_open(l);
@@ -127,11 +196,13 @@ TOLUA_API int luaopen_LuaProxy(lua_State* l){
 	tolua_usertype(l, "LuaCallFuncInterval");
 	tolua_usertype(l, "LuaEventHandler");
 	tolua_usertype(l, "LuaTableView");
+	tolua_usertype(l, "UIUtil");
 	tolua_module(l, NULL, 0);
 	tolua_beginmodule(l, NULL);
 		tolua_function(l, "copyAssetFileToData", tolua_LuaProxy_copyAssetFileToData);
 		tolua_function(l, "touchedNodesChild", tolua_LuaProxy_touchedNodesChild);
 //		tolua_function(l, "repeatTexParams", tolua_LuaProxy_repeatTexParams);
+		tolua_function(l, "fileContentsForPath", tolua_LuaProxy_fileContentsForPath);
 		tolua_constant(l, "GL_LINEAR", GL_LINEAR);
 		tolua_constant(l, "GL_REPEAT", GL_REPEAT);
 		tolua_constant(l, "GL_NEAREST", GL_NEAREST);
@@ -153,6 +224,7 @@ TOLUA_API int luaopen_LuaProxy(lua_State* l){
 			tolua_function(l, "create", tolua_CCBProxy_create);
 			tolua_function(l, "releaseMembers", tolua_CCBProxy_releaseMembers);
 			tolua_function(l, "getMemberName", tolua_CCBProxy_getMemberName);
+			tolua_function(l, "getMemberVariables", tolua_CCBProxy_getMemberVariables);
 			tolua_function(l, "getNode", tolua_CCBProxy_getNode);
 			tolua_function(l, "getNodeWithType", tolua_CCBProxy_getNodeWithType);
 			tolua_function(l, "nodeToType", tolua_CCBProxy_nodeToType);
@@ -213,6 +285,12 @@ TOLUA_API int luaopen_LuaProxy(lua_State* l){
 			tolua_function(l, "setScrollBar", tolua_LuaTableView_setScrollBar);
 			tolua_function(l, "setScrollTrack", tolua_LuaTableView_setScrollTrack);
 			tolua_function(l, "setScrollOffset", tolua_LuaTableView_setScrollOffset);
+		tolua_endmodule(l);
+		tolua_cclass(l, "UIUtil", "UIUtil", "", NULL);
+		tolua_beginmodule(l, "UIUtil");
+			tolua_function(l, "createStroke", tolua_UIUtil_createStroke);
+			tolua_function(l, "shaderForKey", tolua_UIUtil_shaderForKey);
+			tolua_function(l, "setShaderWithChildren", tolua_UIUtil_setShaderWithChildren);
 		tolua_endmodule(l);
 	tolua_endmodule(l);
 	return 1;
