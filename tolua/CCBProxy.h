@@ -86,7 +86,7 @@ public:
 	// Dynamic cast (o) to type (t), and push it by usertype into lua state.
 	static void nodeToTypeForLua(lua_State *l, CCObject *o, const char *t);
 	// Read ccbi file (f). 2nd argument not use yet.
-	CCNode * readCCBFromFile(const char *f, float resolutionScale = 1);
+	CCNode * readCCBFromFile(const char *f);
 //	void changeResolutionScale(CCNode *n, CCBAnimationManager *m, float resolutionScale);
 
 	// Fix label text blur when scaled

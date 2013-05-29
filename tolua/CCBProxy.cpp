@@ -75,6 +75,8 @@ SEL_CCControlHandler CCBProxy::onResolveCCBCCControlSelector(CCObject * pTarget,
 bool CCBProxy::onAssignCCBMemberVariable(CCObject * t, const char * v, CCNode * n){
 	if(n && v && strlen(v) > 0){
 		_memVars->setObject(n, v);
+	}else{
+		printf("CCBProxy assigned node (%s:%x) not saved\n", v, n);
 	}
 	return true;
 }
@@ -211,11 +213,9 @@ void CCBProxy::nodeToTypeForLua(lua_State *l, CCObject *o, const char *t){
 	else tolua_pushusertype(l, dynamic_cast<CCNode *>(o), "CCNode");
 }
 
-CCNode * CCBProxy::readCCBFromFile(const char *f, float resolutionScale){
+CCNode * CCBProxy::readCCBFromFile(const char *f){
 	//assert(f && strlen(f) > 0, "File name must not be null or empty string.");
-	CCNodeLoaderLibrary * lib = CCNodeLoaderLibrary::sharedCCNodeLoaderLibrary();
-	//lib->registerCCNodeLoader("CCParticleSystemQuad", ProxyPSQLoader::loader());
-	CCBReader * reader = new CCBReader(lib);
+	CCBReader * reader = new CCBReader(CCNodeLoaderLibrary::sharedCCNodeLoaderLibrary());
 	reader->autorelease();
 #if COCOS2D_VERSION < 0x00020100
 	reader->hasScriptingOwner = true;
