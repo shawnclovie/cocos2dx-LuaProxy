@@ -5,6 +5,15 @@
 #include "tolua_CursorTextField.h"
 #include "../ui/UIUtil.h"
 
+const char * getFullPathForFile(const char *p){
+	CCFileUtils *fu = CCFileUtils::sharedFileUtils();
+#if COCOS2D_VERSION < 0x00020100
+	return fu->fullPathFromRelativePath(p);
+#else
+	return fu->fullPathForFilename(p);
+#endif
+}
+
 // Require encoded lua file
 // require(path)
 static int tolua_LuaProxy_require(lua_State *l){
@@ -24,14 +33,14 @@ static int tolua_LuaProxy_copyAssetFileToData(lua_State *l){
 	CCFileUtils *fu = CCFileUtils::sharedFileUtils();
 	unsigned long len = 0;
 	std::string src = tolua_tostring(l, 1, NULL),
-		tar = tolua_tostring(l, 2, NULL);
+		tar = tolua_tostring(l, 2, NULL),
+		p;
 	if(tar.length() == 0){tar = src;}
+	src = getFullPathForFile(src.c_str());
 #if COCOS2D_VERSION < 0x00020100
-	src = fu->fullPathFromRelativePath(src.c_str());
-	std::string p = fu->getWriteablePath();
+	p = fu->getWriteablePath();
 #else
-	src = fu->fullPathForFilename(src.c_str());
-	std::string p = fu->getWritablePath();
+	p = fu->getWritablePath();
 #endif
 	tar.insert(0, p);
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32)
@@ -132,7 +141,7 @@ static int tolua_LuaProxy_fileContentsForPath(lua_State *l){
 	const char *p = tolua_tostring(l, 1, NULL);
 	if(p && strlen(p) > 0){
 		unsigned long size = 0;
-		unsigned char *d = CCFileUtils::sharedFileUtils()->getFileData(p, "rb", &size);
+		unsigned char *d = CCFileUtils::sharedFileUtils()->getFileData(getFullPathForFile(p), "rb", &size);
 		tolua_pushstring(l, CCString::createWithData(d, size)->getCString());
 	}
 	return 1;
