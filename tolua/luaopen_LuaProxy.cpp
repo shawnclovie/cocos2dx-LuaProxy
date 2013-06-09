@@ -10,7 +10,7 @@ const char * getFullPathForFile(const char *p){
 #if COCOS2D_VERSION < 0x00020100
 	return fu->fullPathFromRelativePath(p);
 #else
-	return fu->fullPathForFilename(p);
+	return fu->fullPathForFilename(p).c_str();
 #endif
 }
 

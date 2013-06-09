@@ -9,6 +9,7 @@ local h = LuaEventHandler:create(function(fn, table, a1, a2)
 	local r
 	if fn == "cellSize" then
 		-- Return cell size
+		-- a1 is cell index (-1 means default size, in cocos2d-x version below 2.1.3, it's always -1)
 		r = CCSizeMake(320,30)
 	elseif fn == "cellAtIndex" then
 		-- Return CCTableViewCell, a1 is cell index (zero based), a2 is dequeued cell (maybe nil)
@@ -24,8 +25,13 @@ local h = LuaEventHandler:create(function(fn, table, a1, a2)
 	elseif fn == "numberOfCells" then
 		-- Return number of cells
 		r = #data
-	elseif fn == "cellTouched" then
-		-- A cell was touched, a1 is cell that be touched. This is not necessary.
+	-- Cell events:
+	elseif fn == "cellTouched" then			-- A cell was touched, a1 is cell that be touched. This is not necessary.
+	elseif fn == "cellTouchBegan" then		-- A cell is touching, a1 is cell, a2 is CCTouch
+	elseif fn == "cellTouchEnded" then		-- A cell was touched, a1 is cell, a2 is CCTouch
+	elseif fn == "cellHighlignt" then		-- A cell is highlighting, coco2d-x 2.1.3 or above
+	elseif fn == "cellUnhighlignt" then		-- A cell had been unhighlighted, coco2d-x 2.1.3 or above
+	elseif fn == "cellWillRecycle" then		-- A cell will be recycled, coco2d-x 2.1.3 or above
 	end
 	return r
 end)

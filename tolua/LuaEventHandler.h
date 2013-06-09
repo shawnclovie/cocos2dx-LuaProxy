@@ -97,14 +97,19 @@ public:
 	void editBoxEvent(const char *e, CCEditBox *eb);
 #endif
 	// CCTableView events
+	virtual CCSize tableCellSizeForIndex(CCTableView *t, unsigned int i);
 	virtual CCSize cellSizeForTable(CCTableView *t);
 	virtual CCTableViewCell * tableCellAtIndex(CCTableView *t, unsigned int i);
 	virtual unsigned int numberOfCellsInTableView(CCTableView *t);
+	void tableCellEvent(const char *e, CCTableView *t, CCTableViewCell *c, CCObject *v = NULL, const char *type = NULL);
 	virtual void tableCellTouched(CCTableView *t, CCTableViewCell *c);
 	// Touched event, pass the point that touch in table
 	virtual void tableCellTouched(CCTableView *t, CCTableViewCell *c, CCTouch *touch);
 	virtual void tableCellTouchBegan(CCTableView *t, CCTableViewCell *c, CCTouch *touch);
 	virtual void tableCellTouchEnded(CCTableView *t, CCTableViewCell *c, CCTouch *touch);
+	virtual void tableCellHighlight(CCTableView* t, CCTableViewCell* c);
+	virtual void tableCellUnhighlight(CCTableView *t, CCTableViewCell* c);
+	virtual void tableCellWillRecycle(CCTableView *t, CCTableViewCell* c);
 	virtual void scrollViewDidScroll(CCScrollView *s);
 	virtual void scrollViewDidZoom(CCScrollView *s);
 	virtual void keyBackClicked();

@@ -248,11 +248,12 @@ void LuaEventHandler::editBoxEvent(const char *e, CCEditBox *eb){
 	}
 }
 #endif
-CCSize LuaEventHandler::cellSizeForTable(CCTableView *t){
+CCSize LuaEventHandler::tableCellSizeForIndex(CCTableView *t, unsigned int i){
 	CCSize r = CCSizeZero;
 	if(_handler){
 		LuaStack->pushString("cellSize");
 		LuaStack->pushCCObject(t, "CCTableView");
+		LuaStack->pushInt(i);
 		runLuaFunction(_handler, 2);
 		lua_State *l = luaStateForEngine();
 		tolua_Error err;
@@ -263,6 +264,9 @@ CCSize LuaEventHandler::cellSizeForTable(CCTableView *t){
 		finishRunLuaFunction(l);
 	}
 	return r;
+}
+CCSize LuaEventHandler::cellSizeForTable(CCTableView *t){
+	return tableCellSizeForIndex(t, -1);
 }
 CCTableViewCell * LuaEventHandler::tableCellAtIndex(CCTableView *t, unsigned int i){
 	CCTableViewCell *cell = t->dequeueCell();
@@ -294,36 +298,37 @@ unsigned int LuaEventHandler::numberOfCellsInTableView(CCTableView *t){
 	}
 	return r;
 }
+void LuaEventHandler::tableCellEvent(const char *e, CCTableView *t, CCTableViewCell *c, CCObject *v, const char *type){
+	if(_handler){
+		LuaStack->pushString(e);
+		LuaStack->pushCCObject(t, "CCTableView");
+		if(c){	LuaStack->pushCCObject(c, "CCTableViewCell");}
+		else{	LuaStack->pushNil();}
+		if(v && type){	LuaStack->pushCCObject(v, type);}
+		else{	LuaStack->pushNil();}
+		runLuaFunction(_handler, 4, true);
+	}
+}
 void LuaEventHandler::tableCellTouched(CCTableView *t, CCTableViewCell *c){
 	tableCellTouched(t, c, NULL);
 }
 void LuaEventHandler::tableCellTouched(CCTableView *t, CCTableViewCell *c, CCTouch *touch){
-	if(_handler){
-		LuaStack->pushString("cellTouched");
-		LuaStack->pushCCObject(t, "CCTableView");
-		LuaStack->pushCCObject(c, "CCTableViewCell");
-		LuaStack->pushCCObject(touch, "CCTouch");
-		runLuaFunction(_handler, 4, true);
-	}
+	tableCellEvent("cellTouched", t, c, touch, "CCTouch");
 }
 void LuaEventHandler::tableCellTouchBegan(CCTableView *t, CCTableViewCell *c, CCTouch *touch){
-	if(_handler){
-		LuaStack->pushString("cellTouchBegan");
-		LuaStack->pushCCObject(t, "CCTableView");
-		LuaStack->pushCCObject(c, "CCTableViewCell");
-		LuaStack->pushCCObject(touch, "CCTouch");
-		runLuaFunction(_handler, 4, true);
-	}
+	tableCellEvent("cellTouchBegan", t, c, touch, "CCTouch");
 }
 void LuaEventHandler::tableCellTouchEnded(CCTableView *t, CCTableViewCell *c, CCTouch *touch){
-	if(_handler){
-		LuaStack->pushString("cellTouchEnded");
-		LuaStack->pushCCObject(t, "CCTableView");
-		if(c){LuaStack->pushCCObject(c, "CCTableViewCell");}
-		else{LuaStack->pushNil();}
-		LuaStack->pushCCObject(touch, "CCTouch");
-		runLuaFunction(_handler, 4, true);
-	}
+	tableCellEvent("cellTouchEnded", t, c, touch, "CCTouch");
+}
+void LuaEventHandler::tableCellHighlight(CCTableView* t, CCTableViewCell* c){
+	tableCellEvent("cellHighlight", t, c);
+}
+void LuaEventHandler::tableCellUnhighlight(CCTableView *t, CCTableViewCell* c){
+	tableCellEvent("cellUnhighlight", t, c);
+}
+void LuaEventHandler::tableCellWillRecycle(CCTableView *t, CCTableViewCell* c){
+	tableCellEvent("cellWillRecycle", t, c);
 }
 void LuaEventHandler::scrollViewDidScroll(CCScrollView *s){
 	if(_handler){
