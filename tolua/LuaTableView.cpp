@@ -60,7 +60,12 @@ bool LuaTableView::ccTouchBegan(CCTouch *t, CCEvent *e){
 	bool r = CCScrollView::ccTouchBegan(t, e);
 	if(r){
 		LuaEventHandler *h = dynamic_cast<LuaEventHandler *>(m_pTableViewDelegate);
-		if(h){ h->tableCellTouchBegan(this, cellForTouch(t), t);}
+		if(h){
+			CCTableViewCell *c = cellForTouch(t);
+			if(c){
+				h->tableCellTouchBegan(this, c, t);
+			}
+		}
 	}
 	return r;
 }
@@ -69,15 +74,15 @@ void LuaTableView::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent){
 		return;
 	}
 	CCTableViewCell *cell = cellForTouch(pTouch);
-	if (m_pTouches->count() == 1 && !this->isTouchMoved()) {
-		if (cell) {
+	if(cell){
+		if (m_pTouches->count() == 1 && !this->isTouchMoved()) {
 			LuaEventHandler *h = dynamic_cast<LuaEventHandler *>(m_pTableViewDelegate);
 			if(h){ h->tableCellTouched(this, cell, pTouch);}
 			else{ m_pTableViewDelegate->tableCellTouched(this, cell);}
+		}else{
+			LuaEventHandler *h = dynamic_cast<LuaEventHandler *>(m_pTableViewDelegate);
+			if(h){ h->tableCellTouchEnded(this, cell, pTouch);}
 		}
-	}else{
-		LuaEventHandler *h = dynamic_cast<LuaEventHandler *>(m_pTableViewDelegate);
-		if(h){ h->tableCellTouchEnded(this, cell, pTouch);}
 	}
 	CCScrollView::ccTouchEnded(pTouch, pEvent);
 }

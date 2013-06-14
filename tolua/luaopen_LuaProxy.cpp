@@ -6,11 +6,10 @@
 #include "../ui/UIUtil.h"
 
 const char * getFullPathForFile(const char *p){
-	CCFileUtils *fu = CCFileUtils::sharedFileUtils();
 #if COCOS2D_VERSION < 0x00020100
-	return fu->fullPathFromRelativePath(p);
+	return CCFileUtils::sharedFileUtils()->fullPathFromRelativePath(p);
 #else
-	return fu->fullPathForFilename(p).c_str();
+	return CCFileUtils::sharedFileUtils()->fullPathFromRelativeFile(p, "");
 #endif
 }
 
@@ -141,7 +140,8 @@ static int tolua_LuaProxy_fileContentsForPath(lua_State *l){
 	const char *p = tolua_tostring(l, 1, NULL);
 	if(p && strlen(p) > 0){
 		unsigned long size = 0;
-		unsigned char *d = CCFileUtils::sharedFileUtils()->getFileData(getFullPathForFile(p), "rb", &size);
+		const char *fullPath = getFullPathForFile(p);
+		unsigned char *d = CCFileUtils::sharedFileUtils()->getFileData(fullPath, "rb", &size);
 		tolua_pushstring(l, CCString::createWithData(d, size)->getCString());
 	}
 	return 1;
