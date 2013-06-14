@@ -25,8 +25,7 @@ THE SOFTWARE.
 #include "CCBProxy.h"
 #include "tolua++.h"
 
-CCBProxy::CCBProxy(){
-	_selectorHandler = NULL;
+CCBProxy::CCBProxy():_selectorHandler(0){
 	_memVars = CCDictionary::create();
 	_memVars->retain();
 	_handlers = CCArray::create();
@@ -38,6 +37,7 @@ CCBProxy::~CCBProxy(){
 	CC_SAFE_RELEASE(_selectorHandler);
 }
 void CCBProxy::releaseMembers(){
+/*
 	CCDictElement *e;
 	CCNode *n;
 	CCDICT_FOREACH(_memVars, e){
@@ -49,6 +49,9 @@ void CCBProxy::releaseMembers(){
 	CCARRAY_FOREACH(_handlers, o){
 		o->autorelease();
 	}
+//*/
+	_memVars->removeAllObjects();
+	_handlers->removeAllObjects();
 }
 
 CCBProxy * CCBProxy::initProxy(lua_State *l){
@@ -216,12 +219,12 @@ void CCBProxy::nodeToTypeForLua(lua_State *l, CCObject *o, const char *t){
 CCNode * CCBProxy::readCCBFromFile(const char *f){
 	//assert(f && strlen(f) > 0, "File name must not be null or empty string.");
 	CCBReader * reader = new CCBReader(CCNodeLoaderLibrary::sharedCCNodeLoaderLibrary());
-	reader->autorelease();
 #if COCOS2D_VERSION < 0x00020100
 	reader->hasScriptingOwner = true;
 #endif
 	CCNode *node = reader->readNodeGraphFromFile(f, this);
 	CCBAnimationManager *m = reader->getAnimationManager();
+	reader->autorelease();
 	node->setUserObject(m);
 	return node;
 }
