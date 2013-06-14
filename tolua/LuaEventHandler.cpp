@@ -254,7 +254,7 @@ CCSize LuaEventHandler::tableCellSizeForIndex(CCTableView *t, unsigned int i){
 		LuaStack->pushString("cellSize");
 		LuaStack->pushCCObject(t, "CCTableView");
 		LuaStack->pushInt(i);
-		runLuaFunction(_handler, 2);
+		runLuaFunction(_handler, 3);
 		lua_State *l = luaStateForEngine();
 		tolua_Error err;
 		if(tolua_isusertype(l, -1, "CCSize", 0, &err)){
