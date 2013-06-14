@@ -13,6 +13,7 @@ extern "C" {
 #include "tolua_CCTableView.h"
 #include "tolua_CCScale9Sprite.h"
 #include "tolua_CCHttpClient.h"
+#include "tolua_CCGLProgram.h"
 
 //######################################## CCBFile ##########################
 //CCBFile::getCCBFileNode
@@ -418,6 +419,13 @@ TOLUA_API int tolua_CC_Extension_open(lua_State* l){
 			tolua_function(l, "reset", tolua_CCTableViewCell_reset);
 			tolua_function(l, "getObjectID", tolua_CCTableViewCell_getObjectID);
 			tolua_function(l, "setObjectID", tolua_CCTableViewCell_setObjectID);
+		tolua_endmodule(l);
+
+		tolua_cclass(l, "CCGLProgram", "CCGLProgram", "CCObject", NULL);
+		tolua_beginmodule(l, "CCGLProgram");
+			tolua_function(l, "addAttribute", tolua_CCGLProgram_addAttribute);
+			tolua_function(l, "getUniformLocationForName", tolua_CCGLProgram_getUniformLocationForName);
+			tolua_function(l, "setUniformLocationWith", tolua_CCGLProgram_setUniformLocationWith);
 		tolua_endmodule(l);
 	tolua_endmodule(l);
 	return 1;
