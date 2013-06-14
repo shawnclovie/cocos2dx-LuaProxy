@@ -11,6 +11,7 @@ USING_NS_CC;
 //######################################## CCGLProgram ##########################
 // CCGLProgram::getUniformLocationForName(const char *n)
 static int tolua_CCGLProgram_getUniformLocationForName(lua_State *l){
+#if COCOS2D_VERSION >= 0x00020100
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
 	if(!tolua_isusertype(l, 1, "CCGLProgram", 0, &err) || !tolua_isstring(l, 2, 0, &err)){
@@ -20,10 +21,12 @@ static int tolua_CCGLProgram_getUniformLocationForName(lua_State *l){
 #endif
 	auto o = (CCGLProgram *)tolua_tousertype(l, 1, NULL);
 	if(o){tolua_pushnumber(l, o->getUniformLocationForName(tolua_tostring(l, 2, "")));}
+#endif
 	return 1;
 }
 // CCGLProgram::setUniformLocationWith(const char *with, GLint loc / const char *name, ...)
 static int tolua_CCGLProgram_setUniformLocationWith(lua_State *l){
+#if COCOS2D_VERSION >= 0x00020100
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
 	if(!tolua_isusertype(l, 1, "CCGLProgram", 0, &err) || !tolua_isstring(l, 2, 0, &err) ||
@@ -68,6 +71,7 @@ static int tolua_CCGLProgram_setUniformLocationWith(lua_State *l){
 			o->setUniformLocationWithMatrix4fv(loc, vs, 4);}
 	}
 	tolua_pushusertype(l, o, "CCGLProgram");
+#endif
 	return 1;
 }
 // CCGLProgram::addAttribute(const char* attributeName, GLuint index)
