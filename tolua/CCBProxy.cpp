@@ -97,13 +97,17 @@ CCBSelectorResolver * CCBProxy::createNew(){
 	return dynamic_cast<CCBSelectorResolver *>(p);
 }
 
-void CCBProxy::handleEvent(CCControlButton *n, const int handler, bool multiTouches, CCControlEvent e){
+void CCBProxy::handleEvent(CCControl *n, const int handler, bool multiTouches, CCControlEvent e){
+#if COCOS2D_VERSION > 0x00020100
+	n->addHandleOfControlEvent(handler, e);
+#else
 	LuaEventHandler *h = getHandler(handler);
 	if(!h){
 		h = addHandler(handler, multiTouches)
 			->setTypename("CCControlButton");
 	}
 	n->addTargetWithActionForControlEvents(h, cccontrol_selector(LuaEventHandler::controlAction), e);
+#endif
 }
 
 #ifdef LUAPROXY_CCEDITBOX_ENABLED

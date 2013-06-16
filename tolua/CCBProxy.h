@@ -57,7 +57,7 @@ public:
 	virtual void onNodeLoaded(CCNode * pNode, CCNodeLoader * pNodeLoader);
 
 	//create LuaEventHandler contains a lua function(handler), for handler control's event
-	void handleEvent(CCControlButton *n, const int handler, bool multiTouches = false, CCControlEvent e = CCControlEventTouchUpInside);
+	void handleEvent(CCControl *n, const int handler, bool multiTouches = false, CCControlEvent e = CCControlEventTouchUpInside);
 #ifdef LUAPROXY_CCEDITBOX_ENABLED
 	void handleEvent(CCEditBox *n, const int handler);
 #endif
@@ -104,27 +104,4 @@ public:
 	void duplicate(CCParticleSystemQuad *n, CCParticleSystemQuad *o);
 	void duplicate(CCParticleSystem *n, CCParticleSystem *o);
 };
-/*
-class ProxyPSQLoader : public CCParticleSystemQuadLoader{
-public:
-	CCB_STATIC_NEW_AUTORELEASE_OBJECT_METHOD(ProxyPSQLoader, loader);
-	virtual CCTexture2D * parsePropTypeTexture(CCNode * pNode, CCNode * pParent, CCBReader * pCCBReader) {
-		CCString * spriteFile = pCCBReader->readCachedString();
-		if(spriteFile->compare("") != 0){
-			const char *s = spriteFile->getCString();
-			CCTextureCache *c = CCTextureCache::sharedTextureCache();
-			CCTexture2D *t = c->textureForKey(s);
-			if(!t){
-				t = c->addImage(s);
-			}
-			return t;
-		}else{
-			return NULL;
-		}
-	}
-
-protected:
-	CCB_VIRTUAL_NEW_AUTORELEASE_CREATECCNODE_METHOD(CCParticleSystemQuad);
-};
-*/
 #endif // __CCBPROXY_H_

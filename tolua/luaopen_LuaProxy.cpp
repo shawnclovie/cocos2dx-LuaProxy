@@ -240,7 +240,9 @@ TOLUA_API int luaopen_LuaProxy(lua_State* l){
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32)
 			tolua_function(l, "handleEditEvent", tolua_CCBProxy_handleEditEvent);
 #endif
-			tolua_function(l, "handleButtonEvent", tolua_CCBProxy_handleButtonEvent);
+			// Kept for compatible
+			tolua_function(l, "handleButtonEvent", tolua_CCBProxy_handleControlEvent);
+			tolua_function(l, "handleControlEvent", tolua_CCBProxy_handleControlEvent);
 			tolua_function(l, "handleKeypad", tolua_CCBProxy_handleKeypad);
 			tolua_function(l, "handleMenuEvent", tolua_CCBProxy_handleMenuEvent);
 			tolua_function(l, "handleAnimationComplate", tolua_CCBProxy_handleAnimationComplate);

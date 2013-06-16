@@ -94,17 +94,17 @@ static int tolua_CCBProxy_nodeToType(lua_State *l){
 	return 1;
 }
 //CCBProxy::handleButtonEvent
-static int tolua_CCBProxy_handleButtonEvent(lua_State *l){
+static int tolua_CCBProxy_handleControlEvent(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCBProxy", 0, &err) || !tolua_isusertype(l, 2, "CCControlButton", 0, &err) ||
+	if(!tolua_isusertype(l, 1, "CCBProxy", 0, &err) || !tolua_isusertype(l, 2, "CCControl", 0, &err) ||
 		!toluafix_isfunction(l, 3, "LUA_FUNCTION", 0, &err) || !tolua_isnumber(l, 4, 0, &err)){
 		tolua_error(l,"#ferror in function 'CCBProxy.handleButtonEvent'.",&err);
 		return 0;
 	}
 #endif
 	CCBProxy *p = (CCBProxy *)tolua_tousertype(l, 1, NULL);
-	CCControlButton *n = (CCControlButton *)tolua_tousertype(l, 2, NULL);
+	CCControl *n = (CCControl *)tolua_tousertype(l, 2, NULL);
 	CCControlEvent e = tolua_tonumber(l, 4, 0);
 	if(p && n){
 		p->handleEvent(n, toluafix_ref_function(l, 3, 0), false, e > 0? e : CCControlEventTouchUpInside);}

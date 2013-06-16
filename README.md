@@ -2,8 +2,15 @@
 =================
 LuaProxy for cocos2d-x, include CocosBuilder support for lua, and other cocos2d-extension support for lua, and easy to use function.
 
+##For cocos2d-x 2.1.4#
+Don't add tolua_extensions_ccb_open(lua_State) to AppDelegate.cpp.
+
 ##Change Log#
-2013-4-8 Add scroll bar support for LuaTableView. Temporary remove support for CCEditBox.
+2013-6-14 Add CCGLProgram support for lua.  
+2013-6-9 Support cocos2d-x 2.1.3.  
+2013-5-29 Add two LuaTableView events, and ui/UIUtil for useful functions.  
+2013-5-16 Add static functions to LuaEventHandler to direct call lua function.  
+2013-4-8 Add scroll bar support for LuaTableView. Temporary remove support for CCEditBox.  
 2013-3-28 Fix for support cocos2d-x 2.1.1.  
 2013-3-22 Bug fix: LuaTableView is "null" userdata in lua. Add LuaCallFuncInterval for call lua function every frame in duration seconds.  
 2013-3-19 Change main include file name to luaopen_LuaProxy.h - All function useful for lua will be add, not only CC_Extension.
