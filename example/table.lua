@@ -29,8 +29,8 @@ local h = LuaEventHandler:create(function(fn, table, a1, a2)
 	elseif fn == "cellTouched" then			-- A cell was touched, a1 is cell that be touched. This is not necessary.
 	elseif fn == "cellTouchBegan" then		-- A cell is touching, a1 is cell, a2 is CCTouch
 	elseif fn == "cellTouchEnded" then		-- A cell was touched, a1 is cell, a2 is CCTouch
-	elseif fn == "cellHighlignt" then		-- A cell is highlighting, coco2d-x 2.1.3 or above
-	elseif fn == "cellUnhighlignt" then		-- A cell had been unhighlighted, coco2d-x 2.1.3 or above
+	elseif fn == "cellHighlight" then		-- A cell is highlighting, coco2d-x 2.1.3 or above
+	elseif fn == "cellUnhighlight" then		-- A cell had been unhighlighted, coco2d-x 2.1.3 or above
 	elseif fn == "cellWillRecycle" then		-- A cell will be recycled, coco2d-x 2.1.3 or above
 	end
 	return r
