@@ -63,7 +63,7 @@ CCTableViewCell * LuaTableView::cellForTouch(CCTouch *t){
 #endif
 }
 bool LuaTableView::ccTouchBegan(CCTouch *t, CCEvent *e){
-	bool r = CCScrollView::ccTouchBegan(t, e);
+	bool r = CCTableView::ccTouchBegan(t, e);
 	if(r){
 		CCTableViewCell *c = cellForTouch(t);
 		LuaEventHandler *h = dynamic_cast<LuaEventHandler *>(m_pTableViewDelegate);
@@ -89,7 +89,7 @@ void LuaTableView::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent){
 	}else{
 		printf("LTV.touchEnded cell is null %f,%f\n", pTouch->getLocation().x, pTouch->getLocation().y);
 	}
-	CCScrollView::ccTouchEnded(pTouch, pEvent);
+	CCTableView::ccTouchEnded(pTouch, pEvent);
 }
 void LuaTableView::setScrollNode(CCNode *n){
 	if(_scrollNode){ _scrollNode->removeAllChildrenWithCleanup(true);}
