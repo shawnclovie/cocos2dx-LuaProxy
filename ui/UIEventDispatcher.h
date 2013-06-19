@@ -1,6 +1,9 @@
 #ifndef __UIEVENTDISPATCHER_H__
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #define __UIEVENTDISPATCHER_H__
+
+#include "platform/CCPlatformConfig.h"
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #include "cocos2d.h"
 USING_NS_CC;
 using namespace std;

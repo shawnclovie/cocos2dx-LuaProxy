@@ -35,6 +35,7 @@ CCBProxy::~CCBProxy(){
 	CC_SAFE_RELEASE(_memVars);
 	CC_SAFE_RELEASE(_handlers);
 	CC_SAFE_RELEASE(_selectorHandler);
+	CCTextureCache::sharedTextureCache()->removeUnusedTextures();
 }
 void CCBProxy::releaseMembers(){
 /*

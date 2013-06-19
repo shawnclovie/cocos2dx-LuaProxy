@@ -32,6 +32,25 @@ static int tolua_CCBProxy_releaseMembers(lua_State *l){
 	}
 	return 1;
 }
+
+//CCBProxy::getMemberVariables
+static int tolua_CCBProxy_getMembers(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "CCBProxy", 0, &err)){
+		tolua_error(l,"#ferror in function 'CCBProxy.getMembers'.",&err);
+		return 0;
+	}
+#endif
+    CCBProxy *p = (CCBProxy *)tolua_tousertype(l, 1, NULL);
+    CCDictionary* tolua_ret = (CCDictionary*)p->getMemberVariables();
+    int nID = (tolua_ret) ? (int)tolua_ret->m_uID : -1;
+    int* pLuaID = (tolua_ret) ? &tolua_ret->m_nLuaID : NULL;
+    toluafix_pushusertype_ccobject(l, nID, pLuaID, (void*)tolua_ret,"CCDictionary");
+
+    return 1;
+}
+
 //CCBProxy::getMemberName
 static int tolua_CCBProxy_getMemberName(lua_State *l){
 #ifndef TOLUA_RELEASE
