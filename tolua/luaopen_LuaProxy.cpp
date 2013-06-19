@@ -232,6 +232,7 @@ TOLUA_API int luaopen_LuaProxy(lua_State* l){
 		tolua_beginmodule(l,"CCBProxy");
 			tolua_function(l, "create", tolua_CCBProxy_create);
 			tolua_function(l, "releaseMembers", tolua_CCBProxy_releaseMembers);
+			tolua_function(l, "getMembers", tolua_CCBProxy_getMembers);
 			tolua_function(l, "getMemberName", tolua_CCBProxy_getMemberName);
 			tolua_function(l, "getMemberVariables", tolua_CCBProxy_getMemberVariables);
 			tolua_function(l, "getNode", tolua_CCBProxy_getNode);

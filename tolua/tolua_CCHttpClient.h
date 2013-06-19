@@ -337,7 +337,7 @@ static int tolua_CCHttpResponse_getHttpRequest(lua_State *l){
 	}
 #endif
 	CCHttpResponse *o = (CCHttpResponse *)tolua_tousertype(l, 1, NULL);
-	tolua_pushusertype(l, o? o->getHttpRequest() : NULL, "CCCCHttpRequest");
+	tolua_pushusertype(l, o? o->getHttpRequest() : NULL, "CCHttpRequest");
 	return 1;
 }
 //CCHttpResponse::isSucceed

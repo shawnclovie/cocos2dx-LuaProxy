@@ -45,29 +45,29 @@ static int tolua_CCGLProgram_setUniformLocationWith(lua_State *l){
 		else if(strcmp(w, "3i") == 0){	o->setUniformLocationWith3i(loc, tolua_tonumber(l, 4, 0), tolua_tonumber(l, 5, 0), tolua_tonumber(l, 6, 0));}
 		else if(strcmp(w, "4i") == 0){	o->setUniformLocationWith4i(loc, tolua_tonumber(l, 4, 0), tolua_tonumber(l, 5, 0), tolua_tonumber(l, 6, 0), tolua_tonumber(l, 7, 0));}
 		else if(strcmp(w, "2iv") == 0){
-			GLint vs[] = {tolua_tonumber(l, 4, 0), tolua_tonumber(l, 5, 0)};
+			GLint vs[] = {static_cast<GLint>(tolua_tonumber(l, 4, 0)), static_cast<GLint>(tolua_tonumber(l, 5, 0))};
 			o->setUniformLocationWith2iv(loc, vs, 2);}
 		else if(strcmp(w, "3iv") == 0){
-			GLint vs[] = {tolua_tonumber(l, 4, 0), tolua_tonumber(l, 5, 0), tolua_tonumber(l, 6, 0)};
+			GLint vs[] = {static_cast<GLint>(tolua_tonumber(l, 4, 0)), static_cast<GLint>(tolua_tonumber(l, 5, 0)), static_cast<GLint>(tolua_tonumber(l, 6, 0))};
 			o->setUniformLocationWith3iv(loc, vs, 3);}
 		else if(strcmp(w, "4iv") == 0){
-			GLint vs[] = {tolua_tonumber(l, 4, 0), tolua_tonumber(l, 5, 0), tolua_tonumber(l, 6, 0), tolua_tonumber(l, 7, 0)};
+			GLint vs[] = {static_cast<GLint>(tolua_tonumber(l, 4, 0)), static_cast<GLint>(tolua_tonumber(l, 5, 0)), static_cast<GLint>(tolua_tonumber(l, 6, 0)), static_cast<GLint>(tolua_tonumber(l, 7, 0))};
 			o->setUniformLocationWith4iv(loc, vs, 4);}
 		else if(strcmp(w, "1f") == 0){	o->setUniformLocationWith1f(loc, (GLfloat)tolua_tonumber(l, 4, 0));}
 		else if(strcmp(w, "2f") == 0){	o->setUniformLocationWith2f(loc, tolua_tonumber(l, 4, 0), tolua_tonumber(l, 5, 0));}
 		else if(strcmp(w, "3f") == 0){	o->setUniformLocationWith3f(loc, tolua_tonumber(l, 4, 0), tolua_tonumber(l, 5, 0), tolua_tonumber(l, 6, 0));}
 		else if(strcmp(w, "4f") == 0){	o->setUniformLocationWith4f(loc, tolua_tonumber(l, 4, 0), tolua_tonumber(l, 5, 0), tolua_tonumber(l, 6, 0), tolua_tonumber(l, 7, 0));}
 		else if(strcmp(w, "2fv") == 0){
-			GLfloat vs[] = {tolua_tonumber(l, 4, 0), tolua_tonumber(l, 5, 0)};
+			GLfloat vs[] = {static_cast<GLfloat>(tolua_tonumber(l, 4, 0)), static_cast<GLfloat>(tolua_tonumber(l, 5, 0))};
 			o->setUniformLocationWith2fv(loc, vs, 2);}
 		else if(strcmp(w, "3fv") == 0){
-			GLfloat vs[] = {tolua_tonumber(l, 4, 0), tolua_tonumber(l, 5, 0), tolua_tonumber(l, 6, 0)};
+			GLfloat vs[] = {static_cast<GLfloat>(tolua_tonumber(l, 4, 0)), static_cast<GLfloat>(tolua_tonumber(l, 5, 0)), static_cast<GLfloat>(tolua_tonumber(l, 6, 0))};
 			o->setUniformLocationWith3fv(loc, vs, 3);}
 		else if(strcmp(w, "4fv") == 0){
-			GLfloat vs[] = {tolua_tonumber(l, 4, 0), tolua_tonumber(l, 5, 0), tolua_tonumber(l, 6, 0), tolua_tonumber(l, 7, 0)};
+			GLfloat vs[] = {static_cast<GLfloat>(tolua_tonumber(l, 4, 0)), static_cast<GLfloat>(tolua_tonumber(l, 5, 0)), static_cast<GLfloat>(tolua_tonumber(l, 6, 0)), static_cast<GLfloat>(tolua_tonumber(l, 7, 0))};
 			o->setUniformLocationWith4fv(loc, vs, 4);}
 		else if(strcmp(w, "m4fv") == 0){
-			GLfloat vs[] = {tolua_tonumber(l, 4, 0), tolua_tonumber(l, 5, 0), tolua_tonumber(l, 6, 0), tolua_tonumber(l, 7, 0)};
+			GLfloat vs[] = {static_cast<GLfloat>(tolua_tonumber(l, 4, 0)), static_cast<GLfloat>(tolua_tonumber(l, 5, 0)), static_cast<GLfloat>(tolua_tonumber(l, 6, 0)), static_cast<GLfloat>(tolua_tonumber(l, 7, 0))};
 			o->setUniformLocationWithMatrix4fv(loc, vs, 4);}
 	}
 	tolua_pushusertype(l, o, "CCGLProgram");
