@@ -19,7 +19,7 @@ static int tolua_CCGLProgram_getUniformLocationForName(lua_State *l){
 		return 0;
 	}
 #endif
-	auto o = (CCGLProgram *)tolua_tousertype(l, 1, NULL);
+	CCGLProgram * o = (CCGLProgram *)tolua_tousertype(l, 1, NULL);
 	if(o){tolua_pushnumber(l, o->getUniformLocationForName(tolua_tostring(l, 2, "")));}
 #endif
 	return 1;
@@ -35,8 +35,8 @@ static int tolua_CCGLProgram_setUniformLocationWith(lua_State *l){
 		return 0;
 	}
 #endif
-	auto o = (CCGLProgram *)tolua_tousertype(l, 1, NULL);
-	auto w = tolua_tostring(l, 2, NULL);
+	CCGLProgram * o = (CCGLProgram *)tolua_tousertype(l, 1, NULL);
+	const char * w = tolua_tostring(l, 2, NULL);
 	if(o && w){
 		GLint loc = tolua_tonumber(l, 3, 0);
 		if(loc == 0){loc = o->getUniformLocationForName(tolua_tostring(l, 3, 0));}
@@ -83,7 +83,7 @@ static int tolua_CCGLProgram_addAttribute(lua_State *l){
 		return 0;
 	}
 #endif
-	auto o = (CCGLProgram *)tolua_tousertype(l, 1, NULL);
+	CCGLProgram * o = (CCGLProgram *)tolua_tousertype(l, 1, NULL);
 	if(o){o->addAttribute(tolua_tostring(l, 2, NULL), tolua_tonumber(l, 3, 0));}
 	tolua_pushusertype(l, o, "CCGLProgram");
 	return 1;

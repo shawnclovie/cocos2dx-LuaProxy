@@ -3,7 +3,7 @@
 #define __CURSORTEXTFIELD_H__
 #include "cocos2d.h"
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
-#include "UIEventDispatcher.h"
+#include "UIUtil.h"
 #endif
 USING_NS_CC;
 

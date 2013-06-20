@@ -6,6 +6,7 @@ LuaProxy for cocos2d-x, include CocosBuilder support for lua, and other cocos2d-
 Don't add tolua_extensions_ccb_open(lua_State) to AppDelegate.cpp.
 
 ##Change Log#
+2013-6-19 Moved some functions about ui to ui/UIUtil from CCBProxy. Moved UIEventDispatcher into UIUtil.h/.cpp no longer stand alone. Add CameraEyeAction to do some 3d effect.  
 2013-6-14 Add CCGLProgram support for lua.  
 2013-6-9 Support cocos2d-x 2.1.3.  
 2013-5-29 Add two LuaTableView events, and ui/UIUtil for useful functions.  
@@ -18,8 +19,7 @@ Don't add tolua_extensions_ccb_open(lua_State) to AppDelegate.cpp.
 ##Step 1 Add LuaProxy files to your project#
 Create a Lua based cocos2d-x project, or open your project that added Lua support.  
 In Visual Studio, open Project Property, in C/C++ - Additional Include Directories, add LuaProxy source code directory, and add all source files.  
-In Xcode, add all source files.
-You may safety remove ui/UIEventDispatcher.cpp(and .h), it's just design for win32.
+In Xcode, add all source files. You may safety remove ui/UIEventDispatcher.cpp(and .h), it's just design for win32.
 
 ##Step 2 Add C++ Code#
 Open CCAppDelegate.cpp, add include like this:  
@@ -32,8 +32,8 @@ Now you can do those things in lua, but we must create a CCBProxy at first, I wr
 
 > local proxy = CCBProxy:create()  
 -- !!  
--- If you want to handle CCControlButton, you must add this line.  
--- And kept variable "proxy" to global.  
+-- If you want to handle CCControlButton, you must retain the proxy,  
+-- And kept variable "proxy" to global or global table.  
 -- While the button won't be use, just like scene poped, you'd batter release the proxy.  
 -- proxy:retain()
 

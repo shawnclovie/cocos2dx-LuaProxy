@@ -88,20 +88,5 @@ public:
 	// Read ccbi file (f). 2nd argument not use yet.
 	CCNode * readCCBFromFile(const char *f);
 //	void changeResolutionScale(CCNode *n, CCBAnimationManager *m, float resolutionScale);
-
-	// Fix label text blur when scaled
-	// Change (o) and the children's scale and font size (scale/=rate and fontSize*=rate), and set font name if assigned (font)
-	void fixLabel(CCNode *o, const float rate, bool withChild, const char *font = NULL);
-	void fixParticle(CCNode *o, const float dur, const float life, bool withChild);
-	void fixParticleWithHandler(CCNode *o, LuaEventHandler *h, bool withChild);
-	CCNode * copyNode(CCNode *n);
-	// Duplicate (o)'s properties to (n)
-	void duplicate(CCNode *n, CCNode *o);
-	void duplicate(CCScale9Sprite *n, CCScale9Sprite *o);
-	void duplicate(CCSprite *n, CCSprite *o);
-	void duplicate(CCLabelBMFont *n, CCLabelBMFont *o);
-	void duplicate(CCLabelTTF *n, CCLabelTTF *o);
-	void duplicate(CCParticleSystemQuad *n, CCParticleSystemQuad *o);
-	void duplicate(CCParticleSystem *n, CCParticleSystem *o);
 };
 #endif // __CCBPROXY_H_
