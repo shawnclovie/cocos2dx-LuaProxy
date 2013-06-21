@@ -117,6 +117,7 @@ public:
 
 	// Http Event
 	void onHttpResponse(CCNode *sender, void *data);
+	void onHttpResponse(CCHttpClient *c, CCHttpResponse *res);
 	
 	void onIAPProductList(CCDictionary *prods);
 	void onIAPBuy(bool success, const char *key, const char *errMsg = NULL, int errCode = 0);

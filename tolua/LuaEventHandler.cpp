@@ -168,7 +168,11 @@ LuaEventHandler * LuaEventHandler::handle(CCBAnimationManager *m, int handler){
 LuaEventHandler * LuaEventHandler::handle(CCHttpRequest *req, int handler){
 	if(req){
 		if(handler > 0){ handle(handler);}
+#ifdef httpresponse_selector
+		req->setResponseCallback(this, httpresponse_selector(LuaEventHandler::onHttpResponse));
+#else
 		req->setResponseCallback(this, callfuncND_selector(LuaEventHandler::onHttpResponse));
+#endif
 		CCHttpClient::getInstance()->send(req);
 		req->release();
 	}
@@ -364,6 +368,10 @@ void LuaEventHandler::onHttpResponse(CCNode *sender, void *data){
 		LuaStack->pushCCObject(this, "LuaEventHandler");
 		LuaStack->executeFunctionByHandler(_handler, 2);
 	}
+}
+
+void LuaEventHandler::onHttpResponse(CCHttpClient *c, CCHttpResponse *res){
+	onHttpResponse(NULL, (void *)res);
 }
 
 void LuaEventHandler::onIAPProductList(CCDictionary *prods){
