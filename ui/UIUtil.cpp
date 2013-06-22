@@ -174,6 +174,11 @@ void UIUtil::duplicate(CCNode *n, CCNode *o){
 	n->setRotation(o->getRotation());
 	n->setVisible(o->isVisible());
 	n->setVertexZ(o->getVertexZ());
+	n->setSkewX(o->getSkewX());
+	n->setSkewY(o->getSkewY());
+	n->setOrderOfArrival(o->getOrderOfArrival());
+	n->ignoreAnchorPointForPosition(o->isIgnoreAnchorPointForPosition());
+	n->setGLServerState(o->getGLServerState());
 }
 void UIUtil::duplicate(CCParticleSystemQuad *n, CCParticleSystemQuad *o){
 	if(!n || !o)return;
