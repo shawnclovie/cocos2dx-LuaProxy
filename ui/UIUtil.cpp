@@ -116,6 +116,12 @@ CCNode * UIUtil::copyNode(CCNode *n, bool deep){
 		if(!r){	CREATE_AND_DUPLICATE(r, CCSprite, n);}
 		if(!r){	CREATE_AND_DUPLICATE(r, CCScale9Sprite, n);}
 		if(!r){
+			CREATE_AND_DUPLICATE(r, CCControlButton, n);
+			if(r){
+				deep = false;
+			}
+		}
+		if(!r){
 			r = CCNode::create();
 			duplicate(r, n);
 		}
@@ -144,6 +150,10 @@ void UIUtil::duplicate(CCSprite *n, CCSprite *o){
 	n->setFlipX(o->isFlipX());
 	n->setFlipY(o->isFlipY());
 	n->setBlendFunc(o->getBlendFunc());
+	duplicate((CCNode *)n, (CCNode *)o);
+}
+void UIUtil::duplicate(CCLayer *n, CCLayer *o){
+	if(!n || !o)return;
 	duplicate((CCNode *)n, (CCNode *)o);
 }
 void UIUtil::duplicate(CCLabelBMFont *n, CCLabelBMFont *o){
@@ -236,6 +246,30 @@ void UIUtil::duplicate(CCParticleSystem *n, CCParticleSystem *o){
 	n->setAutoRemoveOnFinish(o->isAutoRemoveOnFinish());
 	duplicate((CCNode *)n, (CCNode *)o);
 }
+void UIUtil::duplicate(CCControl *n, CCControl *o){
+	if(!n || !o)return;
+	duplicate((CCLayer *)n, (CCLayer *)o);
+}
+void UIUtil::duplicate(CCControlButton *n, CCControlButton *o){
+	if(!n || !o)return;
+	duplicate((CCControl *)n, (CCControl *)o);
+	CCControlState states[] = {CCControlStateNormal, CCControlStateHighlighted, CCControlStateDisabled};
+	CCControlState s;
+	for(int i = 0; i < 3; i ++){
+		s = states[i];
+		n->setTitleForState(o->getTitleForState(s), s);
+		n->setTitleColorForState(o->getTitleColorForState(s), s);
+	}
+	n->setEnabled(o->isEnabled());
+	n->setSelected(o->isSelected());
+	n->setHighlighted(o->isHighlighted());
+	n->setAdjustBackgroundImage(o->doesAdjustBackgroundImage());
+	n->setPreferredSize(o->getPreferredSize());
+	n->setZoomOnTouchDown(o->getZoomOnTouchDown());
+	n->setOpacity(o->getOpacity());
+	n->setOpacityModifyRGB(o->isOpacityModifyRGB());
+	n->setColor(o->getColor());
+}
 CCNode * UIUtil::changeParent(CCNode *n, CCNode *np, int zOrd, int tag){
 	if(n && np){
 		n->retain();
@@ -274,7 +308,7 @@ void UIEventDispatcher::removeListener(UIEventDelegate *l){
 void UIEventDispatcherHook(UINT m, WPARAM w, LPARAM l){
 	UIEventDispatcher::sharedDispatcher()->win32Key(m, w, l);
 }
-#endif
+#endif // WIN32 only
 
 CCCameraEyeAction * CCCameraEyeAction::create(float dur, bool bTo, const ccVertex3F& d){
 	CCCameraEyeAction *o = new CCCameraEyeAction();

@@ -35,11 +35,16 @@ public:
 	static void duplicate(CCNode *n, CCNode *o);
 	static void duplicate(CCScale9Sprite *n, CCScale9Sprite *o);
 	static void duplicate(CCSprite *n, CCSprite *o);
+	static void duplicate(CCLayer *n, CCLayer *o);
 	static void duplicate(CCLabelBMFont *n, CCLabelBMFont *o);
 	static void duplicate(CCLabelTTF *n, CCLabelTTF *o);
 	static void duplicate(CCParticleSystemQuad *n, CCParticleSystemQuad *o);
 	static void duplicate(CCParticleSystem *n, CCParticleSystem *o);
+	static void duplicate(CCControl *n, CCControl *o);
+	static void duplicate(CCControlButton *n, CCControlButton *o);
+	// Move node (n) from its original parent to new one (np), and set z order (zOrd=0) and (tag=1)
 	static CCNode * changeParent(CCNode *n, CCNode *np, int zOrd = 0, int tag = -1);
+	// Get node (n)'s position relative another node (np), np may not parent of n.
 	static CCPoint positionRelative(CCNode *n, CCNode *np);
 };
 
@@ -62,7 +67,7 @@ public:
 	void removeListener(UIEventDelegate *l);
 };
 void UIEventDispatcherHook(UINT m, WPARAM w, LPARAM l);
-#endif
+#endif // WIN32 only
 
 class CCCameraEyeAction : public CCActionInterval{
 public:
@@ -80,4 +85,5 @@ public:
 	virtual void update(float time);
 	CCCameraEyeAction * setStart(ccVertex3F v);
 };
+
 #endif //__UIUTIL_H__
