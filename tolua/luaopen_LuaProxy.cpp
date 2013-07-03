@@ -55,38 +55,6 @@ static int tolua_LuaProxy_copyAssetFileToData(lua_State *l){
 	if(len){tolua_pushstring(l, tar.c_str());}
 	return 1;
 }
-//#include "iconv.h"
-//iconv
-/*static int tolua_iconv(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isstring(l, 1, NULL, &err) || !tolua_isstring(l, 2, NULL, &err)
-		|| !tolua_isstring(l, 3, NULL, &err) || !tolua_isnoobj(l, 4, &err)){
-		tolua_error(l,"#ferror in function 'iconv'.",&err);
-		return 0;
-	}
-#endif
-	char *r = "";
-	const char *s = tolua_tostring(l, 1, r);
-	iconv_t h = iconv_open(tolua_tostring(l, 2, NULL), tolua_tostring(l, 3, NULL));
-	if(h != 0){
-		size_t len = strlen(s);
-		size_t lenout = len * 4;
-		const char **pin = &s;
-		char *outbuf = (char *)malloc(lenout);
-		memset(outbuf, 0, lenout);
-		if(-1 == libiconv(h, pin, &len, &outbuf, &lenout)){
-CCLog("iconv convert failed");
-			free(outbuf);
-		}else{
-CCLog("iconv converted, %s", outbuf);
-			r = outbuf;
-		}
-		iconv_close(h);
-	}
-	tolua_pushstring(l, r);
-	return 1;
-}*/
 // touchedNodesChild(CCNode *node, int x, int y, const char *toTypeName)
 static int tolua_LuaProxy_touchedNodesChild(lua_State *l){
 #ifndef TOLUA_RELEASE
@@ -273,13 +241,15 @@ static int tolua_UIUtil_duplicate(lua_State *l){
 	CCNode *n = (CCNode *)tolua_tousertype(l, 2, NULL);
 	CCNode *o = (CCNode *)tolua_tousertype(l, 3, NULL);
 	const char *t = tolua_tostring(l, 4, NULL);
-	if(strcmp(t, "CCScale9Sprite") == 0)		UIUtil::duplicate(dynamic_cast<CCScale9Sprite *>(n), dynamic_cast<CCScale9Sprite *>(o));
-	else if(strcmp(t, "CCSprite") == 0)			UIUtil::duplicate(dynamic_cast<CCSprite *>(n), dynamic_cast<CCSprite *>(o));
-	else if(strcmp(t, "CCLabelBMFont") == 0)	UIUtil::duplicate(dynamic_cast<CCLabelBMFont *>(n), dynamic_cast<CCLabelBMFont *>(o));
-	else if(strcmp(t, "CCLabelTTF") == 0)		UIUtil::duplicate(dynamic_cast<CCLabelTTF *>(n), dynamic_cast<CCLabelTTF *>(o));
-	else if(strcmp(t, "CCParticleSystem") == 0)	UIUtil::duplicate(dynamic_cast<CCParticleSystem *>(n), dynamic_cast<CCParticleSystem *>(o));
-	else if(strcmp(t, "CCParticleSystemQuad") == 0)UIUtil::duplicate(dynamic_cast<CCParticleSystemQuad *>(n), dynamic_cast<CCParticleSystemQuad *>(o));
-	else UIUtil::duplicate(n, o);
+	if(strcmp(t, "CCScale9Sprite") == 0){		UIUtil::duplicate(dynamic_cast<CCScale9Sprite *>(n), dynamic_cast<CCScale9Sprite *>(o));}
+	else if(strcmp(t, "CCSprite") == 0){		UIUtil::duplicate(dynamic_cast<CCSprite *>(n), dynamic_cast<CCSprite *>(o));}
+	else if(strcmp(t, "CCLabelBMFont") == 0){	UIUtil::duplicate(dynamic_cast<CCLabelBMFont *>(n), dynamic_cast<CCLabelBMFont *>(o));}
+	else if(strcmp(t, "CCLabelTTF") == 0){		UIUtil::duplicate(dynamic_cast<CCLabelTTF *>(n), dynamic_cast<CCLabelTTF *>(o));}
+	else if(strcmp(t, "CCParticleSystem") == 0){UIUtil::duplicate(dynamic_cast<CCParticleSystem *>(n), dynamic_cast<CCParticleSystem *>(o));}
+	else if(strcmp(t, "CCParticleSystemQuad") == 0){UIUtil::duplicate(dynamic_cast<CCParticleSystemQuad *>(n), dynamic_cast<CCParticleSystemQuad *>(o));}
+	else if(strcmp(t, "CCControlButton") == 0){	UIUtil::duplicate(dynamic_cast<CCControlButton *>(n), dynamic_cast<CCControlButton *>(o));}
+	else if(strcmp(t, "CCLayer") == 0){			UIUtil::duplicate(dynamic_cast<CCLayer *>(n), dynamic_cast<CCLayer *>(o));}
+	else{	UIUtil::duplicate(n, o);}
 	return 1;
 }
 // UIUtil::changeParent(CCNode *n)
@@ -382,7 +352,6 @@ TOLUA_API int luaopen_LuaProxy(lua_State* l){
 		tolua_constant(l, "CC_PLATFORM_MAC", CC_PLATFORM_MAC);
 		tolua_constant(l, "CC_PLATFORM_LINUX", CC_PLATFORM_LINUX);
 		tolua_constant(l, "CC_PLATFORM_UNKNOW", CC_PLATFORM_UNKNOWN);
-//		tolua_function(l, "iconv", tolua_iconv);
 		tolua_cclass(l,"CCBProxy","CCBProxy","CCLayer",NULL);
 		tolua_beginmodule(l,"CCBProxy");
 			tolua_function(l, "create", tolua_CCBProxy_create);

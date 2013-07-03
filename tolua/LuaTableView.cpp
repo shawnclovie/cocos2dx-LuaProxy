@@ -83,13 +83,14 @@ void LuaTableView::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent){
 		if(m_pTouches->count() == 1 && !isTouchMoved()){
 			if(h){	h->tableCellTouched(this, cell, pTouch);}
 			else{	m_pTableViewDelegate->tableCellTouched(this, cell);}
+            m_pTableViewDelegate->tableCellUnhighlight(this, cell);
 		}else if(h){
 			h->tableCellTouchEnded(this, cell, pTouch);
 		}
 	}else{
 		printf("LTV.touchEnded cell is null %f,%f\n", pTouch->getLocation().x, pTouch->getLocation().y);
 	}
-	CCTableView::ccTouchEnded(pTouch, pEvent);
+	CCScrollView::ccTouchEnded(pTouch, pEvent);
 }
 void LuaTableView::setScrollNode(CCNode *n){
 	if(_scrollNode){ _scrollNode->removeAllChildrenWithCleanup(true);}
