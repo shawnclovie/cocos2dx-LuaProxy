@@ -181,6 +181,7 @@ LuaEventHandler * LuaEventHandler::handle(CCHttpRequest *req, int handler){
 
 void LuaEventHandler::unhandle(){
 	if(_handler > 0){
+		toluafix_remove_function_by_refid(_lua, _handler);
 		lua_unref(_lua, _handlerRef);
 		_handlerRef = 0;
 		_handler = 0;
