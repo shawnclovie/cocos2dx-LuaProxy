@@ -8,7 +8,7 @@ extern "C" {
 #include "CCBProxy.h"
 
 //######################################## CCScale9Sprite ##########################
-//CCScale9Sprite::create(const char *file, CCRect *rect = CCRectZero, CCRect capInsets = CCRectZero)
+// CCScale9Sprite::create(const char *file, CCRect *rect = CCRectZero, CCRect capInsets = CCRectZero)
 static int tolua_CCScale9Sprite_create(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
@@ -28,7 +28,7 @@ static int tolua_CCScale9Sprite_create(lua_State *l){
 	tolua_pushusertype(l, o, "CCScale9Sprite");
 	return 1;
 }
-//CCScale9Sprite::createWithSpriteFrame(CCSpriteFrame *f, CCRect capInsets = CCRectZero)
+// CCScale9Sprite::createWithSpriteFrame(CCSpriteFrame *f, CCRect capInsets = CCRectZero)
 static int tolua_CCScale9Sprite_createWithSpriteFrame(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
@@ -47,26 +47,36 @@ static int tolua_CCScale9Sprite_createWithSpriteFrame(lua_State *l){
 	tolua_pushusertype(l, o, "CCScale9Sprite");
 	return 1;
 }
-//CCScale9Sprite::setContentSize(number, number)
+// CCScale9Sprite::setContentSize(number, number)
+// CCScale9Sprite::setContentSize(CCSize *)
 static int tolua_CCScale9Sprite_setContentSize(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isnumber(l, 2, 0, &err) ||
-		!tolua_isnumber(l, 3, 0, &err)){
+	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err)){
 		tolua_error(l,"#ferror in function 'setContentSize'.",&err);
 		return 0;
 	}
 #endif
 	CCScale9Sprite *o = (CCScale9Sprite *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setContentSize(CCSizeMake(tolua_tonumber(l, 3, 0), tolua_tonumber(l, 4, 0)));
+	if(o){
+		CCSize *s = NULL;
+		if(tolua_isusertype(l, 2, "CCSize", NULL, NULL)){
+			s = static_cast<CCSize *>(tolua_tousertype(l, 2, NULL));
+		}else{
+			s = &CCSize(tolua_tonumber(l, 2, 0), tolua_tonumber(l, 3, 0));
+		}
+		if(s){
+			o->setContentSize(*s);
+		}
+	}
 	tolua_pushusertype(l, o, "CCScale9Sprite");
 	return 1;
 }
-//CCScale9Sprite::getCapInsets
+// CCScale9Sprite::getCapInsets()
 static int tolua_CCScale9Sprite_getCapInsets(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err)){
 		tolua_error(l,"#ferror in function 'getCapInsets'.",&err);
 		return 0;
 	}
@@ -75,26 +85,26 @@ static int tolua_CCScale9Sprite_getCapInsets(lua_State *l){
 	if(o)tolua_pushusertype(l, Mtolua_new((CCRect)(o->getCapInsets())), "CCRect");
 	return 1;
 }
-//CCScale9Sprite::setCapInsets
+// CCScale9Sprite::setCapInsets(CCRect *)
 static int tolua_CCScale9Sprite_setCapInsets(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isusertype(l, 2, "CCRect", 0, &err) || !tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isusertype(l, 2, "CCRect", 0, &err)){
 		tolua_error(l,"#ferror in function 'setCapInsets'.",&err);
 		return 0;
 	}
 #endif
 	CCScale9Sprite *o = (CCScale9Sprite *)tolua_tousertype(l, 1, NULL);
 	CCRect *r = (CCRect *)tolua_tousertype(l, 2, 0);
-	if(o && r)o->setCapInsets(*r);
+	if(o && r){o->setCapInsets(*r);}
 	tolua_pushusertype(l, o, "CCScale9Sprite");
 	return 1;
 }
-//CCScale9Sprite::getColor
+// CCScale9Sprite::getColor()
 static int tolua_CCScale9Sprite_getColor(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err)){
 		tolua_error(l,"#ferror in function 'getColor'.",&err);
 		return 0;
 	}
@@ -103,11 +113,11 @@ static int tolua_CCScale9Sprite_getColor(lua_State *l){
 	if(o)tolua_pushusertype(l, Mtolua_new((ccColor3B)(o->getColor())), "ccColor3B");
 	return 1;
 }
-//CCScale9Sprite::setColor
+// CCScale9Sprite::setColor(ccColor3B *)
 static int tolua_CCScale9Sprite_setColor(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isusertype(l, 2, "ccColor3B", 0, &err) || !tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isusertype(l, 2, "ccColor3B", 0, &err)){
 		tolua_error(l,"#ferror in function 'setColor'.",&err);
 		return 0;
 	}
@@ -118,11 +128,11 @@ static int tolua_CCScale9Sprite_setColor(lua_State *l){
 	tolua_pushusertype(l, o, "CCScale9Sprite");
 	return 1;
 }
-//CCScale9Sprite::getOpacity
+// CCScale9Sprite::getOpacity()
 static int tolua_CCScale9Sprite_getOpacity(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScale9Sprite.getOpacity'.",&err);
 		return 0;
 	}
@@ -131,11 +141,11 @@ static int tolua_CCScale9Sprite_getOpacity(lua_State *l){
 	if(o)tolua_pushnumber(l, o->getOpacity());
 	return 1;
 }
-//CCScale9Sprite::setOpacity
+// CCScale9Sprite::setOpacity(number)
 static int tolua_CCScale9Sprite_setOpacity(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isnumber(l, 2, 255, &err) || !tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isnumber(l, 2, 255, &err)){
 		tolua_error(l,"#ferror in function 'CCScale9Sprite.setOpacity'.",&err);
 		return 0;
 	}
@@ -145,11 +155,11 @@ static int tolua_CCScale9Sprite_setOpacity(lua_State *l){
 	tolua_pushusertype(l, o, "CCScale9Sprite");
 	return 1;
 }
-//CCScale9Sprite::isOpacityModifyRGB
+// CCScale9Sprite::isOpacityModifyRGB
 static int tolua_CCScale9Sprite_isOpacityModifyRGB(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err)){
 		tolua_error(l,"#ferror in function 'isOpacityModifyRGB'.",&err);
 		return 0;
 	}
@@ -158,11 +168,11 @@ static int tolua_CCScale9Sprite_isOpacityModifyRGB(lua_State *l){
 	if(o)tolua_pushboolean(l, o->isOpacityModifyRGB());
 	return 1;
 }
-//CCScale9Sprite::setOpacityModifyRGB
+// CCScale9Sprite::setOpacityModifyRGB(bool)
 static int tolua_CCScale9Sprite_setOpacityModifyRGB(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isboolean(l, 2, true, &err) || !tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isboolean(l, 2, true, &err)){
 		tolua_error(l,"#ferror in function 'setOpacityModifyRGB'.",&err);
 		return 0;
 	}
@@ -172,11 +182,11 @@ static int tolua_CCScale9Sprite_setOpacityModifyRGB(lua_State *l){
 	tolua_pushusertype(l, o, "CCScale9Sprite");
 	return 1;
 }
-//CCScale9Sprite::getPreferredSize
+// CCScale9Sprite::getPreferredSize()
 static int tolua_CCScale9Sprite_getPreferredSize(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScale9Sprite.getPreferredSize'.",&err);
 		return 0;
 	}
@@ -187,12 +197,11 @@ static int tolua_CCScale9Sprite_getPreferredSize(lua_State *l){
 	}
 	return 1;
 }
-//CCScale9Sprite::setPreferredSize
+// CCScale9Sprite::setPreferredSize(CCSize *)
 static int tolua_CCScale9Sprite_setPreferredSize(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isusertype(l, 2, "CCSize", 0, &err)
-		|| !tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isusertype(l, 2, "CCSize", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScale9Sprite.setPreferredSize'.",&err);
 		return 0;
 	}
@@ -205,27 +214,26 @@ static int tolua_CCScale9Sprite_setPreferredSize(lua_State *l){
 	tolua_pushusertype(l, o, "CCScale9Sprite");
 	return 1;
 }
-//CCScale9Sprite::copyPreferredSize
+// CCScale9Sprite::copyPreferredSize(CCScale9Sprite *)
 static int tolua_CCScale9Sprite_copyPreferredSize(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isusertype(l, 2, "CCScale9Sprite", 0, &err)
-		|| !tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isusertype(l, 2, "CCScale9Sprite", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScale9Sprite.copyPreferredSize'.",&err);
 		return 0;
 	}
 #endif
 	CCScale9Sprite *o = (CCScale9Sprite *)tolua_tousertype(l, 1, NULL),
 		*t = (CCScale9Sprite *)tolua_tousertype(l, 2, NULL);
-	if(o && t)o->setPreferredSize(t->getPreferredSize());
+	if(o && t){o->setPreferredSize(t->getPreferredSize());}
 	tolua_pushusertype(l, o, "CCScale9Sprite");
 	return 1;
 }
-//CCScale9Sprite::setSpriteFrame
+// CCScale9Sprite::setSpriteFrame(CCSpriteFrame *)
 static int tolua_CCScale9Sprite_setSpriteFrame(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isusertype(l, 2, "CCSpriteFrame", 0, &err) || !tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isusertype(l, 2, "CCSpriteFrame", 0, &err)){
 		tolua_error(l,"#ferror in function 'setSpriteFrame'.",&err);
 		return 0;
 	}
@@ -235,27 +243,27 @@ static int tolua_CCScale9Sprite_setSpriteFrame(lua_State *l){
 	tolua_pushusertype(l, o, "CCScale9Sprite");
 	return 1;
 }
-//CCScale9Sprite::resizableSpriteWithCapInsets
+// CCScale9Sprite::resizableSpriteWithCapInsets(CCRect *)
 static int tolua_CCScale9Sprite_resizableSpriteWithCapInsets(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isusertype(l, 2, "CCRect", 0, &err) || !tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isusertype(l, 2, "CCRect", 0, &err)){
 		tolua_error(l,"#ferror in function 'resizableSpriteWithCapInsets'.",&err);
 		return 0;
 	}
 #endif
 	CCScale9Sprite *o = (CCScale9Sprite *)tolua_tousertype(l, 1, NULL);
 	CCRect *r = (CCRect *)tolua_tousertype(l, 2, 0);
-	if(o)tolua_pushusertype(l, o->resizableSpriteWithCapInsets(r? *r : o->getCapInsets()), "CCScale9Sprite");
+	if(o){tolua_pushusertype(l, o->resizableSpriteWithCapInsets(r? *r : o->getCapInsets()), "CCScale9Sprite");}
 	return 1;
 }
-//CCScale9Sprite::updateWithBatchNode
+// CCScale9Sprite::updateWithBatchNode(CCSpriteBatchNode *, CCRect *, bool, CCRect *)
 static int tolua_CCScale9Sprite_updateWithBatchNode(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
 	if(!tolua_isusertype(l, 1, "CCScale9Sprite", 0, &err) || !tolua_isusertype(l, 2, "CCSpriteBatchNode", 0, &err)
 		|| !tolua_isusertype(l, 3, "CCRect", 0, &err) || !tolua_isboolean(l, 4, false, &err)
-		|| !tolua_isusertype(l, 5, "CCRect", 0, &err) || !tolua_isnoobj(l, 6, &err)){
+		|| !tolua_isusertype(l, 5, "CCRect", 0, &err)){
 		tolua_error(l,"#ferror in function 'updateWithBatchNode'.",&err);
 		return 0;
 	}
