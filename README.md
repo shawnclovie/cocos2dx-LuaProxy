@@ -3,7 +3,7 @@
 LuaProxy for cocos2d-x, include CocosBuilder support for lua, and other cocos2d-extension support for lua, and easy to use function.
 
 ##For cocos2d-x 3.0 alpha#
-Sorry, I've no time to upgrade LuaProxy to fit 3.0 alpha, in a short time.
+I'm working on port LuaProxy to 3.0, I'll remove some unused function.
 
 ##For cocos2d-x 2.1.4#
 Don't add tolua_extensions_ccb_open(lua_State) to AppDelegate.cpp.  
