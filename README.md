@@ -31,8 +31,7 @@ iOS中要从Xcode工程中移除CCBProxy.*, Lua_extensions_CCB.*（共4个文件
 
 ##Step 1 Add LuaProxy files to your project#
 Create a Lua based cocos2d-x project, or open your project that added Lua support.  
-In Visual Studio, open Project Property, in C/C++ - Additional Include Directories, add LuaProxy source code directory, and add all source files.  
-In Xcode, add all source files. You may safety remove ui/UIEventDispatcher.cpp(and .h), it's just design for win32.
+Copy LuaProxy directory into Classes, add all file into project (ui/* is optional).  
 
 ##Step 2 Add C++ Code#
 Open CCAppDelegate.cpp, add include like this:  
@@ -43,7 +42,7 @@ Move to the line that got CCLuaEngine, add this:
 
 Now you can do those things in lua, but we must create a CCBProxy at first, I wrote this in lua:  
 
-> local proxy = CCBProxy:create()  
+> local proxy = LuaProxy:create()  
 -- !!  
 -- If you want to handle CCControlButton, you must retain the proxy,  
 -- And kept variable "proxy" to global or global table.  
