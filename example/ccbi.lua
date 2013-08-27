@@ -1,5 +1,5 @@
 -- Create a autorelease CCBProxy.
-local p = CCBProxy:create()
+local p = LuaProxy:create()
 -- Read a layer from ccbi file.
 local n = p:readCCBFromFile"ALayer.ccbi"
 -- Pick up a node named "Label", cast to label, set the string.

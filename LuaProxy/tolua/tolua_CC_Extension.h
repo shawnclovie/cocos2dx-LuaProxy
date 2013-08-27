@@ -15,143 +15,235 @@ extern "C" {
 #include "tolua_CCHttpClient.h"
 #include "tolua_CCGLProgram.h"
 
-//######################################## CCBFile ##########################
-//CCBFile::getCCBFileNode
-static int tolua_CCBFile_getCCBFileNode(lua_State *l){
+//######################################## CCPhysicsWorld ##########################
+//######################################## CCPhysicsSprite ##########################
+
+//CCClippingNode
+static int tolua_CCClippingNode_create(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCBFile", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'CCBFile.getCCBFileNode'.",&err);
+	if(!tolua_isusertable(l, 1, "CCClippingNode", 0, &err)
+		|| !(tolua_isnoobj(l, 2, &err) || tolua_isusertype(l, 2, "CCNode", 0, &err))
+		|| !tolua_isnoobj(l, 3, &err)){
+		tolua_error(l,"#ferror in function 'CCClippingNode.create'.",&err);
 		return 0;
 	}
 #endif
-	CCBFile *o = (CCBFile *)tolua_tousertype(l, 1, NULL);
-	tolua_pushusertype(l, o? o->getCCBFileNode() : 0, "CCNode");
+	CCNode *s = (CCNode *)tolua_tousertype(l, 2, NULL);
+	CCClippingNode *o = s ? CCClippingNode::create() : CCClippingNode::create(s);
+	tolua_pushusertype(l, o, "CCClippingNode");
 	return 1;
 }
-//CCBFile::setCCBFileNode
-static int tolua_CCBFile_setCCBFileNode(lua_State *l){
+
+static int tolua_CCClippingNode_getStencil(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCBFile", 0, &err) || !tolua_isusertype(l, 2, "CCNode", 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'CCBFile.setDuration'.",&err);
+	if(!tolua_isusertype(l, 1, "CCClippingNode", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+		tolua_error(l,"#ferror in function 'CCClippingNode.getStencil'.",&err);
 		return 0;
 	}
 #endif
-	CCBFile *o = (CCBFile *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setCCBFileNode((CCNode *)tolua_tousertype(l, 2, 0));
-	tolua_pushusertype(l, o, "CCBFile");
+	CCClippingNode *o = (CCClippingNode *)tolua_tousertype(l, 1, NULL);
+	tolua_pushusertype(l, o->getStencil(), "CCNode");
 	return 1;
 }
-//######################################## CCBSequence ##########################
-//CCBSequence::getDuration
-static int tolua_CCBSequence_getDuration(lua_State *l){
+
+static int tolua_CCClippingNode_setStencil(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCBSequence", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'CCBSequence.getDuration'.",&err);
+	if(!tolua_isusertype(l, 1, "CCClippingNode", 0, &err) || !tolua_isusertype(l, 2, "CCNode", 0, &err)){
+		tolua_error(l,"#ferror in function 'CCClippingNode.setStencil'.",&err);
 		return 0;
 	}
 #endif
-	CCBSequence *o = (CCBSequence *)tolua_tousertype(l, 1, NULL);
-	tolua_pushnumber(l, o? o->getDuration() : 0);
+	CCClippingNode *o = (CCClippingNode *)tolua_tousertype(l, 1, NULL);
+	CCNode *s = (CCNode *)tolua_tousertype(l, 2, NULL);
+	o->setStencil(s);
 	return 1;
 }
-//CCBSequence::setDuration
-static int tolua_CCBSequence_setDuration(lua_State *l){
+
+static int tolua_CCClippingNode_getAlphaThreshold(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCBSequence", 0, &err) || !tolua_isnumber(l, 2, 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'CCBSequence.setDuration'.",&err);
+	if(!tolua_isusertype(l, 1, "CCClippingNode", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+		tolua_error(l,"#ferror in function 'CCClippingNode.getAlphaThreshold'.",&err);
 		return 0;
 	}
 #endif
-	CCBSequence *o = (CCBSequence *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setDuration(tolua_tonumber(l, 2, 0));
-	tolua_pushusertype(l, o, "CCBSequence");
+	CCClippingNode *o = (CCClippingNode *)tolua_tousertype(l, 1, NULL);
+	tolua_pushnumber(l, o->getAlphaThreshold());
 	return 1;
 }
-//CCBSequence::getName
-static int tolua_CCBSequence_getName(lua_State *l){
+
+static int tolua_CCClippingNode_setAlphaThreshold(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCBSequence", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'CCBSequence.getName'.",&err);
+	if(!tolua_isusertype(l, 1, "CCClippingNode", 0, &err) || !tolua_isnumber(l, 2, 0, &err)){
+		tolua_error(l,"#ferror in function 'CCClippingNode.setAlphaThreshold'.",&err);
 		return 0;
 	}
 #endif
-	CCBSequence *o = (CCBSequence *)tolua_tousertype(l, 1, NULL);
-	tolua_pushstring(l, o? o->getName() : "");
+	CCClippingNode *o = (CCClippingNode *)tolua_tousertype(l, 1, NULL);
+	o->setAlphaThreshold( tolua_tonumber(l, 2, 0) );
 	return 1;
 }
-//CCBSequence::setName
-static int tolua_CCBSequence_setName(lua_State *l){
+
+static int tolua_CCClippingNode_isInverted(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCBSequence", 0, &err) || !tolua_isnumber(l, 2, 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'CCBSequence.setName'.",&err);
+	if(!tolua_isusertype(l, 1, "CCClippingNode", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+		tolua_error(l,"#ferror in function 'CCClippingNode.isInverted'.",&err);
 		return 0;
 	}
 #endif
-	CCBSequence *o = (CCBSequence *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setName(tolua_tostring(l, 2, ""));
-	tolua_pushusertype(l, o, "CCBSequence");
+	CCClippingNode *o = (CCClippingNode *)tolua_tousertype(l, 1, NULL);
+	tolua_pushboolean(l, o->isInverted());
 	return 1;
 }
-//CCBSequence::getSequenceId
-static int tolua_CCBSequence_getSequenceId(lua_State *l){
+
+static int tolua_CCClippingNode_setInverted(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCBSequence", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'CCBSequence.getSequenceId'.",&err);
+	if(!tolua_isusertype(l, 1, "CCClippingNode", 0, &err) || !tolua_isboolean(l, 2, 0, &err)){
+		tolua_error(l,"#ferror in function 'CCClippingNode.setInverted'.",&err);
 		return 0;
 	}
 #endif
-	CCBSequence *o = (CCBSequence *)tolua_tousertype(l, 1, NULL);
-	tolua_pushnumber(l, o? o->getSequenceId() : 0);
+	CCClippingNode *o = (CCClippingNode *)tolua_tousertype(l, 1, NULL);
+	o->setInverted( tolua_toboolean(l, 2, 0) == 1 );
 	return 1;
 }
-//CCBSequence::setSequenceId
-static int tolua_CCBSequence_setSequenceId(lua_State *l){
+
+//CCDrawNode
+static int tolua_CCDrawNode_create(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCBSequence", 0, &err) || !tolua_isnumber(l, 2, 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'CCBSequence.setSequenceId'.",&err);
+	if(!tolua_isusertable(l, 1, "CCDrawNode", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+		tolua_error(l,"#ferror in function 'CCDrawNode.create'.",&err);
 		return 0;
 	}
 #endif
-	CCBSequence *o = (CCBSequence *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setSequenceId(tolua_tonumber(l, 2, 0));
-	tolua_pushusertype(l, o, "CCBSequence");
+	CCDrawNode *o = CCDrawNode::create();
+	tolua_pushusertype(l, o, "CCDrawNode");
 	return 1;
 }
-//CCBSequence::getChainedSequenceId
-static int tolua_CCBSequence_getChainedSequenceId(lua_State *l){
+
+static int tolua_CCDrawNode_drawDot(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCBSequence", 0, &err) || !tolua_isnoobj(l, 2, &err)){
-		tolua_error(l,"#ferror in function 'CCBSequence.getChainedSequenceId'.",&err);
+	if(!tolua_isusertype(l, 1, "CCDrawNode", 0, &err) || !tolua_isusertype(l, 2, "CCPoint", 0, &err)
+		|| !tolua_isnumber(l, 3, 0, &err) || !tolua_isusertype(l, 4, "ccColor4F", 0, &err)){
+		tolua_error(l,"#ferror in function 'CCDrawNode.drawDot'.",&err);
 		return 0;
 	}
 #endif
-	CCBSequence *o = (CCBSequence *)tolua_tousertype(l, 1, NULL);
-	tolua_pushnumber(l, o? o->getChainedSequenceId() : 0);
+	CCDrawNode *o = (CCDrawNode *)tolua_tousertype(l, 1, NULL);
+	CCPoint p = *((CCPoint *)tolua_tousertype(l, 2, NULL));
+	ccColor4F c = *((ccColor4F *)tolua_tousertype(l, 4, NULL));
+	o->drawDot( p, (float)tolua_tonumber(l, 3, 0), c );
 	return 1;
 }
-//CCBSequence::setChainedSequenceId
-static int tolua_CCBSequence_setChainedSequenceId(lua_State *l){
+
+static int tolua_CCDrawNode_drawSegment(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCBSequence", 0, &err) || !tolua_isnumber(l, 2, 0, &err) || !tolua_isnoobj(l, 3, &err)){
-		tolua_error(l,"#ferror in function 'CCBSequence.setChainedSequenceId'.",&err);
+	if(!tolua_isusertype(l, 1, "CCDrawNode", 0, &err) || !tolua_isusertype(l, 2, "CCPoint", 0, &err)
+		|| !tolua_isusertype(l, 3, "CCPoint", 0, &err) || !tolua_isnumber(l, 4, 0, &err) || !tolua_isusertype(l, 5, "ccColor4F", 0, &err)){
+		tolua_error(l,"#ferror in function 'CCDrawNode.drawSegment'.",&err);
 		return 0;
 	}
 #endif
-	CCBSequence *o = (CCBSequence *)tolua_tousertype(l, 1, NULL);
-	if(o)o->setChainedSequenceId(tolua_tonumber(l, 2, 0));
-	tolua_pushusertype(l, o, "CCBSequence");
+	CCDrawNode *o = (CCDrawNode *)tolua_tousertype(l, 1, NULL);
+	CCPoint fp = *((CCPoint *)tolua_tousertype(l, 2, NULL));
+	CCPoint tp = *((CCPoint *)tolua_tousertype(l, 3, NULL));
+	ccColor4F c = *((ccColor4F *)tolua_tousertype(l, 5, NULL));
+	o->drawSegment(fp, tp, (float)tolua_tonumber(l, 4, 0), c);
 	return 1;
 }
+
+static int tolua_CCDrawNode_drawPolygon(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "CCDrawNode", 0, &err) || !tolua_isusertype(l, 2, "CCPointArray", 0, &err)
+		|| !tolua_isnumber(l, 3, 0, &err) || !tolua_isusertype(l, 4, "ccColor4F", 0, &err) || !tolua_isnumber(l, 5, 0, &err)
+		|| !tolua_isusertype(l, 6, "ccColor4F", 0, &err)){
+		tolua_error(l,"#ferror in function 'CCDrawNode.drawPolygon'.",&err);
+		return 0;
+	}
+#endif
+	CCDrawNode *o = (CCDrawNode *)tolua_tousertype(l, 1, NULL);
+	CCPointArray *vertsArr = (CCPointArray *)tolua_tousertype(l, 2, NULL);
+	int cnt = vertsArr->count();
+	CCPoint *verts = new CCPoint[cnt];
+	for (int i=0; i<cnt; i++) verts[i] = vertsArr->getControlPointAtIndex(i);	
+
+	ccColor4F fc = *((ccColor4F *)tolua_tousertype(l, 4, NULL));
+	ccColor4F bc = *((ccColor4F *)tolua_tousertype(l, 6, NULL));
+	o->drawPolygon(verts, (int)tolua_tonumber(l, 3, 0), fc, (float)tolua_tonumber(l, 5, 0), bc);
+
+	delete[] verts;
+	verts = NULL;
+	return 1;
+}
+
+static int tolua_CCDrawNode_clear(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "CCDrawNode", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+		tolua_error(l,"#ferror in function 'CCDrawNode.clear'.",&err);
+		return 0;
+	}
+#endif
+	CCDrawNode *o = (CCDrawNode *)tolua_tousertype(l, 1, NULL);
+	o->clear();
+	return 1;
+}
+
+static int tolua_CCDrawNode_getBlendFunc(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "CCDrawNode", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+		tolua_error(l,"#ferror in function 'CCDrawNode.getBlendFunc'.",&err);
+		return 0;
+	}
+#endif
+ {
+  CCDrawNode *o = (CCDrawNode *)tolua_tousertype(l, 1, NULL);
+#ifndef TOLUA_RELEASE
+  if (!o) tolua_error(l,"invalid 'self' in function 'getBlendFunc'", NULL);
+#endif
+  {
+   ccBlendFunc tolua_ret = (ccBlendFunc)  o->getBlendFunc();
+   {
+#ifdef __cplusplus
+    void* tolua_obj = Mtolua_new((ccBlendFunc)(tolua_ret));
+     tolua_pushusertype(l,tolua_obj,"ccBlendFunc");
+    tolua_register_gc(l,lua_gettop(l));
+#else
+    void* tolua_obj = tolua_copy(l,(void*)&tolua_ret,sizeof(ccBlendFunc));
+     tolua_pushusertype(l,tolua_obj,"ccBlendFunc");
+    tolua_register_gc(l,lua_gettop(l));
+#endif
+   }
+  }
+ }
+ return 1;
+}
+
+static int tolua_CCDrawNode_setBlendFunc(lua_State *l){
+#ifndef TOLUA_RELEASE
+ tolua_Error err;
+ if (!tolua_isusertype(l, 1, "CCDrawNode", 0, &err) || (tolua_isvaluenil(l, 2, &err) || !tolua_isusertype(l, 2, "ccBlendFunc", 0, &err))
+	 || !tolua_isnoobj(l, 3, &err)){
+		tolua_error(l,"#ferror in function 'CCDrawNode.setBlendFunc'.",&err);
+		return 0;
+	}
+#endif
+	CCDrawNode *o = (CCDrawNode *)tolua_tousertype(l, 1, NULL);
+	o->setBlendFunc( *((ccBlendFunc *)tolua_tousertype(l, 2, NULL)) );
+	return 1;
+}
+
 
 
 TOLUA_API int tolua_CC_Extension_open(lua_State* l){
@@ -171,6 +263,8 @@ TOLUA_API int tolua_CC_Extension_open(lua_State* l){
 	tolua_usertype(l, "CCTableViewCell");
 	tolua_usertype(l, "CCTableViewDataSource");
 	tolua_usertype(l, "CCTableViewDelegate");
+	tolua_usertype(l, "CCClippingNode");
+	tolua_usertype(l, "CCDrawNode");
 	tolua_module(l, NULL, 0);
 	tolua_beginmodule(l, NULL);
 		tolua_cclass(l,"CCBAnimationManager","CCBAnimationManager","CCObject",NULL);
@@ -426,6 +520,28 @@ TOLUA_API int tolua_CC_Extension_open(lua_State* l){
 			tolua_function(l, "addAttribute", tolua_CCGLProgram_addAttribute);
 			tolua_function(l, "getUniformLocationForName", tolua_CCGLProgram_getUniformLocationForName);
 			tolua_function(l, "setUniformLocationWith", tolua_CCGLProgram_setUniformLocationWith);
+		tolua_endmodule(l);
+
+		tolua_cclass(l, "CCClippingNode", "CCClippingNode", "CCNode", NULL);
+		tolua_beginmodule(l, "CCClippingNode");
+			tolua_function(l, "create", tolua_CCClippingNode_create);
+			tolua_function(l, "getStencil", tolua_CCClippingNode_getStencil);
+			tolua_function(l, "setStencil", tolua_CCClippingNode_setStencil);
+			tolua_function(l, "getAlphaThreshold", tolua_CCClippingNode_getAlphaThreshold);
+			tolua_function(l, "setAlphaThreshold", tolua_CCClippingNode_setAlphaThreshold);
+			tolua_function(l, "isInverted", tolua_CCClippingNode_isInverted);
+			tolua_function(l, "setInverted", tolua_CCClippingNode_setInverted);
+		tolua_endmodule(l);
+
+		tolua_cclass(l, "CCDrawNode", "CCDrawNode", "CCNode", NULL);
+		tolua_beginmodule(l, "CCDrawNode");
+			tolua_function(l, "create", tolua_CCDrawNode_create);
+			tolua_function(l, "drawDot", tolua_CCDrawNode_drawDot);
+			tolua_function(l, "drawSegment", tolua_CCDrawNode_drawSegment);
+			tolua_function(l, "drawPolygon", tolua_CCDrawNode_drawPolygon);
+			tolua_function(l, "clear", tolua_CCDrawNode_clear);
+			tolua_function(l, "getBlendFunc", tolua_CCDrawNode_getBlendFunc);
+			tolua_function(l, "setBlendFunc", tolua_CCDrawNode_setBlendFunc);
 		tolua_endmodule(l);
 	tolua_endmodule(l);
 	return 1;
