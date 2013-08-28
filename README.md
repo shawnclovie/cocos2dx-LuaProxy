@@ -5,6 +5,8 @@ LuaProxy for cocos2d-x, include CocosBuilder support for lua, and other cocos2d-
 当前版本：2.1.5  
 LuaProxy基于cocos2d-x，主要用于支持在Lua中使用CocosBuilder，以及添加cocos2d扩展库的Lua支持，还有另外一些易用功能。
 
+LuaProxy have been merged in quick-cocos2d-x.
+
 ##For cocos2d-x 3.0 alpha#
 I'm working on port LuaProxy to 3.0, I'll remove some unused function.  
 The biggest change is rename "CCBProxy" to "LuaProxy", I've no idea about cocos2d-x 2.1.4's CCBProxy.  
