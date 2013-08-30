@@ -66,7 +66,7 @@ We'd loaded a ccbi as layer, but you want access a CCLabelTTF, marked "owner" an
 
 > local lbl = tolua.cast(proxy:getNode"label", "CCLabelTTF")  
 lbl:setString("some string")  
-local btn = proxy:getNodeWithType("button", "CCControlButton")
+local btn = tolua.cast(proxy:getNode"button", "CCControlButton")
 
 When CCBProxy read ccbi, it has saved all member variable into a CCDictionary.  
 So if you'd loaded other ccbi and any variable defined same name, the old one will be lost in the CCDictionary.
