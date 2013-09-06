@@ -5,7 +5,8 @@
 #include "tolua_util.h"
 
 //######################################## CCScrollView ##########################
-//CCScrollView::create
+//CCScrollView::create()
+//CCScrollView::create(CCSize *, CCNode * = NULL)
 static int tolua_CCScrollView_create(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
@@ -14,10 +15,17 @@ static int tolua_CCScrollView_create(lua_State *l){
 		return 0;
 	}
 #endif
-	tolua_pushusertype(l, CCScrollView::create(), "CCScrollView");
+	CCScrollView *o = NULL;
+	if(tolua_isusertype(l, 2, "CCSize", 0, NULL)){
+		CCSize *s = static_cast<CCSize *>(tolua_tousertype(l, 2, NULL));
+		o = CCScrollView::create(s? *s : CCSizeZero, static_cast<CCNode *>(tolua_tousertype(l, 3, NULL)));
+	}else{
+		o = CCScrollView::create();
+	}
+	tolua_pushusertype(l, o, "CCScrollView");
 	return 1;
 }
-//CCScrollView::isBounceable
+//CCScrollView::isBounceable()
 static int tolua_CCScrollView_isBounceable(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
@@ -30,7 +38,7 @@ static int tolua_CCScrollView_isBounceable(lua_State *l){
 	tolua_pushboolean(l, o? o->isBounceable() : false);
 	return 1;
 }
-//CCScrollView::setBounceable
+//CCScrollView::setBounceable(bool)
 static int tolua_CCScrollView_setBounceable(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
@@ -61,7 +69,7 @@ static int tolua_CCScrollView_addChild(lua_State *l){
 	tolua_pushusertype(l, o, "CCScrollView");
 	return 1;
 }
-//CCScrollView::isClippingToBounds
+//CCScrollView::isClippingToBounds()
 static int tolua_CCScrollView_isClippingToBounds(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
@@ -74,12 +82,11 @@ static int tolua_CCScrollView_isClippingToBounds(lua_State *l){
 	tolua_pushboolean(l, o? o->isClippingToBounds() : false);
 	return 1;
 }
-//CCScrollView::setClippingToBounds
+//CCScrollView::setClippingToBounds(bool)
 static int tolua_CCScrollView_setClippingToBounds(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isboolean(l, 2, false, &err) ||
-		!tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isboolean(l, 2, false, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.setClippingToBounds'.",&err);
 		return 0;
 	}
@@ -102,7 +109,7 @@ static int tolua_CCScrollView_getContainer(lua_State *l){
 	if(o)tolua_pushusertype(l, o->getContainer(), "CCNode");
 	return 1;
 }
-//CCScrollView::setContainer
+//CCScrollView::setContainer(CCNode *)
 static int tolua_CCScrollView_setContainer(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
@@ -116,7 +123,7 @@ static int tolua_CCScrollView_setContainer(lua_State *l){
 	tolua_pushusertype(l, o, "CCScrollView");
 	return 1;
 }
-//CCScrollView::getContentOffset
+//CCScrollView::getContentOffset()
 static int tolua_CCScrollView_getContentOffset(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
