@@ -170,7 +170,6 @@ public:
 		}
 		return h;
 	}
-
 	inline LuaEventHandler * getSelectorHandler(){
 		return _selectorHandler;
 	}

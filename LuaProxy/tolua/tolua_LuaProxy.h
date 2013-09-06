@@ -15,9 +15,13 @@ static int tolua_LuaProxy_create(lua_State *l){
 }
 //LuaProxy::releaseMembers
 static int tolua_LuaProxy_releaseMembers(lua_State *l){
-	TOLUA_ERROR_CHECK{
-		TOLUA_ERROR_WHILE(l, !tolua_isusertype(l, 1, "LuaProxy", 0, &err), err, __FUNCTION__);
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "LuaProxy", 0, &err)){
+		tolua_error(l,"#ferror in function 'LuaProxy.releaseMembers'.",&err);
+		return 0;
 	}
+#endif
 	LuaProxy *p = (LuaProxy *)tolua_tousertype(l, 1, NULL);
 	if(p){
 		p->releaseMembers();
@@ -27,9 +31,13 @@ static int tolua_LuaProxy_releaseMembers(lua_State *l){
 }
 //LuaProxy::getMemberName
 static int tolua_LuaProxy_getMemberName(lua_State *l){
-	TOLUA_ERROR_CHECK{
-		TOLUA_ERROR_WHILE(l, !tolua_isusertype(l, 1, "LuaProxy", 0, &err) || !tolua_isusertype(l, 2, "CCObject", 0, &err), err, __FUNCTION__);
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "LuaProxy", 0, &err) || !tolua_isusertype(l, 2, "CCObject", 0, &err)){
+		tolua_error(l,"#ferror in function 'LuaProxy.getMemberName'.",&err);
+		return 0;
 	}
+#endif
 	LuaProxy *p = (LuaProxy *)tolua_tousertype(l, 1, NULL);
 	CCObject *n = (CCObject *)tolua_tousertype(l, 2, NULL);
 	tolua_pushstring(l, p && n? p->getMemberName(n) : "");

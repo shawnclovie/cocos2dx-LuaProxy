@@ -7,26 +7,38 @@
 //######################################## CCScrollView ##########################
 //CCScrollView::create
 static int tolua_CCScrollView_create(lua_State *l){
-	TOLUA_ERROR_CHECK{
-		TOLUA_ERROR_WHILE(l, !tolua_isusertable(l, 1, "CCScrollView", 0, &err), err, __FUNCTION__);
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertable(l, 1, "CCScrollView", 0, &err)){
+		tolua_error(l,"#ferror in function 'CCScrollView.create'.",&err);
+		return 0;
 	}
+#endif
 	tolua_pushusertype(l, CCScrollView::create(), "CCScrollView");
 	return 1;
 }
 //CCScrollView::isBounceable
 static int tolua_CCScrollView_isBounceable(lua_State *l){
-	TOLUA_ERROR_CHECK{
-		TOLUA_ERROR_WHILE(l, !tolua_isusertype(l, 1, "CCScrollView", 0, &err), err, __FUNCTION__);
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err)){
+		tolua_error(l,"#ferror in function 'CCScrollView.isBounceable'.",&err);
+		return 0;
 	}
+#endif
 	CCScrollView *o = (CCScrollView *)tolua_tousertype(l, 1, NULL);
 	tolua_pushboolean(l, o? o->isBounceable() : false);
 	return 1;
 }
 //CCScrollView::setBounceable
 static int tolua_CCScrollView_setBounceable(lua_State *l){
-	TOLUA_ERROR_CHECK{
-		TOLUA_ERROR_WHILE(l, !tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isboolean(l, 2, false, &err), err, __FUNCTION__);
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isboolean(l, 2, false, &err)){
+		tolua_error(l,"#ferror in function 'CCScrollView.setBounceable'.",&err);
+		return 0;
 	}
+#endif
 	CCScrollView *o = (CCScrollView *)tolua_tousertype(l, 1, NULL);
 	if(o){ o->setBounceable(tolua_toboolean(l, 2, false) > 0);}
 	tolua_pushusertype(l, o, "CCScrollView");
@@ -34,12 +46,15 @@ static int tolua_CCScrollView_setBounceable(lua_State *l){
 }
 //CCScrollView::addChild(CCNode *node, int order = 0, int tag = node->getTag())
 static int tolua_CCScrollView_addChild(lua_State *l){
-	TOLUA_ERROR_CHECK{
-		TOLUA_ERROR_WHILE(l,
-			!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isusertype(l, 2, "CCNode", 0, &err) ||
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isusertype(l, 2, "CCNode", 0, &err) ||
 			!(tolua_isnoobj(l, 3, &err) || tolua_isnumber(l, 3, 0, &err)) ||
-			!(tolua_isnoobj(l, 4, &err) || tolua_isnumber(l, 4, 0, &err)), err, __FUNCTION__);
+			!(tolua_isnoobj(l, 4, &err) || tolua_isnumber(l, 4, 0, &err))){
+		tolua_error(l,"#ferror in function 'CCScrollView.addChild'.",&err);
+		return 0;
 	}
+#endif
 	CCScrollView *o = (CCScrollView *)tolua_tousertype(l, 1, NULL);
 	CCNode *n = (CCNode *)tolua_tousertype(l, 2, NULL);
 	if(o && n)o->addChild(n, tolua_tonumber(l, 3, 0), tolua_tonumber(l, 4, n->getTag()));
@@ -50,7 +65,7 @@ static int tolua_CCScrollView_addChild(lua_State *l){
 static int tolua_CCScrollView_isClippingToBounds(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.isClippingToBounds'.",&err);
 		return 0;
 	}
@@ -74,11 +89,11 @@ static int tolua_CCScrollView_setClippingToBounds(lua_State *l){
 	tolua_pushusertype(l, o, "CCScrollView");
 	return 1;
 }
-//CCScrollView::getContainer
+//CCScrollView::getContainer()
 static int tolua_CCScrollView_getContainer(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.getContainer'.",&err);
 		return 0;
 	}
@@ -91,8 +106,7 @@ static int tolua_CCScrollView_getContainer(lua_State *l){
 static int tolua_CCScrollView_setContainer(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isusertype(l, 2, "CCNode", 0, &err) ||
-		!tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isusertype(l, 2, "CCNode", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.setContainer'.",&err);
 		return 0;
 	}
@@ -106,7 +120,7 @@ static int tolua_CCScrollView_setContainer(lua_State *l){
 static int tolua_CCScrollView_getContentOffset(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.getContentOffset'.",&err);
 		return 0;
 	}
@@ -115,12 +129,11 @@ static int tolua_CCScrollView_getContentOffset(lua_State *l){
 	tolua_pushusertype(l, Mtolua_new((CCPoint)(o? o->getContentOffset() : CCPointZero)), "CCPoint");
 	return 1;
 }
-//CCScrollView::setContentOffset
+//CCScrollView::setContentOffset(CCPoint *, bool animated = false)
 static int tolua_CCScrollView_setContentOffset(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isusertype(l, 2, "CCPoint", 0, &err) ||
-		!tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isusertype(l, 2, "CCPoint", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.setContentOffset'.",&err);
 		return 0;
 	}
@@ -128,17 +141,17 @@ static int tolua_CCScrollView_setContentOffset(lua_State *l){
 	CCScrollView *o = (CCScrollView *)tolua_tousertype(l, 1, NULL);
 	if(o){
 		void *ps = tolua_tousertype(l, 2, NULL);
-		o->setContentOffset(ps? *((CCPoint *)ps) : CCPointZero);
+		o->setContentOffset(ps? *((CCPoint *)ps) : CCPointZero, tolua_toboolean(l, 3, false) == 1);
 	}
 	tolua_pushusertype(l, o, "CCScrollView");
 	return 1;
 }
-//CCScrollView::setContentOffsetInDuration
+//CCScrollView::setContentOffsetInDuration(CCPoint *, float)
 static int tolua_CCScrollView_setContentOffsetInDuration(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
 	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isusertype(l, 2, "CCPoint", 0, &err) ||
-		!tolua_isnumber(l, 3, 0, &err) || !tolua_isnoobj(l, 4, &err)){
+		!tolua_isnumber(l, 3, 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.setContentOffsetInDuration'.",&err);
 		return 0;
 	}
@@ -151,11 +164,11 @@ static int tolua_CCScrollView_setContentOffsetInDuration(lua_State *l){
 	tolua_pushusertype(l, o, "CCScrollView");
 	return 1;
 }
-//CCScrollView::getContentSize
+//CCScrollView::getContentSize()
 static int tolua_CCScrollView_getContentSize(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.getContentSize'.",&err);
 		return 0;
 	}
@@ -164,12 +177,11 @@ static int tolua_CCScrollView_getContentSize(lua_State *l){
 	tolua_pushusertype(l, Mtolua_new((CCSize)(o? o->getContentSize() : CCSizeZero)), "CCSize");
 	return 1;
 }
-//CCScrollView::setContentSize
+//CCScrollView::setContentSize(CCSize *)
 static int tolua_CCScrollView_setContentSize(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isusertype(l, 2, "CCSize", 0, &err) ||
-		!tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isusertype(l, 2, "CCSize", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.setContentSize'.",&err);
 		return 0;
 	}
@@ -186,7 +198,7 @@ static int tolua_CCScrollView_setContentSize(lua_State *l){
 static int tolua_CCScrollView_getDirection(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.getDirection'.",&err);
 		return 0;
 	}
@@ -214,7 +226,7 @@ static int tolua_CCScrollView_setDirection(lua_State *l){
 static int tolua_CCScrollView_isDragging(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.isDragging'.",&err);
 		return 0;
 	}
@@ -227,7 +239,7 @@ static int tolua_CCScrollView_isDragging(lua_State *l){
 static int tolua_CCScrollView_isNodeVisible(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isusertype(l, 2, "CCNode", 0, &err) || !tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isusertype(l, 2, "CCNode", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.isNodeVisible'.",&err);
 		return 0;
 	}
@@ -240,7 +252,7 @@ static int tolua_CCScrollView_isNodeVisible(lua_State *l){
 static int tolua_CCScrollView_isTouchMoved(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.isTouchMoved'.",&err);
 		return 0;
 	}
@@ -253,7 +265,7 @@ static int tolua_CCScrollView_isTouchMoved(lua_State *l){
 static int tolua_CCScrollView_getViewSize(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.getViewSize'.",&err);
 		return 0;
 	}
@@ -266,8 +278,7 @@ static int tolua_CCScrollView_getViewSize(lua_State *l){
 static int tolua_CCScrollView_setViewSize(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isusertype(l, 2, "CCSize", 0, &err) ||
-		!tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isusertype(l, 2, "CCSize", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.setViewSize'.",&err);
 		return 0;
 	}
@@ -285,7 +296,7 @@ static int tolua_CCScrollView_setViewSize(lua_State *l){
 static int tolua_CCScrollView_getZoomScale(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.getZoomScale'.",&err);
 		return 0;
 	}
@@ -299,7 +310,7 @@ static int tolua_CCScrollView_setZoomScale(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
 	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isnumber(l, 2, 0, &err) ||
-		!(tolua_isnoobj(l, 3, &err) || tolua_isboolean(l, 3, false, &err)) || !tolua_isnoobj(l, 4, &err)){
+		!(tolua_isnoobj(l, 3, &err) || tolua_isboolean(l, 3, false, &err))){
 		tolua_error(l,"#ferror in function 'CCScrollView.setZoomScale'.",&err);
 		return 0;
 	}
@@ -318,7 +329,7 @@ static int tolua_CCScrollView_setZoomScaleInDuration(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
 	if(!tolua_isusertype(l, 1, "CCScrollView", 0, &err) || !tolua_isnumber(l, 2, 0, &err) ||
-		!tolua_isnumber(l, 3, 0, &err) || !tolua_isnoobj(l, 4, &err)){
+		!tolua_isnumber(l, 3, 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.setZoomScaleInDuration'.",&err);
 		return 0;
 	}

@@ -7,11 +7,11 @@ extern "C" {
 #include "tolua_fix.h"
 }
 #include "tolua_CCBAnimationManager.h"
-#include "tolua_CCControl.h"
-#include "tolua_CCEditBox.h"
+//#include "tolua_CCControl.h"
+//#include "tolua_CCEditBox.h"
 #include "tolua_CCScrollView.h"
 #include "tolua_CCTableView.h"
-#include "tolua_CCScale9Sprite.h"
+//#include "tolua_CCScale9Sprite.h"
 #include "tolua_CCHttpClient.h"
 #include "tolua_CCGLProgram.h"
 
@@ -304,6 +304,7 @@ TOLUA_API int tolua_CC_Extension_open(lua_State* l){
 			tolua_function(l,"getChainedSequenceId",tolua_CCBSequence_getChainedSequenceId);
 			tolua_function(l,"setChainedSequenceId",tolua_CCBSequence_setChainedSequenceId);
 		tolua_endmodule(l);
+#ifdef __TOLUA_CCCONTROL__
 		tolua_cclass(l, "CCControl", "CCControl", "CCLayer", NULL);
 		tolua_beginmodule(l, "CCControl");
 			tolua_function(l, "isEnabled", tolua_CCControl_isEnabled);
@@ -358,6 +359,7 @@ TOLUA_API int tolua_CC_Extension_open(lua_State* l){
 		tolua_constant(l, "CCControlStateHighlighted", CCControlStateHighlighted);
 		tolua_constant(l, "CCControlStateDisabled", CCControlStateDisabled);
 		tolua_constant(l, "CCControlStateSelected", CCControlStateSelected);
+#endif
 #ifdef LUAPROXY_CCEDITBOX_ENABLED
 		tolua_cclass(l, "CCEditBox", "CCEditBox", "CCControlButton", NULL);
 		tolua_beginmodule(l, "CCEditBox");
@@ -434,7 +436,7 @@ TOLUA_API int tolua_CC_Extension_open(lua_State* l){
 			tolua_function(l, "getErrorBuffer", tolua_CCHttpResponse_getErrorBuffer);
 			tolua_function(l, "setErrorBuffer", tolua_CCHttpResponse_setErrorBuffer);
 		tolua_endmodule(l);
-		
+#ifdef __TOLUA_CCSCALE9SPRITE__
 		tolua_cclass(l, "CCScale9Sprite", "CCScale9Sprite", "CCNode", NULL);
 		tolua_beginmodule(l, "CCScale9Sprite");
 			tolua_function(l, "create", tolua_CCScale9Sprite_create);
@@ -455,6 +457,7 @@ TOLUA_API int tolua_CC_Extension_open(lua_State* l){
 			tolua_function(l, "resizableSpriteWithCapInsets", tolua_CCScale9Sprite_resizableSpriteWithCapInsets);
 			tolua_function(l, "updateWithBatchNode", tolua_CCScale9Sprite_updateWithBatchNode);
 		tolua_endmodule(l);
+#endif
 		tolua_constant(l, "kCCScrollViewDirectionNone", kCCScrollViewDirectionNone);
 		tolua_constant(l, "kCCScrollViewDirectionHorizontal", kCCScrollViewDirectionHorizontal);
 		tolua_constant(l, "kCCScrollViewDirectionVertical", kCCScrollViewDirectionVertical);
