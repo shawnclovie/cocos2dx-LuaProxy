@@ -1,4 +1,5 @@
 #include "UIUtil.h"
+#include <math.h>
 
 CCRenderTexture * UIUtil::createStroke(CCLabelTTF *label, float size, ccColor3B color){
 	if(!label || size <= 0){ return NULL;}
@@ -91,18 +92,6 @@ void UIUtil::fixParticle(CCNode *o, const float dur, const float life, bool with
 		CCObject *s;
 		CCARRAY_FOREACH(o->getChildren(), s){
 			fixParticle((CCNode *)s, dur, life, true);
-		}
-	}
-}
-void UIUtil::fixParticleWithHandler(CCNode *o, LuaEventHandler *h, bool withChild){
-	CCParticleSystemQuad *e = dynamic_cast<CCParticleSystemQuad *>(o);
-	if(e){
-		h->action(e);
-	}
-	if(withChild){
-		CCObject *s;
-		CCARRAY_FOREACH(o->getChildren(), s){
-			fixParticleWithHandler((CCNode *)s, h, true);
 		}
 	}
 }
@@ -286,6 +275,7 @@ CCNode * UIUtil::changeParent(CCNode *n, CCNode *np, int zOrd, int tag){
 CCPoint UIUtil::positionRelative(CCNode *n, CCNode *np){
 	return n && np? np->convertToNodeSpace(n->getParent()->convertToWorldSpace(n->getPosition())) : CCPointZero;
 }
+
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 UIEventDispatcher * UIEventDispatcher::_instance = NULL;

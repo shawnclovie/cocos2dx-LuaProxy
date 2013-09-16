@@ -2,7 +2,6 @@
 #define __UIUTIL_H__
 #include "cocos2d.h"
 #include "cocos-ext.h"
-#include "../LuaEventHandler.hpp"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -29,7 +28,6 @@ public:
 	// Change (o) and the children's scale and font size (scale/=rate and fontSize*=rate), and set font name if assigned (font)
 	static void fixLabel(CCNode *o, const float rate, bool withChild, const char *font = NULL);
 	static void fixParticle(CCNode *o, const float dur, const float life, bool withChild);
-	static void fixParticleWithHandler(CCNode *o, LuaEventHandler *h, bool withChild);
 	static CCNode * copyNode(CCNode *n, bool deep = true);
 	// Duplicate (o)'s properties to (n)
 	static void duplicate(CCNode *n, CCNode *o);
