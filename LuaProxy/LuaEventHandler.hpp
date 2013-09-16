@@ -75,6 +75,11 @@ public:
 		app->handle(handler);
 		return app;
 	}
+	static void appStateChange(Events e){
+		if(app){
+			app->applicationStateChange(e);
+		}
+	}
 	static CCLuaEngine * engine(){
 #if COCOS2D_VERSION >= 0x00030000
 		return LuaEngine::getInstance();

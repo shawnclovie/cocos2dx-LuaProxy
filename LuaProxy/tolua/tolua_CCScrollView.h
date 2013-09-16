@@ -8,15 +8,15 @@
 //CCScrollView::create()
 //CCScrollView::create(CCSize *, CCNode * = NULL)
 static int tolua_CCScrollView_create(lua_State *l){
-#ifndef TOLUA_RELEASE
 	tolua_Error err;
+#ifndef TOLUA_RELEASE
 	if(!tolua_isusertable(l, 1, "CCScrollView", 0, &err)){
 		tolua_error(l,"#ferror in function 'CCScrollView.create'.",&err);
 		return 0;
 	}
 #endif
 	CCScrollView *o = NULL;
-	if(tolua_isusertype(l, 2, "CCSize", 0, NULL)){
+	if(tolua_isusertype(l, 2, "CCSize", 0, &err)){
 		CCSize *s = static_cast<CCSize *>(tolua_tousertype(l, 2, NULL));
 		o = CCScrollView::create(s? *s : CCSizeZero, static_cast<CCNode *>(tolua_tousertype(l, 3, NULL)));
 	}else{

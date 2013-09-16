@@ -79,9 +79,9 @@ public:
 	// o:self, v:var, n:node
 	virtual bool onAssignCCBMemberVariable(CCObject * o, const char * var, CCNode * n){
 		if(n && var && strlen(var) > 0){
-			if(_memVars->objectForKey(var) != NULL){
+/*			if(_memVars->objectForKey(var) != NULL){
 				CCLog("LuaProxy.onAssignCCBMemberVariable() node name %s was exists.\n", var);
-			}
+			}*/
 			_memVars->setObject(n, var);
 		}else{
 			CCLog("LuaProxy.onAssignCCBMemberVariable() node (%s:%p) didn't saved.\n", var, n);
@@ -234,7 +234,9 @@ public:
 		CCNode *node = reader->readNodeGraphFromFile(f, this);
 		CCBAnimationManager *m = reader->getAnimationManager();
 		reader->autorelease();
-		node->setUserObject(m);
+		if(node){
+			node->setUserObject(m);
+		}
 		return node;
 	}
 //	void changeResolutionScale(CCNode *n, CCBAnimationManager *m, float resolutionScale);
