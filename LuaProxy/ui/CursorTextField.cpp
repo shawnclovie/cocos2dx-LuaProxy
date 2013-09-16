@@ -1,4 +1,5 @@
 #include "CursorTextField.h"
+#include "../LuaEventHandler.hpp"
 
 static int _calcCharCount(const char *t){
 	int n = 0;
@@ -17,10 +18,12 @@ CursorTextField::CursorTextField()
 : _cursor(NULL)
 , _cursorAction(NULL)
 , _password(false)
-, _maxLength(30){
+, _maxLength(30)
+, _scriptFunc(0){
 	CCTextFieldTTF();
 }
 CursorTextField::~CursorTextField(){
+	unregisterScriptHandler();
 	CC_SAFE_RELEASE(_cursorAction);
 }
 CursorTextField * CursorTextField::create(const char *fontName, float fontSize){
@@ -82,27 +85,47 @@ void CursorTextField::ccTouchEnded(CCTouch *t, CCEvent *e){
 	CCPoint ep = CCDirector::sharedDirector()->convertToGL(t->getLocationInView());
 	if(abs(ep.x - _touchBeginPos.x) > DELTA || abs(ep.y - _touchBeginPos.y) > DELTA){
 		_touchBeginPos.x = _touchBeginPos.y = -1;
-	}else
-		isInTextField(t)? openIME() : closeIME();
+	}else{
+		if(isInTextField(t)){
+			openIME();
+		}else{
+			closeIME();
+		}
+	}
 }
 CCRect CursorTextField::getRect(){
 	CCSize s = &_designedSize != NULL? _designedSize : getContentSize();
 	return CCRectMake(0 - s.width * getAnchorPoint().x, 0 - s.height * getAnchorPoint().y, s.width, s.height);
 }
+
 CCSize CursorTextField::getDesignedSize(){return _designedSize;}
+
 void CursorTextField::setDesignedSize(CCSize s){_designedSize = s;}
+
 bool CursorTextField::isInTextField(CCTouch *t){
 	return getRect().containsPoint(convertTouchToNodeSpaceAR(t));
 }
+
+void callScriptFunc(CursorTextField *o, const char *event){
+	if(o->_scriptFunc){
+		LuaEventHandler::pushString(event);
+		LuaEventHandler::pushUsertype(o, "CursorTextField");
+		LuaEventHandler::runFunctionHandler(o->_scriptFunc, 2);
+	}
+}
+
 // ############################# Delegate functions ###############################
 bool CursorTextField::onTextFieldAttachWithIME(CCTextFieldTTF *s){
-	if(!m_pInputText->empty())
+	if(!m_pInputText->empty()){
 		_cursor->setPositionX(getContentSize().width);
+	}
+	callScriptFunc(this, "began");
 	return false;
 }
 bool CursorTextField::onTextFieldInsertText(CCTextFieldTTF *s, const char *t, int len){
 	if(strcmp(t, "\n") == 0){
 		closeIME();
+		callScriptFunc(this, "return");
 		return false;
 	}
 	if(m_pInputText->length() + len > _maxLength)
@@ -112,6 +135,7 @@ bool CursorTextField::onTextFieldInsertText(CCTextFieldTTF *s, const char *t, in
 	updateDisplay();
 	_cursor->setPositionX(getTextureRect().size.width);
 //	_cursor->setPositionX(getContentSize().width);
+	callScriptFunc(this, "changed");
 	return true;
 }
 bool CursorTextField::onTextFieldDeleteBackward(CCTextFieldTTF *s, const char *delText, int len){
@@ -122,9 +146,14 @@ bool CursorTextField::onTextFieldDeleteBackward(CCTextFieldTTF *s, const char *d
 	m_pInputText->erase(it, m_pInputText->end());
 	updateDisplay();
 	_cursor->setPositionX(m_pInputText->empty()? 0 : getContentSize().width);
+	callScriptFunc(this, "changed");
 	return true;
 }
-bool CursorTextField::onTextFieldDetachWithIME(CCTextFieldTTF *s){return false;}
+
+bool CursorTextField::onTextFieldDetachWithIME(CCTextFieldTTF *s){
+	callScriptFunc(this, "ended");
+	return false;
+}
 
 void CursorTextField::openIME(){
 	_cursor->setVisible(true);
@@ -166,6 +195,15 @@ void CursorTextField::setColor(const ccColor3B& c){
 	updateColor();
 	_cursor->setColor(c);
 }
+
+void CursorTextField::unregisterScriptHandler(){
+	if(_scriptFunc){
+		lua_unref(LuaEventHandler::luaStack()->getLuaState(), _scriptFunc);
+//CCLog("CTF.unref %d", _scriptFunc);
+		_scriptFunc = 0;
+	}
+}
+
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 void CursorTextField::keyEvent(UINT m, WPARAM w, LPARAM l){
 	if(!_cursor->isVisible())

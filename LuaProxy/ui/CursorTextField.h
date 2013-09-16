@@ -12,15 +12,17 @@ class CursorTextField : public CCTextFieldTTF, public CCTextFieldDelegate, publi
 	, public UIEventDelegate
 #endif
 {
-private:
+protected:
 	CCPoint _touchBeginPos;
 	CCSprite *_cursor;
 	CCAction *_cursorAction;
+public:
 	CCPoint _cursorPos;
 	bool _password;
 	unsigned int _maxLength;
 	CCSize _designedSize;
-public:
+	int _scriptFunc;
+
 	CursorTextField();
 	~CursorTextField();
 	static CursorTextField * create(const char *fontName, float fontSize);
@@ -55,8 +57,13 @@ public:
 	//area for touch to open IME
 	CCSize getDesignedSize();
 	void setDesignedSize(CCSize s);
-	//UIEventDelegate
+
+	void registerScriptHandler(int hnd){
+		_scriptFunc = hnd;
+	}
+	void unregisterScriptHandler();
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+	//UIEventDelegate
 	void keyEvent(UINT m, WPARAM w, LPARAM l);
 #endif
 };

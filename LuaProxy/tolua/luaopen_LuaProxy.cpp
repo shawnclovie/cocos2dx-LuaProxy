@@ -201,23 +201,6 @@ static int tolua_UIUtil_fixParticle(lua_State *l){
 	}
 	return 1;
 }
-// UIUtil::fixParticleWithHandler(CCNode *n, LuaEventHandler, bool withChild)
-static int tolua_UIUtil_fixParticleWithHandler(lua_State *l){
-#ifndef TOLUA_RELEASE
-	tolua_Error err;
-	if(!tolua_isusertable(l, 1, "UIUtil", 0, &err) || !tolua_isusertype(l, 2, "CCNode", 0, &err) ||
-		!tolua_isusertype(l, 3, "LuaEventHandler", 0, &err)){
-		tolua_error(l,"#ferror in function 'UIUtil.fixParticle'.",&err);
-		return 0;
-	}
-#endif
-	CCNode *n = (CCNode *)tolua_tousertype(l, 2, 0);
-	LuaEventHandler *h = (LuaEventHandler *)tolua_tousertype(l, 3, 0);
-	if(n){
-		UIUtil::fixParticleWithHandler(n, h, tolua_toboolean(l, 4, false) > 0);
-	}
-	return 1;
-}
 // UIUtil::copyNode(CCNode *n)
 static int tolua_UIUtil_copyNode(lua_State *l){
 #ifndef TOLUA_RELEASE
@@ -400,6 +383,7 @@ TOLUA_API int luaopen_LuaProxy(lua_State* l){
 			tolua_function(l, "isPassword", tolua_CursorTextField_isPassword);
 			tolua_function(l, "setPassword", tolua_CursorTextField_setPassword);
 			tolua_function(l, "getRect", tolua_CursorTextField_getRect);
+			tolua_function(l, "registerScriptHandler", tolua_CursorTextField_registerScriptHandler);
 			tolua_function(l, "setString", tolua_CursorTextField_setString);
 		tolua_endmodule(l);
 		tolua_constant(l, "kLuaEventKeyBack", (int)LuaEventHandler::Events::KeyBack);
@@ -433,7 +417,6 @@ TOLUA_API int luaopen_LuaProxy(lua_State* l){
 			tolua_function(l, "setShaderWithChildren", tolua_UIUtil_setShaderWithChildren);
 			tolua_function(l, "fixLabel", tolua_UIUtil_fixLabel);
 			tolua_function(l, "fixParticle", tolua_UIUtil_fixParticle);
-			tolua_function(l, "fixParticleWithHandler", tolua_UIUtil_fixParticleWithHandler);
 			tolua_function(l, "copyNode", tolua_UIUtil_copyNode);
 			tolua_function(l, "duplicate", tolua_UIUtil_duplicate);
 			tolua_function(l, "changeParent", tolua_UIUtil_changeParent);

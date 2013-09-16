@@ -13,7 +13,7 @@ static int tolua_CursorTextField_create(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
 	if(!tolua_isusertable(l, 1, "CursorTextField", 0, &err) || !tolua_isstring(l, 2, 0, &err)
-		|| !tolua_isnumber(l, 3, 0, &err) || !tolua_isnoobj(l, 4, &err)){
+		|| !tolua_isnumber(l, 3, 0, &err)){
 		tolua_error(l,"#ferror in function 'CursorTextField.create'.",&err);
 		return 0;
 	}
@@ -26,7 +26,7 @@ static int tolua_CursorTextField_createWithPlaceHolder(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
 	if(!tolua_isusertable(l, 1, "CursorTextField", 0, &err) || !tolua_isstring(l, 2, 0, &err)
-		|| !tolua_isstring(l, 3, 0, &err) || !tolua_isnumber(l, 4, 0, &err) || !tolua_isnoobj(l, 5, &err)){
+		|| !tolua_isstring(l, 3, 0, &err) || !tolua_isnumber(l, 4, 0, &err)){
 		tolua_error(l,"#ferror in function 'createWithPlaceHolder'.",&err);
 		return 0;
 	}
@@ -39,8 +39,7 @@ static int tolua_CursorTextField_createWithPlaceHolder(lua_State *l){
 static int tolua_CursorTextField_setColor(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err) || !tolua_isusertype(l, 2, "ccColor3B", 0, &err)
-		|| !tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err) || !tolua_isusertype(l, 2, "ccColor3B", 0, &err)){
 		tolua_error(l,"#ferror in function 'setColor'.",&err);
 		return 0;
 	}
@@ -54,7 +53,7 @@ static int tolua_CursorTextField_setColor(lua_State *l){
 static int tolua_CursorTextField_getDesignedSize(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err)){
 		tolua_error(l,"#ferror in function 'CursorTextField.getDesignedSize'.",&err);
 		return 0;
 	}
@@ -67,8 +66,7 @@ static int tolua_CursorTextField_getDesignedSize(lua_State *l){
 static int tolua_CursorTextField_setDesignedSize(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err) || !tolua_isusertype(l, 2, "CCSize", 0, &err)
-		|| !tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err) || !tolua_isusertype(l, 2, "CCSize", 0, &err)){
 		tolua_error(l,"#ferror in function 'CursorTextField.setDesignedSize'.",&err);
 		return 0;
 	}
@@ -82,7 +80,7 @@ static int tolua_CursorTextField_setDesignedSize(lua_State *l){
 static int tolua_CursorTextField_getMaxLength(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err)){
 		tolua_error(l,"#ferror in function 'CursorTextField.getMaxLength'.",&err);
 		return 0;
 	}
@@ -95,8 +93,7 @@ static int tolua_CursorTextField_getMaxLength(lua_State *l){
 static int tolua_CursorTextField_setMaxLength(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err) || !tolua_isnumber(l, 2, 0, &err)
-		|| !tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err) || !tolua_isnumber(l, 2, 0, &err)){
 		tolua_error(l,"#ferror in function 'CursorTextField.setMaxLength'.",&err);
 		return 0;
 	}
@@ -110,7 +107,7 @@ static int tolua_CursorTextField_setMaxLength(lua_State *l){
 static int tolua_CursorTextField_isPassword(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err)){
 		tolua_error(l,"#ferror in function 'CursorTextField.isPassword'.",&err);
 		return 0;
 	}
@@ -123,8 +120,7 @@ static int tolua_CursorTextField_isPassword(lua_State *l){
 static int tolua_CursorTextField_setPassword(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err) || !tolua_isboolean(l, 2, 0, &err)
-		|| !tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err) || !tolua_isboolean(l, 2, 0, &err)){
 		tolua_error(l,"#ferror in function 'CursorTextField.setPassword'.",&err);
 		return 0;
 	}
@@ -138,7 +134,7 @@ static int tolua_CursorTextField_setPassword(lua_State *l){
 static int tolua_CursorTextField_getRect(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err) || !tolua_isnoobj(l, 2, &err)){
+	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err)){
 		tolua_error(l,"#ferror in function 'CursorTextField.getRect'.",&err);
 		return 0;
 	}
@@ -147,17 +143,33 @@ static int tolua_CursorTextField_getRect(lua_State *l){
 	if(p)tolua_pushusertype(l, Mtolua_new((CCRect)(p->getRect())), "CCRect");
 	return 1;
 }
+//CursorTextField::registerScriptHandler
+static int tolua_CursorTextField_registerScriptHandler(lua_State *l){
+#ifndef TOLUA_RELEASE
+	tolua_Error err;
+	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err) || !toluafix_isfunction(l, 2, "LUA_FUNCTION", 0, &err)){
+		tolua_error(l,"#ferror in function 'CursorTextField.registerScriptHandler'.",&err);
+		return 0;
+	}
+#endif
+	CursorTextField *p = (CursorTextField *)tolua_tousertype(l, 1, NULL);
+	if(p){
+		p->registerScriptHandler(toluafix_ref_function(l, 2, 0));
+	}
+	tolua_pushusertype(l, p, "CursorTextField");
+	return 1;
+}
 //CursorTextField::setString
 static int tolua_CursorTextField_setString(lua_State *l){
 #ifndef TOLUA_RELEASE
 	tolua_Error err;
-	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err) || !tolua_isstring(l, 2, 0, &err) || !tolua_isnoobj(l, 3, &err)){
+	if(!tolua_isusertype(l, 1, "CursorTextField", 0, &err) || !tolua_isstring(l, 2, 0, &err)){
 		tolua_error(l,"#ferror in function 'CursorTextField.setString'.",&err);
 		return 0;
 	}
 #endif
 	CursorTextField *p = (CursorTextField *)tolua_tousertype(l, 1, NULL);
-	if(p)p->setString(tolua_tostring(l, 2, ""));
+	if(p){p->setString(tolua_tostring(l, 2, ""));}
 	tolua_pushusertype(l, p, "CursorTextField");
 	return 1;
 }
