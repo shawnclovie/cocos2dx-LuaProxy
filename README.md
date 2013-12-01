@@ -1,17 +1,19 @@
 #cocos2dx-LuaProxy#
 -------
-Current version: 2.1.5  
+Current version: 2.1.5, support cocos2d-x 2.1.5 and 2.2.x  
 LuaProxy for cocos2d-x, include CocosBuilder support for lua, and other cocos2d-extension support for lua, and easy to use function.  
-当前版本：2.1.5  
-LuaProxy基于cocos2d-x，主要用于支持在Lua中使用CocosBuilder，以及添加cocos2d扩展库的Lua支持，还有另外一些易用功能。
+当前版本：2.1.5，支持cocos2d-x 2.1.5及2.2.x  
+LuaProxy基于cocos2d-x，主要用于支持在Lua中使用CocosBuilder输出的界面、动画文件，以及添加cocos2d扩展库的Lua支持，还有另外一些易用功能。
 
 LuaProxy have been merged in quick-cocos2d-x.
+LuaProxy已被整合进quick-cocos2d-x。
 
 ##For cocos2d-x 3.0 alpha#
-I'm working on port LuaProxy to 3.0, I'll remove some unused function.  
-The biggest change is rename "CCBProxy" to "LuaProxy", I've no idea about cocos2d-x 2.1.4's CCBProxy.  
-开始准备移植以支持cocos2d-x 3.0，将会移除一些无用的函数。  
-较大的改变是将CCBProxy类改名为LuaProxy，对cocos2d-x 2.1.4以来官方的CCBProxy很无语。
+Changes of 3.0 is huge, I think I'll use more time to port.  
+And, I hope to support JavaScript Binding, so LuaProxy is going to rename to "ScriptProxy". But lua is main target to support.  
+Most files had changed name, because this is a new start, for LuaProxy, and your game project.  
+3.0的改变很巨大，我大概还要一段时间来移植。我希望可以支持JSB，所以LuaProxy要改名为ScriptProxy，但Lua仍然是主要的支持目标。  
+很多文件会改名，对LuaProxy来说这是一个新的开始，对你的游戏项目如是。  
 
 ##LuaProxy 2.1.4 for cocos2d-x 2.1.4#
 Don't add tolua_extensions_ccb_open(lua_State) to AppDelegate.cpp.  
